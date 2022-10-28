@@ -30,7 +30,7 @@ export class CustomUserService implements UserService<User, Credentials> {
     const passwordMatched = await compare(password, credentialsFound.password);
 
     if (!passwordMatched) {
-      throw new Error('The password is not correct.');
+      throw new Error(invalidCredentialsError);
     }
     return foundUser;
   }
@@ -41,7 +41,7 @@ export class CustomUserService implements UserService<User, Credentials> {
       [securityId]: user.id,
       id: user.id,
       name: fullName,
-      roles: user.role,
+      role: user.role,
       isActivated: user.isActivated,
     };
   }
