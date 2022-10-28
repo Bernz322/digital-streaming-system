@@ -40,8 +40,14 @@ export class User extends Entity {
   })
   isActivated: boolean;
 
+  @property({
+    type: 'date',
+    default: new Date(),
+  })
+  datePosted: string;
+
   @hasOne(() => UserCredential)
-  userCredential: UserCredential;
+  userCredentials: UserCredential;
 
   constructor(data?: Partial<User>) {
     super(data);
