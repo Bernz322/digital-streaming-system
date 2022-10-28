@@ -11,7 +11,6 @@ export const CredentialsSchema: SchemaObject = {
     },
     password: {
       type: 'string',
-      minLength: 8,
     },
   },
 };

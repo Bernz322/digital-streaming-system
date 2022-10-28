@@ -35,7 +35,13 @@ import {genSalt, hash} from 'bcryptjs';
 import _, {has} from 'lodash';
 import {User} from '../models';
 import {UserRepository as MyUserRepo} from '../repositories';
-import {CustomResponse, validateEmail, validateName} from '../utils';
+import {
+  CredentialsSchema,
+  CustomResponse,
+  validateEmail,
+  validateName,
+} from '../utils';
+import {authorize} from '@loopback/authorization';
 @model()
 export class NewUserRequest extends User {
   @property({
@@ -133,11 +139,77 @@ export class UserController {
         success: false,
         fail: true,
         data: null,
-        message: error ? error.message : 'Server unavailable',
+        message: error ? error.message : 'Registration failed.',
       };
     }
   }
 
+  @post('/users/login')
+  async login(
+    @requestBody({
+      description: 'Login user and return token and minimum data',
+      content: {
+        'application/json': {schema: CredentialsSchema},
+      },
+    })
+    credentials: Credentials,
+  ): Promise<CustomResponse<{}>> {
+    const {email} = credentials;
+
+    validateEmail(email);
+
+    try {
+      const user = await this.userService.verifyCredentials(credentials);
+      const userProfile = this.userService.convertToUserProfile(user);
+      const token = await this.jwtService.generateToken(userProfile);
+
+      return {
+        success: true,
+        fail: false,
+        data: {
+          token,
+          user: userProfile,
+        },
+        message: 'Logged in successfully',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        fail: true,
+        data: null,
+        message: error ? error.message : 'Logging in failed.',
+      };
+    }
+  }
+
+  @authenticate('jwt')
+  // @authorize({allowedRoles: ['user']})
+  @get('/users/me')
+  async whoAmI(
+    @inject(SecurityBindings.USER) currentLoggedUser: UserProfile,
+  ): Promise<any> {
+    try {
+      const user = await this.userRepository.findById(
+        currentLoggedUser[securityId],
+      );
+      if (!user) throw new Error('Unknown user.');
+      return {
+        success: true,
+        fail: false,
+        data: user,
+        message: 'Current logged in user data fetched successfully.',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        fail: true,
+        data: null,
+        message: error ? error.message : 'Logging in failed.',
+      };
+    }
+  }
+
+  // TODO: Delete this api endpoint
   @get('/users/count')
   @response(200, {
     description: 'User model count',
