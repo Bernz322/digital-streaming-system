@@ -9,14 +9,3 @@ export type CustomResponse<T> = {
   data?: T | T[] | null;
   message?: string;
 };
-
-export type NewUser = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-  password: string;
-  isActivated: boolean;
-  datePosted?: string;
-};

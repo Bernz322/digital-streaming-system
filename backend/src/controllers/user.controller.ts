@@ -35,7 +35,7 @@ import {genSalt, hash} from 'bcryptjs';
 import _, {has} from 'lodash';
 import {User} from '../models';
 import {UserRepository as MyUserRepo} from '../repositories';
-import {CustomResponse, NewUser, validateEmail, validateName} from '../utils';
+import {CustomResponse, validateEmail, validateName} from '../utils';
 @model()
 export class NewUserRequest extends User {
   @property({
@@ -132,7 +132,7 @@ export class UserController {
       return {
         success: false,
         fail: true,
-        data: [],
+        data: null,
         message: error ? error.message : 'Server unavailable',
       };
     }
