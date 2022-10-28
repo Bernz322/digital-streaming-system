@@ -1,3 +1,9 @@
+import {AuthenticationComponent} from '@loopback/authentication';
+import {
+  JWTAuthenticationComponent,
+  UserServiceBindings,
+  UserRepository,
+} from '@loopback/authentication-jwt';
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
 import {
@@ -9,6 +15,9 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
+import {MongodbDataSource} from './datasources';
+import {UserCredentialRepository} from './repositories';
+import {CustomUserService} from './services/user.service';
 
 export {ApplicationConfig};
 
@@ -29,6 +38,17 @@ export class BackendApplication extends BootMixin(
       path: '/explorer',
     });
     this.component(RestExplorerComponent);
+
+    this.component(AuthenticationComponent);
+    this.component(JWTAuthenticationComponent);
+
+    this.dataSource(MongodbDataSource, UserServiceBindings.DATASOURCE_NAME);
+
+    this.bind(UserServiceBindings.USER_SERVICE).toClass(CustomUserService);
+    this.bind(UserServiceBindings.USER_REPOSITORY).toClass(UserRepository);
+    this.bind(UserServiceBindings.USER_CREDENTIALS_REPOSITORY).toClass(
+      UserCredentialRepository,
+    );
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
