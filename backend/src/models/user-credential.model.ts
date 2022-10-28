@@ -19,7 +19,7 @@ export class UserCredential extends Entity {
     type: 'string',
     mongodb: {dataType: 'ObjectID'},
   })
-  userId?: string;
+  userId: string;
 
   constructor(data?: Partial<UserCredential>) {
     super(data);

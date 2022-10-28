@@ -17,7 +17,7 @@ import path from 'path';
 import {MySequence} from './sequence';
 import {MongodbDataSource} from './datasources';
 import {UserCredentialRepository} from './repositories';
-import {CustomUserService} from './services/user.service';
+import {CustomUserService} from './services';
 
 export {ApplicationConfig};
 

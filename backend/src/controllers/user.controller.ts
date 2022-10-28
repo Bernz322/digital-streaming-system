@@ -3,6 +3,8 @@ import {
   CountSchema,
   Filter,
   FilterExcludingWhere,
+  model,
+  property,
   repository,
   Where,
 } from '@loopback/repository';
@@ -30,10 +32,18 @@ import {
 import {inject} from '@loopback/core';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcryptjs';
-import _ from 'lodash';
+import _, {has} from 'lodash';
 import {User} from '../models';
 import {UserRepository as MyUserRepo} from '../repositories';
-
+import {CustomResponse, validateEmail, validateName} from '../utils';
+@model()
+export class NewUserRequest extends User {
+  @property({
+    type: 'string',
+    required: true,
+  })
+  password: string;
+}
 export class UserController {
   constructor(
     @inject(TokenServiceBindings.TOKEN_SERVICE)
@@ -42,31 +52,90 @@ export class UserController {
     public userService: MyUserService,
     @inject(SecurityBindings.USER, {optional: true})
     public user: UserProfile,
+    @repository(UserRepository)
+    protected userRepository: UserRepository,
+
     @repository(MyUserRepo)
     public myUserRepo: MyUserRepo,
-    @repository(UserRepository)
-    public userRepository: UserRepository,
   ) {}
 
-  @post('/users')
+  @post('/users/register')
   @response(200, {
-    description: 'User model instance',
+    description: 'Register a new user',
     content: {'application/json': {schema: getModelSchemaRef(User)}},
   })
   async create(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {
+          schema: getModelSchemaRef(NewUserRequest, {
             title: 'NewUser',
-            exclude: ['id'],
+            exclude: ['id', 'role', 'isActivated', 'datePosted'],
           }),
         },
       },
     })
-    user: Omit<User, 'id'>,
-  ): Promise<User> {
-    return this.userRepository.create(user);
+    user: Omit<NewUserRequest, 'id'>,
+  ): Promise<CustomResponse<{}>> {
+    try {
+      // Validate email and name
+      validateEmail(user.email);
+      validateName(user.firstName, 'firstName');
+      validateName(user.lastName, 'lastName');
+
+      const emailExists = await this.userRepository.findOne({
+        where: {email: user.email},
+      });
+
+      if (emailExists) {
+        return {
+          success: false,
+          fail: true,
+          data: null,
+          message: 'Email already exists',
+        };
+      }
+
+      // Create new user
+      // ---------------
+      // Hash password
+      const password = await hash(user.password, await genSalt());
+
+      // Check user count. If 0, then the new user is the root admin.
+      const {count} = await this.userRepository.count();
+
+      if (count === 0) {
+        user.isActivated = true;
+        user.role = 'admin';
+        const newUser = await this.userRepository.create(
+          _.omit(user, ['password']),
+        );
+        await this.userRepository
+          .userCredentials(newUser.id)
+          .create({password});
+      } else {
+        const newUser = await this.userRepository.create(
+          _.omit(user, ['password']),
+        );
+        await this.userRepository
+          .userCredentials(newUser.id)
+          .create({password});
+      }
+
+      return {
+        success: true,
+        fail: false,
+        data: null,
+        message: 'Registered successfully',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        fail: true,
+        data: null,
+        message: error ? error.message : 'Server unavailable',
+      };
+    }
   }
 
   @get('/users/count')
@@ -91,7 +160,7 @@ export class UserController {
     },
   })
   async find(@param.filter(User) filter?: Filter<User>): Promise<User[]> {
-    return this.userRepository.find(filter);
+    return this.myUserRepo.find(filter);
   }
 
   @patch('/users')
@@ -126,7 +195,7 @@ export class UserController {
     @param.path.string('id') id: string,
     @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>,
   ): Promise<User> {
-    return this.userRepository.findById(id, filter);
+    return this.myUserRepo.findById(id, filter);
   }
 
   @patch('/users/{id}')

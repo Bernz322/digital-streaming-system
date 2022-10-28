@@ -3,12 +3,12 @@ import {repository} from '@loopback/repository';
 import {securityId, UserProfile} from '@loopback/security';
 import {compare} from 'bcryptjs';
 import {User} from '../models';
-import {UserRepository, Credentials} from '../repositories';
+import {UserRepository} from '../repositories';
+import {Credentials} from '../utils';
 
 export class CustomUserService implements UserService<User, Credentials> {
   constructor(
-    @repository(UserRepository)
-    public userRepository: UserRepository,
+    @repository(UserRepository) public userRepository: UserRepository,
   ) {}
 
   async verifyCredentials(credentials: Credentials): Promise<User> {
@@ -42,6 +42,7 @@ export class CustomUserService implements UserService<User, Credentials> {
       id: user.id,
       name: fullName,
       roles: user.role,
+      isActivated: user.isActivated,
     };
   }
 }

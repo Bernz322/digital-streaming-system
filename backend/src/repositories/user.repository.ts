@@ -13,7 +13,7 @@ export class UserRepository extends DefaultCrudRepository<
   typeof User.prototype.id,
   UserRelations
 > {
-  public readonly userCredential: HasOneRepositoryFactory<
+  public readonly userCredentials: HasOneRepositoryFactory<
     UserCredential,
     typeof User.prototype.id
   >;
@@ -24,13 +24,13 @@ export class UserRepository extends DefaultCrudRepository<
     protected userCredentialRepositoryGetter: Getter<UserCredentialRepository>,
   ) {
     super(User, dataSource);
-    this.userCredential = this.createHasOneRepositoryFactoryFor(
-      'userCredential',
+    this.userCredentials = this.createHasOneRepositoryFactoryFor(
+      'userCredentials',
       userCredentialRepositoryGetter,
     );
     this.registerInclusionResolver(
-      'userCredential',
-      this.userCredential.inclusionResolver,
+      'userCredentials',
+      this.userCredentials.inclusionResolver,
     );
   }
 
@@ -38,7 +38,7 @@ export class UserRepository extends DefaultCrudRepository<
     userId: typeof User.prototype.id,
   ): Promise<UserCredential | undefined> {
     try {
-      return await this.userCredential(userId).get();
+      return await this.userCredentials(userId).get();
     } catch (error) {
       if (error.code === 'ENTITY_NOT_FOUND') {
         return undefined;
