@@ -41,6 +41,7 @@ export class CustomUserService implements UserService<User, Credentials> {
       [securityId]: user.id,
       id: user.id,
       name: fullName,
+      email: user.email,
       role: user.role,
       isActivated: user.isActivated,
     };
