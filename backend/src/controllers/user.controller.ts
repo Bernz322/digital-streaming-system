@@ -1,12 +1,9 @@
 import {
-  Count,
-  CountSchema,
   Filter,
   FilterExcludingWhere,
   model,
   property,
   repository,
-  Where,
 } from '@loopback/repository';
 import {
   post,
@@ -14,11 +11,9 @@ import {
   get,
   getModelSchemaRef,
   patch,
-  put,
   del,
   requestBody,
   response,
-  RestBindings,
 } from '@loopback/rest';
 import {authenticate, TokenService} from '@loopback/authentication';
 import {
@@ -27,12 +22,11 @@ import {
   TokenServiceBindings,
   UserRepository,
   UserServiceBindings,
-  UserWithRelations,
 } from '@loopback/authentication-jwt';
 import {inject} from '@loopback/core';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcryptjs';
-import _, {has} from 'lodash';
+import _ from 'lodash';
 import {User} from '../models';
 import {UserRepository as MyUserRepo} from '../repositories';
 import {
@@ -67,7 +61,8 @@ export class UserController {
 
   @post('/users/register')
   @response(200, {
-    description: 'Register a new user',
+    description:
+      'Register a new user. The first user will be given the admin role and is activated immediately.',
     content: {'application/json': {schema: getModelSchemaRef(User)}},
   })
   async create(
@@ -76,7 +71,7 @@ export class UserController {
         'application/json': {
           schema: getModelSchemaRef(NewUserRequest, {
             title: 'NewUser',
-            exclude: ['id', 'role', 'isActivated', 'datePosted'],
+            exclude: ['id', 'role', 'isActivated', 'dateCreated'],
           }),
         },
       },
@@ -147,7 +142,7 @@ export class UserController {
   @post('/users/login')
   async login(
     @requestBody({
-      description: 'Login user and return token and minimum data',
+      description: 'Login user and return token with user data',
       content: {
         'application/json': {schema: CredentialsSchema},
       },
@@ -183,10 +178,10 @@ export class UserController {
   }
 
   @authenticate('jwt')
-  // @authorize({allowedRoles: ['user']})
   @get('/users/me')
   async whoAmI(
-    @inject(SecurityBindings.USER) currentLoggedUser: UserProfile,
+    @inject(SecurityBindings.USER)
+    currentLoggedUser: UserProfile,
   ): Promise<any> {
     try {
       const user = await this.userRepository.findById(
@@ -209,19 +204,12 @@ export class UserController {
     }
   }
 
-  // TODO: Delete this api endpoint
-  @get('/users/count')
-  @response(200, {
-    description: 'User model count',
-    content: {'application/json': {schema: CountSchema}},
-  })
-  async count(@param.where(User) where?: Where<User>): Promise<Count> {
-    return this.userRepository.count(where);
-  }
-
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   @get('/users')
   @response(200, {
-    description: 'Array of User model instances',
+    description:
+      'Return array of all users in the database with their information. (Requires token and admin role authorization)',
     content: {
       'application/json': {
         schema: {
@@ -231,32 +219,34 @@ export class UserController {
       },
     },
   })
-  async find(@param.filter(User) filter?: Filter<User>): Promise<User[]> {
-    return this.myUserRepo.find(filter);
+  async find(
+    @param.filter(User) filter?: Filter<User>,
+  ): Promise<CustomResponse<{}>> {
+    try {
+      const users = await this.myUserRepo.find(filter);
+
+      return {
+        success: true,
+        fail: false,
+        data: users,
+        message: 'All users fetched successfully.',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        fail: true,
+        data: null,
+        message: error ? error.message : 'Fetching users failed.',
+      };
+    }
   }
 
-  @patch('/users')
-  @response(200, {
-    description: 'User PATCH success count',
-    content: {'application/json': {schema: CountSchema}},
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
-        },
-      },
-    })
-    user: User,
-    @param.where(User) where?: Where<User>,
-  ): Promise<Count> {
-    return this.userRepository.updateAll(user, where);
-  }
-
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   @get('/users/{id}')
   @response(200, {
-    description: 'User model instance',
+    description:
+      'Return all data of a user (provide user id). (Requires token and admin role authorization)',
     content: {
       'application/json': {
         schema: getModelSchemaRef(User, {includeRelations: true}),
@@ -266,44 +256,115 @@ export class UserController {
   async findById(
     @param.path.string('id') id: string,
     @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>,
-  ): Promise<User> {
-    return this.myUserRepo.findById(id, filter);
+  ): Promise<CustomResponse<{}>> {
+    try {
+      const user = await this.myUserRepo.findById(id, filter);
+
+      if (!user) throw new Error('User with the given ID not found.');
+
+      return {
+        success: true,
+        fail: false,
+        data: user,
+        message: 'User data fetched successfully.',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        fail: true,
+        data: null,
+        message: error ? error.message : 'Fetching user data failed.',
+      };
+    }
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   @patch('/users/{id}')
   @response(204, {
-    description: 'User PATCH success',
+    description:
+      'Update user (provide user id). (Requires token and admin role authorization)',
   })
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
+          schema: getModelSchemaRef(User, {
+            title: 'Update user',
+            exclude: ['id', 'dateCreated'],
+            partial: true,
+          }),
         },
       },
     })
     user: User,
-  ): Promise<void> {
-    await this.userRepository.updateById(id, user);
+  ): Promise<CustomResponse<{}>> {
+    try {
+      // Validate email and name
+      if (user.firstName) validateName(user.firstName, 'firstName');
+      if (user.lastName) validateName(user.lastName, 'lastName');
+      if (user.email) {
+        validateEmail(user.email);
+        const emailExists = await this.myUserRepo.findOne({
+          where: {email: user.email},
+        });
+
+        if (emailExists && emailExists.id !== id)
+          throw new Error('Email already exists');
+      }
+
+      await this.myUserRepo.updateById(id, user);
+
+      return {
+        success: true,
+        fail: false,
+        data: null,
+        message: 'User updated successfully',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        fail: true,
+        data: null,
+        message: error ? error.message : 'Updating user failed.',
+      };
+    }
   }
 
-  @put('/users/{id}')
-  @response(204, {
-    description: 'User PUT success',
-  })
-  async replaceById(
-    @param.path.string('id') id: string,
-    @requestBody() user: User,
-  ): Promise<void> {
-    await this.userRepository.replaceById(id, user);
-  }
-
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   @del('/users/{id}')
   @response(204, {
-    description: 'User DELETE success',
+    description:
+      'Delete user with their credentials (provide user id). (Requires token and admin role authorization)',
   })
-  async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.userRepository.deleteById(id);
+  async deleteById(
+    @param.path.string('id') id: string,
+  ): Promise<CustomResponse<{}>> {
+    try {
+      const rootAdmin = await this.myUserRepo.find({
+        order: ['dateCreated DESC'],
+        limit: 1,
+      });
+      if (rootAdmin[0].id === id)
+        throw new Error('You cannot delete the root admin.');
+
+      await this.userRepository.deleteById(id);
+      await this.userRepository.userCredentials(id).delete();
+      return {
+        success: true,
+        fail: false,
+        data: null,
+        message: 'User data deleted successfully.',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        fail: true,
+        data: null,
+        message: error ? error.message : 'Deleting user failed.',
+      };
+    }
   }
 }

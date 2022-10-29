@@ -44,7 +44,7 @@ export class User extends Entity {
     type: 'date',
     default: new Date(),
   })
-  datePosted: string;
+  dateCreated: string;
 
   @hasOne(() => UserCredential)
   userCredentials: UserCredential;
