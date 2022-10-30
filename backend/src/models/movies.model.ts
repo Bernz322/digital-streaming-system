@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, hasMany, model, property} from '@loopback/repository';
+import {Actors, MovieCast} from '.';
 
 @model()
 export class Movies extends Entity {
@@ -17,7 +18,8 @@ export class Movies extends Entity {
 
   @property({
     type: 'string',
-    required: true,
+    default:
+      'https://www.pacifictrellisfruit.com/wp-content/uploads/2016/04/default-placeholder-300x300.png',
   })
   image: string;
 
@@ -32,6 +34,11 @@ export class Movies extends Entity {
     required: true,
   })
   yearReleased: number;
+
+  @hasMany(() => Actors, {
+    through: {model: () => MovieCast, keyFrom: 'movieId', keyTo: 'actorId'},
+  })
+  movieCasters: Actors[];
 
   constructor(data?: Partial<Movies>) {
     super(data);
