@@ -30,7 +30,7 @@ import _ from 'lodash';
 import {User} from '../models';
 import {UserRepository as MyUserRepo} from '../repositories';
 import {
-  CredentialsSchema,
+  UserLoginSchema,
   CustomResponse,
   validateEmail,
   validateName,
@@ -90,10 +90,9 @@ export class UserController {
 
       if (emailExists) {
         return {
-          success: false,
-          fail: true,
+          status: 'fail',
           data: null,
-          message: 'Email already exists',
+          message: 'Email already exists.',
         };
       }
 
@@ -114,25 +113,26 @@ export class UserController {
         await this.userRepository
           .userCredentials(newUser.id)
           .create({password});
-      } else {
-        const newUser = await this.userRepository.create(
-          _.omit(user, ['password']),
-        );
-        await this.userRepository
-          .userCredentials(newUser.id)
-          .create({password});
+        return {
+          status: 'success',
+          data: newUser,
+          message: 'Root admin created successfully.',
+        };
       }
 
+      const newUser = await this.userRepository.create(
+        _.omit(user, ['password']),
+      );
+      await this.userRepository.userCredentials(newUser.id).create({password});
+
       return {
-        success: true,
-        fail: false,
-        data: null,
-        message: 'Registered successfully',
+        status: 'success',
+        data: newUser,
+        message: 'Registered successfully.',
       };
     } catch (error) {
       return {
-        success: false,
-        fail: true,
+        status: 'fail',
         data: null,
         message: error ? error.message : 'Registration failed.',
       };
@@ -144,7 +144,7 @@ export class UserController {
     @requestBody({
       description: 'Login user and return token with user data',
       content: {
-        'application/json': {schema: CredentialsSchema},
+        'application/json': {schema: UserLoginSchema},
       },
     })
     credentials: Credentials,
@@ -159,8 +159,7 @@ export class UserController {
       const token = await this.jwtService.generateToken(userProfile);
 
       return {
-        success: true,
-        fail: false,
+        status: 'success',
         data: {
           token,
           user: userProfile,
@@ -169,8 +168,7 @@ export class UserController {
       };
     } catch (error) {
       return {
-        success: false,
-        fail: true,
+        status: 'fail',
         data: null,
         message: error ? error.message : 'Logging in failed.',
       };
@@ -182,24 +180,24 @@ export class UserController {
   async whoAmI(
     @inject(SecurityBindings.USER)
     currentLoggedUser: UserProfile,
-  ): Promise<any> {
+  ): Promise<CustomResponse<{}>> {
     try {
       const user = await this.userRepository.findById(
         currentLoggedUser[securityId],
       );
       if (!user) throw new Error('Unknown user.');
       return {
-        success: true,
-        fail: false,
+        status: 'success',
         data: user,
         message: 'Current logged in user data fetched successfully.',
       };
     } catch (error) {
       return {
-        success: false,
-        fail: true,
+        status: 'fail',
         data: null,
-        message: error ? error.message : 'Logging in failed.',
+        message: error
+          ? error.message
+          : 'Fetching your data failed. Please login properly.',
       };
     }
   }
@@ -226,15 +224,13 @@ export class UserController {
       const users = await this.myUserRepo.find(filter);
 
       return {
-        success: true,
-        fail: false,
+        status: 'success',
         data: users,
         message: 'All users fetched successfully.',
       };
     } catch (error) {
       return {
-        success: false,
-        fail: true,
+        status: 'fail',
         data: null,
         message: error ? error.message : 'Fetching users failed.',
       };
@@ -263,15 +259,13 @@ export class UserController {
       if (!user) throw new Error('User with the given ID not found.');
 
       return {
-        success: true,
-        fail: false,
+        status: 'success',
         data: user,
         message: 'User data fetched successfully.',
       };
     } catch (error) {
       return {
-        success: false,
-        fail: true,
+        status: 'fail',
         data: null,
         message: error ? error.message : 'Fetching user data failed.',
       };
@@ -279,11 +273,9 @@ export class UserController {
   }
 
   @authenticate('jwt')
-  @authorize({allowedRoles: ['admin']})
   @patch('/users/{id}')
   @response(204, {
-    description:
-      'Update user (provide user id). (Requires token and admin role authorization)',
+    description: 'Update user (provide user id). (Requires token)',
   })
   async updateById(
     @param.path.string('id') id: string,
@@ -313,19 +305,22 @@ export class UserController {
         if (emailExists && emailExists.id !== id)
           throw new Error('Email already exists');
       }
+      if (user.role) {
+        if (user.role !== 'admin' && user.role !== 'user')
+          throw new Error('Role should only be either admin or user');
+      }
 
       await this.myUserRepo.updateById(id, user);
+      const updatedUser = await this.myUserRepo.findById(id);
 
       return {
-        success: true,
-        fail: false,
-        data: null,
+        status: 'success',
+        data: updatedUser,
         message: 'User updated successfully',
       };
     } catch (error) {
       return {
-        success: false,
-        fail: true,
+        status: 'fail',
         data: null,
         message: error ? error.message : 'Updating user failed.',
       };
@@ -353,15 +348,13 @@ export class UserController {
       await this.userRepository.deleteById(id);
       await this.userRepository.userCredentials(id).delete();
       return {
-        success: true,
-        fail: false,
-        data: null,
-        message: 'User data deleted successfully.',
+        status: 'success',
+        data: id,
+        message: 'User deleted successfully.',
       };
     } catch (error) {
       return {
-        success: false,
-        fail: true,
+        status: 'fail',
         data: null,
         message: error ? error.message : 'Deleting user failed.',
       };

@@ -4,8 +4,7 @@ export type Credentials = {
 };
 
 export type CustomResponse<T> = {
-  success: boolean;
-  fail: boolean;
+  status: 'success' | 'fail';
   data?: T | T[] | null;
   message?: string;
 };
