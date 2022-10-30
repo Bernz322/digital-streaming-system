@@ -34,6 +34,7 @@ import {
   CustomResponse,
   validateEmail,
   validateName,
+  CustomResponseSchema,
 } from '../utils';
 import {authorize} from '@loopback/authorization';
 @model()
@@ -61,12 +62,13 @@ export class UserController {
 
   @post('/users/register')
   @response(200, {
-    description:
-      'Register a new user. The first user will be given the admin role and is activated immediately.',
-    content: {'application/json': {schema: getModelSchemaRef(User)}},
+    description: 'Returns newly registered user data.',
+    content: {'application/json': {schema: CustomResponseSchema}},
   })
   async create(
     @requestBody({
+      description:
+        'Fill in all fields. The first user will be given the admin role and is activated immediately.',
       content: {
         'application/json': {
           schema: getModelSchemaRef(NewUserRequest, {
@@ -89,11 +91,7 @@ export class UserController {
       });
 
       if (emailExists) {
-        return {
-          status: 'fail',
-          data: null,
-          message: 'Email already exists.',
-        };
+        throw new Error('Email already exists.');
       }
 
       // Create new user
@@ -128,21 +126,25 @@ export class UserController {
       return {
         status: 'success',
         data: newUser,
-        message: 'Registered successfully.',
+        message: 'User registered successfully.',
       };
     } catch (error) {
       return {
         status: 'fail',
         data: null,
-        message: error ? error.message : 'Registration failed.',
+        message: error ? error.message : 'User registration failed.',
       };
     }
   }
 
   @post('/users/login')
+  @response(200, {
+    description: 'Returns token and data of the logged in user.',
+    content: {'application/json': {schema: CustomResponseSchema}},
+  })
   async login(
     @requestBody({
-      description: 'Login user and return token with user data',
+      description: 'Enter email and password for logging in.',
       content: {
         'application/json': {schema: UserLoginSchema},
       },
@@ -164,19 +166,24 @@ export class UserController {
           token,
           user: userProfile,
         },
-        message: 'Logged in successfully',
+        message: 'User logged in successfully',
       };
     } catch (error) {
       return {
         status: 'fail',
         data: null,
-        message: error ? error.message : 'Logging in failed.',
+        message: error ? error.message : 'User logging in failed.',
       };
     }
   }
 
-  @authenticate('jwt')
   @get('/users/me')
+  @response(200, {
+    description:
+      'Returns current logged in user data based on the given token.',
+    content: {'application/json': {schema: CustomResponseSchema}},
+  })
+  @authenticate('jwt')
   async whoAmI(
     @inject(SecurityBindings.USER)
     currentLoggedUser: UserProfile,
@@ -197,26 +204,19 @@ export class UserController {
         data: null,
         message: error
           ? error.message
-          : 'Fetching your data failed. Please login properly.',
+          : 'Fetching current logged in user data failed. Please login properly.',
       };
     }
   }
 
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['admin']})
   @get('/users')
   @response(200, {
     description:
-      'Return array of all users in the database with their information. (Requires token and admin role authorization)',
-    content: {
-      'application/json': {
-        schema: {
-          type: 'array',
-          items: getModelSchemaRef(User, {includeRelations: true}),
-        },
-      },
-    },
+      'Returns an array of all users in the database with their information. (Requires token and admin role authorization)',
+    content: {'application/json': {schema: CustomResponseSchema}},
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   async find(
     @param.filter(User) filter?: Filter<User>,
   ): Promise<CustomResponse<{}>> {
@@ -226,29 +226,25 @@ export class UserController {
       return {
         status: 'success',
         data: users,
-        message: 'All users fetched successfully.',
+        message: 'All users data fetched successfully.',
       };
     } catch (error) {
       return {
         status: 'fail',
         data: null,
-        message: error ? error.message : 'Fetching users failed.',
+        message: error ? error.message : 'Fetching all users data failed.',
       };
     }
   }
 
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['admin']})
   @get('/users/{id}')
   @response(200, {
     description:
-      'Return all data of a user (provide user id). (Requires token and admin role authorization)',
-    content: {
-      'application/json': {
-        schema: getModelSchemaRef(User, {includeRelations: true}),
-      },
-    },
+      'Returns all data of a user (provide user id). (Requires token and admin role authorization)',
+    content: {'application/json': {schema: CustomResponseSchema}},
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>,
@@ -272,14 +268,17 @@ export class UserController {
     }
   }
 
-  @authenticate('jwt')
   @patch('/users/{id}')
   @response(204, {
-    description: 'Update user (provide user id). (Requires token)',
+    description: 'Returns updated data of the edited user.',
+    content: {'application/json': {schema: CustomResponseSchema}},
   })
+  @authenticate('jwt')
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
+      description:
+        "Update user's first and last name, email, role, and activated status (provide user id). (Requires token)",
       content: {
         'application/json': {
           schema: getModelSchemaRef(User, {
@@ -327,13 +326,13 @@ export class UserController {
     }
   }
 
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['admin']})
   @del('/users/{id}')
   @response(204, {
-    description:
-      'Delete user with their credentials (provide user id). (Requires token and admin role authorization)',
+    description: 'Returns deleted user id.',
+    content: {'application/json': {schema: CustomResponseSchema}},
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   async deleteById(
     @param.path.string('id') id: string,
   ): Promise<CustomResponse<{}>> {

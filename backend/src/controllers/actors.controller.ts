@@ -1,6 +1,6 @@
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
-import {Filter, FilterExcludingWhere, repository} from '@loopback/repository';
+import {Filter, repository} from '@loopback/repository';
 import {
   post,
   param,
@@ -12,27 +12,28 @@ import {
   response,
 } from '@loopback/rest';
 import {Actors} from '../models';
-import {ActorsRepository} from '../repositories';
-import {CustomResponse, validateName} from '../utils';
+import {ActorsRepository, MovieCastRepository} from '../repositories';
+import {CustomResponse, CustomResponseSchema, validateName} from '../utils';
 
 export class ActorsController {
   constructor(
+    @repository(MovieCastRepository)
+    public movieCastRepository: MovieCastRepository,
     @repository(ActorsRepository)
     public actorsRepository: ActorsRepository,
   ) {}
 
-  // TODO: Add search actor by name endpoint
-
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['admin']})
   @post('/actors')
   @response(200, {
-    description:
-      'Add new actor and return actor created data. (Requires token and admin role authorization)',
-    content: {'application/json': {schema: getModelSchemaRef(Actors)}},
+    description: 'Returns newly added actor data',
+    content: {'application/json': {schema: CustomResponseSchema}},
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   async create(
     @requestBody({
+      description:
+        'Add new actor. Image and link fields is not required. Enter valid name fields. Gender must only be male or female and age should be greater than 0. (Requires token and admin role authorization)',
       content: {
         'application/json': {
           schema: getModelSchemaRef(Actors, {
@@ -69,15 +70,8 @@ export class ActorsController {
 
   @get('/actors')
   @response(200, {
-    description: 'Return array of all actors in the database.',
-    content: {
-      'application/json': {
-        schema: {
-          type: 'array',
-          items: getModelSchemaRef(Actors, {includeRelations: true}),
-        },
-      },
-    },
+    description: 'Returns array of all actors in the database.',
+    content: {'application/json': {schema: CustomResponseSchema}},
   })
   async find(
     @param.filter(Actors) filter?: Filter<Actors>,
@@ -100,20 +94,17 @@ export class ActorsController {
 
   @get('/actors/{id}')
   @response(200, {
-    description: 'Return all data of an actor (provide actor id).',
-    content: {
-      'application/json': {
-        schema: getModelSchemaRef(Actors, {includeRelations: true}),
-      },
-    },
+    description:
+      'Return all data of an actor together with the movies he/she casted (provide actor id).',
+    content: {'application/json': {schema: CustomResponseSchema}},
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(Actors, {exclude: 'where'})
-    filter?: FilterExcludingWhere<Actors>,
   ): Promise<CustomResponse<{}>> {
     try {
-      const actorData = await this.actorsRepository.findById(id, filter);
+      const actorData = await this.actorsRepository.findById(id, {
+        include: ['moviesCasted'],
+      });
       return {
         status: 'success',
         data: actorData,
@@ -121,22 +112,59 @@ export class ActorsController {
       };
     } catch (error) {
       return {
-        status: 'success',
+        status: 'fail',
         data: null,
         message: 'Fetching actor data failed.',
       };
     }
   }
 
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['admin']})
+  @get('/search/actors/{searchKey}')
+  @response(200, {
+    description:
+      'Returns an array of all actors based on the find filter (provide actor first name or last name as the search key).',
+    content: {'application/json': {schema: CustomResponseSchema}},
+  })
+  async searchByName(
+    @param.path.string('searchKey') searchKey: string,
+  ): Promise<CustomResponse<{}>> {
+    try {
+      const searchParam = searchKey || '';
+      const searchParams = [
+        {firstName: {like: searchParam, options: 'i'}},
+        {lastName: {like: searchParam, options: 'i'}},
+      ];
+      const filterObject = {
+        where: {or: searchParams},
+        order: ['firstName ASC'],
+      };
+      const actorsList = await this.actorsRepository.find(filterObject);
+      return {
+        status: 'success',
+        data: actorsList,
+        message: 'Successfully fetched actor data.',
+      };
+    } catch (error) {
+      return {
+        status: 'fail',
+        data: null,
+        message: 'Fetching actor data failed.',
+      };
+    }
+  }
+
   @patch('/actors/{id}')
   @response(204, {
-    description: 'Actors PATCH success',
+    description: 'Returns updated data of the edited actor.',
+    content: {'application/json': {schema: CustomResponseSchema}},
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
+      description:
+        'Update actor (provide actor id). (Requires token and admin role authorization)',
       content: {
         'application/json': {
           schema: getModelSchemaRef(Actors, {
@@ -175,23 +203,34 @@ export class ActorsController {
     }
   }
 
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['admin']})
   @del('/actors/{id}')
   @response(204, {
-    description: 'Actors DELETE success',
+    description: 'Returns deleted actor id.',
+    content: {'application/json': {schema: CustomResponseSchema}},
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   async deleteById(
     @param.path.string('id') id: string,
   ): Promise<CustomResponse<{}>> {
-    // TODO: Check if actor has a movie where he/she casted ad do not delete actor if it has.
     try {
-      await this.actorsRepository.deleteById(id);
-      return {
-        status: 'success',
-        data: id,
-        message: 'Actor deleted successfully failed.',
-      };
+      const {count} = await this.movieCastRepository.count({
+        actorId: id,
+      });
+      if (count > 0) {
+        return {
+          status: 'fail',
+          data: null,
+          message: `Actor cannot be deleted as he/she is casting ${count} movie/s.`,
+        };
+      } else {
+        await this.actorsRepository.deleteById(id);
+        return {
+          status: 'success',
+          data: id,
+          message: 'Actor deleted successfully.',
+        };
+      }
     } catch (error) {
       return {
         status: 'fail',

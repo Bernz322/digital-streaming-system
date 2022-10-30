@@ -34,5 +34,9 @@ export class ActorsRepository extends DefaultCrudRepository<
       moviesRepositoryGetter,
       movieCastRepositoryGetter,
     );
+    this.registerInclusionResolver(
+      'moviesCasted',
+      this.moviesCasted.inclusionResolver,
+    );
   }
 }
