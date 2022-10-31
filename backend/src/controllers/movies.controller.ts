@@ -13,7 +13,11 @@ import {
 } from '@loopback/rest';
 import _ from 'lodash';
 import {Movies} from '../models';
-import {MovieCastRepository, MoviesRepository} from '../repositories';
+import {
+  MovieCastRepository,
+  MoviesRepository,
+  ReviewsRepository,
+} from '../repositories';
 import {
   CustomResponse,
   CustomResponseSchema,
@@ -25,6 +29,8 @@ export class MoviesController {
   constructor(
     @repository(MovieCastRepository)
     public movieCastRepository: MovieCastRepository,
+    @repository(ReviewsRepository)
+    public reviewsRepository: ReviewsRepository,
     @repository(MoviesRepository)
     public moviesRepository: MoviesRepository,
   ) {}
@@ -107,11 +113,38 @@ export class MoviesController {
   ): Promise<CustomResponse<{}>> {
     try {
       const movies = await this.moviesRepository.findById(id, {
-        include: ['movieCasters'],
+        include: [
+          {
+            relation: 'movieCasters',
+          },
+          {
+            relation: 'movieReviews',
+            scope: {
+              include: [
+                {
+                  relation: 'userReviewer',
+                  scope: {
+                    fields: {
+                      role: false,
+                      isActivated: false,
+                      dateCreated: false,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ],
       });
+      let sum = 0;
+      movies?.movieReviews?.forEach(review => {
+        sum += review?.rating;
+      });
+      const reviewCount = movies?.movieReviews?.length || 1;
+
       return {
         status: 'success',
-        data: movies,
+        data: {...movies, rating: sum / reviewCount},
         message: 'Successfully fetched all movies.',
       };
     } catch (error) {
@@ -205,6 +238,7 @@ export class MoviesController {
     try {
       await this.moviesRepository.deleteById(id);
       await this.movieCastRepository.deleteAll({movieId: id});
+      await this.reviewsRepository.deleteAll({movieId: id});
       return {
         status: 'success',
         data: id,
