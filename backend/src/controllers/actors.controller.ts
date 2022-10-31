@@ -43,7 +43,7 @@ export class ActorsController {
         },
       },
     })
-    actors: Actors,
+    actors: Omit<Actors, 'id'>,
   ): Promise<CustomResponse<{}>> {
     try {
       validateName(actors.firstName, 'firstName');
