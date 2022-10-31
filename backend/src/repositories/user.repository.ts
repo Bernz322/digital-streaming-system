@@ -3,10 +3,12 @@ import {
   DefaultCrudRepository,
   repository,
   HasOneRepositoryFactory,
+  HasManyRepositoryFactory,
 } from '@loopback/repository';
 import {MongodbDataSource} from '../datasources';
-import {User, UserRelations, UserCredential} from '../models';
+import {User, UserRelations, UserCredential, Reviews} from '../models';
 import {UserCredentialRepository} from './user-credential.repository';
+import {ReviewsRepository} from './reviews.repository';
 
 export class UserRepository extends DefaultCrudRepository<
   User,
@@ -18,12 +20,27 @@ export class UserRepository extends DefaultCrudRepository<
     typeof User.prototype.id
   >;
 
+  public readonly userReviews: HasManyRepositoryFactory<
+    Reviews,
+    typeof User.prototype.id
+  >;
+
   constructor(
     @inject('datasources.mongodb') dataSource: MongodbDataSource,
     @repository.getter('UserCredentialRepository')
     protected userCredentialRepositoryGetter: Getter<UserCredentialRepository>,
+    @repository.getter('ReviewsRepository')
+    protected reviewsRepositoryGetter: Getter<ReviewsRepository>,
   ) {
     super(User, dataSource);
+    this.userReviews = this.createHasManyRepositoryFactoryFor(
+      'userReviews',
+      reviewsRepositoryGetter,
+    );
+    this.registerInclusionResolver(
+      'userReviews',
+      this.userReviews.inclusionResolver,
+    );
     this.userCredentials = this.createHasOneRepositoryFactoryFor(
       'userCredentials',
       userCredentialRepositoryGetter,
