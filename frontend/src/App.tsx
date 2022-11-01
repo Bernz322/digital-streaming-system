@@ -4,7 +4,7 @@ import { NotificationsProvider } from "@mantine/notifications";
 import { MantineProvider } from "@mantine/core";
 import { Navbar } from "./components";
 import "./styles/App.scss";
-import { Auth, Home, Page404 } from "./pages";
+import { Actors, Auth, Home, Movies, Page404 } from "./pages";
 
 const App = () => {
   /**
@@ -30,6 +30,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/movies" element={<Movies />} />
+          <Route path="/actors" element={<Actors />} />
           <Route path="*" element={<Page404 />} />
         </Routes>
       </NotificationsProvider>

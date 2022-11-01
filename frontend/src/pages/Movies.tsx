@@ -1,9 +1,7 @@
-import { Link } from "react-router-dom";
-import { ActorCard, MovieCard } from "..";
-import { IActor, IMovie } from "../../utils/types";
+import { MovieCard } from "../components";
+import { IMovie } from "../utils/types";
 
-const MoviesSection = () => {
-  // Fetch all movies available here
+const Movies = () => {
   const movies: IMovie[] = [
     {
       id: "635e5996846c644b3849f71c",
@@ -54,65 +52,19 @@ const MoviesSection = () => {
       yearReleased: 2022,
     },
   ];
-
-  const actors: IActor[] = [
-    {
-      id: "6360ea98e7653b1108a97703",
-      firstName: "Joel",
-      lastName: "Edgerton",
-      gender: "male",
-      age: 48,
-      image:
-        "https://m.media-amazon.com/images/M/MV5BMTA0ODI1ODk4NzdeQTJeQWpwZ15BbWU3MDkwNjkzOTY@._V1_.jpg",
-      link: "https://www.imdb.com/name/nm0249291/?ref_=tt_ov_st",
-    },
-    {
-      id: "6360eac6e7653b1108a97704",
-      firstName: "Sean",
-      lastName: "Harris",
-      gender: "male",
-      age: 48,
-      image:
-        "https://m.media-amazon.com/images/M/MV5BMTM3NTI1NzI4MF5BMl5BanBnXkFtZTcwODU1MTg4Nw@@._V1_.jpg",
-      link: "https://www.imdb.com/name/nm0365317/?ref_=tt_ov_st",
-      moviesCasted: 3,
-    },
-    {
-      id: "6360eb32e7653b1108a97705",
-      firstName: "Jada",
-      lastName: "Alberts",
-      gender: "female",
-      age: 46,
-      image:
-        "https://m.media-amazon.com/images/M/MV5BYTY0ZTU1YTItMTgyZS00YzVhLTg1ZGQtMzlkYTBiYTExMDZjXkEyXkFqcGdeQXVyMjgzMDAyMjY@._V1_UY1200_CR84,0,630,1200_AL_.jpg",
-      link: "https://www.imdb.com/name/nm3415084/?ref_=tt_ov_st",
-      moviesCasted: 1,
-    },
-  ];
   return (
-    <div className="sectionContainer">
-      <div className="innerContainer">
-        <div className="sectionTop">
-          <h1>
-            <Link to="movies">Movies Library</Link>
-          </h1>
-          <h2>
-            <Link className="seeAll" to="movies">
-              See all
-            </Link>
-          </h2>
-        </div>
-        <div className="container">
-          {movies.map((movie) => {
-            return <MovieCard movie={movie} key={movie.id} />;
-          })}
-          {actors.map((actor) => {
-            return <ActorCard actor={actor} key={actor.id} />;
-          })}
+    <main className="pageContainer">
+      <div className="sectionContainer">
+        <div className="innerContainer">
+          <div className="container">
+            {movies.map((movie) => {
+              return <MovieCard movie={movie} key={movie.id} />;
+            })}
+          </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
-export default MoviesSection;
+export default Movies;

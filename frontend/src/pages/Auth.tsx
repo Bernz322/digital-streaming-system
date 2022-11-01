@@ -156,7 +156,7 @@ const Auth = () => {
                 ? "Already have an account? Login"
                 : "Don't have an account? Register"}
             </Anchor>
-            <Button type="submit" disabled={false} color="dark">
+            <Button type="submit" disabled={false}>
               {false ? <Loader color="white" size="sm" /> : upperFirst(type)}
             </Button>
           </Group>
