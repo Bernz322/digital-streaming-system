@@ -12,7 +12,6 @@ export interface ILoginResponse {
   };
   message: string;
 }
-
 export interface IMovie {
   id: string;
   title: string;
@@ -20,4 +19,14 @@ export interface IMovie {
   image: string;
   cost: number;
   yearReleased: number;
+}
+export interface IActor {
+  id: string;
+  firstName: string;
+  lastName: string;
+  gender: "male" | "female";
+  age: number;
+  image: string;
+  link: string;
+  moviesCasted?: number;
 }

@@ -8,9 +8,7 @@ export class MovieCastRepository extends DefaultCrudRepository<
   typeof MovieCast.prototype.id,
   MovieCastRelations
 > {
-  constructor(
-    @inject('datasources.mongodb') dataSource: MongodbDataSource,
-  ) {
+  constructor(@inject('datasources.mongodb') dataSource: MongodbDataSource) {
     super(MovieCast, dataSource);
   }
 }

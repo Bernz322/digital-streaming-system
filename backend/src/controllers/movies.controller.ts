@@ -88,7 +88,22 @@ export class MoviesController {
     @param.filter(Movies) filter?: Filter<Movies>,
   ): Promise<CustomResponse<{}>> {
     try {
-      const movies = await this.moviesRepository.find(filter);
+      const movies = await this.moviesRepository.find({
+        ...filter,
+        include: [
+          {
+            relation: 'movieReviews',
+            scope: {
+              fields: {
+                id: false,
+                description: false,
+                datePosted: false,
+              },
+            },
+          },
+        ],
+      });
+
       return {
         status: 'success',
         data: movies,
@@ -171,6 +186,7 @@ export class MoviesController {
       const searchParam = searchKey || '';
       const moviesList = await this.moviesRepository.find({
         where: {title: {like: searchParam}},
+        include: [{relation: 'movieReviews'}],
       });
       return {
         status: 'success',
