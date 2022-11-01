@@ -1,0 +1,63 @@
+.movieCardContainer {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--dark-grey);
+    border-radius: var(--border-radius-subtle);
+    transition: background-color 0.2s ease 0s;
+    cursor: pointer;
+    flex: 1;
+    padding: 10px 15px;
+
+    .movieCardLink {
+        text-decoration: none;
+    }
+
+    &:hover {
+        background-color: var(--grey);
+        img {
+            background-color: var(--grey);
+            box-shadow: 0px 5px 50px var(--near-black);
+        }
+    }
+
+    img {
+        height: 250px;
+        width: 250px;
+        object-fit: cover;
+        margin: 15px auto 20px;
+    }
+
+    h4.movieCardTitle {
+        margin-bottom: 15px;
+        transition: all 0.5s ease-in;
+        text-align: center;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    div.movieCardFooter {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: var(--fz-sm);
+        color: #b3b3b3;
+        margin: 0;
+    }
+
+    span {
+        display: flex;
+        align-items: center;
+        text-transform: capitalize;
+        margin-bottom: 10px;
+
+        &:not(:last-of-type)::after {
+            content: "•";
+            display: block;
+            margin: 0 var(--spacing-xs);
+            color: var(--light-grey);
+            font-size: 8px;
+        }
+    }
+}

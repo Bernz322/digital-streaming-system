@@ -19,6 +19,12 @@ export class Movies extends Entity {
 
   @property({
     type: 'string',
+    required: true,
+  })
+  description: string;
+
+  @property({
+    type: 'string',
     default:
       'https://www.pacifictrellisfruit.com/wp-content/uploads/2016/04/default-placeholder-300x300.png',
   })
