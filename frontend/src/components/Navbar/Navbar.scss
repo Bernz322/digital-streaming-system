@@ -42,7 +42,7 @@
         .left {
             display: flex;
             align-items: center;
-            justify-content: start;
+            justify-content: flex-start;
             color: var(--mantine-color-blue-4);
             text-decoration: none;
             img.logo {
