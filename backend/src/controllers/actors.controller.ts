@@ -73,14 +73,17 @@ export class ActorsController {
     description: 'Returns array of all actors in the database.',
     content: {'application/json': {schema: CustomResponseSchema}},
   })
-  async find(
-    @param.filter(Actors) filter?: Filter<Actors>,
-  ): Promise<CustomResponse<{}>> {
+  async find(): Promise<CustomResponse<{}>> {
     try {
-      const actors = await this.actorsRepository.find(filter);
+      const actors = await this.actorsRepository.find({
+        include: ['moviesCasted'],
+      });
+      const toReturn = actors.map(actor => {
+        return {...actor, moviesCasted: actor?.moviesCasted?.length};
+      });
       return {
         status: 'success',
-        data: actors,
+        data: toReturn,
         message: 'Successfully fetched all actors in the database.',
       };
     } catch (error) {
@@ -103,7 +106,25 @@ export class ActorsController {
   ): Promise<CustomResponse<{}>> {
     try {
       const actorData = await this.actorsRepository.findById(id, {
-        include: ['moviesCasted'],
+        include: [
+          {
+            relation: 'moviesCasted',
+            scope: {
+              include: [
+                {
+                  relation: 'movieReviews',
+                  scope: {
+                    fields: {
+                      id: false,
+                      description: false,
+                      datePosted: false,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ],
       });
       return {
         status: 'success',
@@ -137,11 +158,15 @@ export class ActorsController {
       const filterObject = {
         where: {or: searchParams},
         order: ['firstName ASC'],
+        include: ['moviesCasted'],
       };
       const actorsList = await this.actorsRepository.find(filterObject);
+      const toReturn = actorsList.map(actor => {
+        return {...actor, moviesCasted: actor?.moviesCasted?.length};
+      });
       return {
         status: 'success',
-        data: actorsList,
+        data: toReturn,
         message: 'Successfully fetched actor data.',
       };
     } catch (error) {

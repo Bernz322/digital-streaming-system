@@ -1,0 +1,46 @@
+.actorCardContainer {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--dark-grey);
+    border-radius: var(--border-radius-subtle);
+    transition: background-color 0.2s ease 0s;
+    cursor: pointer;
+    flex: 1;
+    padding: 10px 15px;
+
+    .actorCardLink {
+        text-decoration: none;
+    }
+
+    &:hover {
+        background-color: var(--grey);
+        img {
+            background-color: var(--grey);
+            box-shadow: 0px 5px 50px var(--near-black);
+        }
+    }
+
+    img {
+        height: 250px;
+        width: 250px;
+        object-fit: cover;
+        margin: 15px auto 20px;
+        border-radius: 50%;
+    }
+
+    .actorCardName {
+        text-align: center;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    p {
+        font-size: var(--fz-sm);
+        color: #b3b3b3;
+        text-transform: capitalize;
+        margin-bottom: 10px;
+        text-align: center;
+        min-width: 100%;
+    }
+}
