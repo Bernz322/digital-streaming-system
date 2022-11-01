@@ -1,0 +1,111 @@
+@font-face {
+    font-family: "Circular Std";
+    src: local("MyFont"), url("../../public/fonts/CircularStd-Book.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Circular Std";
+    src: local("MyFont"), url("../../public/fonts/CircularStd-Bold.woff") format("woff");
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Circular Std";
+    src: local("MyFont"), url("../../public/fonts/CircularStd-Black.woff") format("woff");
+    font-weight: 900;
+    font-style: normal;
+}
+
+:root {
+    --fz-xxs: 12px;
+    --fz-xs: 13px;
+    --fz-sm: 14px;
+    --fz-md: 16px;
+    --fz-lg: 18px;
+    --fz-xl: 20px;
+    --fz-xxl: 24px;
+
+    --font: "Circular Std", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+    --spacing-xxs: 4px;
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-xxl: 64px;
+
+    --border-radius-subtle: 4px;
+    --border-radius-pill: 30px;
+    --border-radius-circle: 50%;
+
+    --site-max-width: 1200px;
+
+    --container-xs: 540;
+    --container-sm: 720;
+    --container-md: 960;
+    --container-lg: 1140;
+    --container-xl: 1500;
+
+    --black: #121212;
+    --near-black: #181818;
+    --dark-grey: #282828;
+    --grey: #535353;
+    --light-grey: #b3b3b3;
+    --white: #ffffff;
+}
+
+html {
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-size: var(--fz-md);
+    background-color: var(--black);
+    color: var(--white);
+    font-family: var(--font);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    letter-spacing: -0.04em;
+}
+
+main.pageContainer {
+    position: relative;
+    top: 95px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: fit-content;
+}
+
+a {
+    text-decoration: none;
+    color: var(--white);
+
+    &:hover,
+    &:focus {
+        text-decoration: underline;
+    }
+}
