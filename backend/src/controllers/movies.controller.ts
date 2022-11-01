@@ -138,7 +138,9 @@ export class MoviesController {
       });
       let sum = 0;
       movies?.movieReviews?.forEach(review => {
-        sum += review?.rating;
+        if (review.isApproved) {
+          sum += review?.rating;
+        }
       });
       const reviewCount = movies?.movieReviews?.length || 1;
 

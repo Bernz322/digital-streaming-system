@@ -44,6 +44,9 @@ export const PostMovieSchema: SchemaObject = {
     title: {
       type: 'string',
     },
+    description: {
+      type: 'string',
+    },
     cost: {
       type: 'number',
     },
