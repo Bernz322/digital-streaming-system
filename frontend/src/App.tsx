@@ -4,7 +4,7 @@ import { NotificationsProvider } from "@mantine/notifications";
 import { MantineProvider } from "@mantine/core";
 import { Navbar } from "./components";
 import "./styles/App.scss";
-import { Home } from "./pages";
+import { Auth, Home, Page404 } from "./pages";
 
 const App = () => {
   /**
@@ -29,6 +29,8 @@ const App = () => {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="*" element={<Page404 />} />
         </Routes>
       </NotificationsProvider>
     </MantineProvider>
