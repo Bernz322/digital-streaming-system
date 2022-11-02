@@ -1,3 +1,5 @@
+import { Button, Input } from "@mantine/core";
+import { IconSearch } from "@tabler/icons";
 import { ActorCard } from "../components";
 import { IActor } from "../utils/types";
 
@@ -39,7 +41,17 @@ const Actors = () => {
   return (
     <main className="pageContainer">
       <div className="sectionContainer">
+        <div className="search">
+          <Input
+            icon={<IconSearch />}
+            placeholder="Find actor"
+            className="searchInput"
+          />
+          <Button>Search Actor</Button>
+        </div>
         <div className="innerContainer">
+          <h1 className="actorsPageH1">Actors</h1>
+          <h1 className="noContentH1">There are no actors available.</h1>
           <div className="container">
             {actors.map((actor) => {
               return <ActorCard actor={actor} key={actor.id} />;

@@ -49,7 +49,6 @@
     span {
         display: flex;
         align-items: center;
-        text-transform: capitalize;
         margin-bottom: 10px;
 
         &:not(:last-of-type)::after {

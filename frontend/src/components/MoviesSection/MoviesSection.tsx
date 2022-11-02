@@ -102,6 +102,7 @@ const MoviesSection = () => {
             </Link>
           </h2>
         </div>
+        <h1 className="noContentH1">There are no movies available.</h1>
         <div className="container">
           {movies.map((movie) => {
             return <MovieCard movie={movie} key={movie.id} />;

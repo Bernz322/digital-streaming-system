@@ -1,9 +1,8 @@
-import { Button, Input } from "@mantine/core";
-import { IconSearch } from "@tabler/icons";
+import { Carousel } from "@mantine/carousel";
 import { MovieCard } from "../components";
 import { IMovie } from "../utils/types";
 
-const Movies = () => {
+const IndividualActor = () => {
   const movies: IMovie[] = [
     {
       id: "635e5996846c644b3849f71c",
@@ -57,21 +56,57 @@ const Movies = () => {
   return (
     <main className="pageContainer">
       <div className="sectionContainer">
-        <div className="search">
-          <Input
-            icon={<IconSearch />}
-            placeholder="Find movie"
-            className="searchInput"
-          />
-          <Button>Search Movie</Button>
-        </div>
         <div className="innerContainer">
-          <h1 className="moviesPageH1">Movies</h1>
-          <h1 className="noContentH1">There are no movies available.</h1>
-          <div className="container">
-            {movies.map((movie) => {
-              return <MovieCard movie={movie} key={movie.id} />;
-            })}
+          <div className="actorDetailsContainer">
+            <img
+              className="actorImg"
+              src="https://m.media-amazon.com/images/M/MV5BMTA0ODI1ODk4NzdeQTJeQWpwZ15BbWU3MDkwNjkzOTY@._V1_.jpg"
+              alt="actorImg"
+            />
+            <div className="actorContainer">
+              <div className="actorProfile">Actor Profile</div>
+              <h1 className="actorName">
+                <a
+                  href="https://www.imdb.com/name/nm0249291/?ref_=tt_ov_st"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Joel Edgerton
+                </a>
+              </h1>
+              <div className="actorDetails">
+                <span>
+                  <p className="spanAge">48</p>
+                  <p className="spanLabel">Age</p>
+                </span>
+                <span>
+                  <p className="spanGender">Male</p>
+                  <p className="spanLabel">Gender</p>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="movieActorsContainer">
+            <h2 className="actorsPageH2">Movies Casted</h2>
+            <h1 className="noContentH1">
+              This actor has no movies casted yet.
+            </h1>
+            <div className="container">
+              <Carousel
+                mx="auto"
+                sx={{ minWidth: 1200, maxWidth: 1200 }}
+                loop
+                slideGap="md"
+              >
+                {movies.map((movie) => {
+                  return (
+                    <Carousel.Slide size="25%" gap="xl" key={movie.id}>
+                      <MovieCard movie={movie} />
+                    </Carousel.Slide>
+                  );
+                })}
+              </Carousel>
+            </div>
           </div>
         </div>
       </div>
@@ -79,4 +114,4 @@ const Movies = () => {
   );
 };
 
-export default Movies;
+export default IndividualActor;
