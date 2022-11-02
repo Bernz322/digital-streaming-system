@@ -2,10 +2,12 @@ import { Carousel } from "@mantine/carousel";
 import { Button, Rating, Textarea } from "@mantine/core";
 import { useCallback, useState } from "react";
 import { ActorCard, Rating as MyRating, ReviewCard } from "../components";
+import { useTypedSelector } from "../hooks/rtk-hooks";
 import { budgetFormatter } from "../utils/helpers";
 import { IActor, IMovie } from "../utils/types";
 
 const IndividualMovie = () => {
+  const { loggedIn } = useTypedSelector((state) => state.auth);
   const [reviewComment, setReviewComment] = useState<string>("");
   const [reviewRating, setReviewRating] = useState<number>(3);
 
@@ -147,7 +149,7 @@ const IndividualMovie = () => {
                 mb="md"
                 description="Already seen this movie? How was it? Share what you think of it."
                 placeholder='For starters you could say, "This is great!"'
-                disabled={false}
+                disabled={!loggedIn}
                 label="Give your review to this movie."
                 mt="md"
                 radius="md"
@@ -160,12 +162,15 @@ const IndividualMovie = () => {
                 onChange={(value) => setReviewRating(value)}
               />
               <Button
-                className="movieReviewFormWidth"
+                className={`movieReviewFormWidth ${
+                  !loggedIn && "disabledButton"
+                }`}
                 mt="md"
-                disabled={false}
+                disabled={!loggedIn}
+                color="white"
                 onClick={handleMovieReviewSubmit}
               >
-                Submit Review
+                {!loggedIn ? "Please login to submit review" : "Submit Review"}
               </Button>
             </div>
             <div className="container">
