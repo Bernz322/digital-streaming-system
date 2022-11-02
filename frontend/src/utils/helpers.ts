@@ -109,3 +109,7 @@ export const isLoggedIn = (): boolean => {
     localStorage.getItem("loggedUser") && getCookie("accessToken")
   );
 };
+
+export const budgetFormatter = (budgetCost: number): string => {
+  return budgetCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+};
