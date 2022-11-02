@@ -1,0 +1,26 @@
+.movieRatingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    p.ratingTitle {
+        margin: 0;
+        color: var(--light-grey);
+    }
+    .movieRating {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--mantine-color-blue-5);
+        padding: 2px 8px;
+        border-radius: 10px;
+        max-width: 100px;
+
+        p.ratingValue {
+            margin: 0 5px 0 0;
+        }
+
+        .fa-star {
+            color: yellow;
+        }
+    }
+}
