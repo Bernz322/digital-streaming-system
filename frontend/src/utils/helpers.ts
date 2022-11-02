@@ -16,11 +16,12 @@ export interface IDeleteCookie {
  * @returns {boolean}
  */
 export const isValidEmail = (email: string): boolean => {
+  if (email === "" || !email) throw new Error("Invalid email.");
   let atPosition: number = email.indexOf("@");
   let dotPosition: number = email.lastIndexOf(".");
 
   if (atPosition < 1 || dotPosition - atPosition < 2) {
-    return false;
+    throw new Error("Invalid email.");
   }
   return true;
 };
@@ -31,10 +32,11 @@ export const isValidEmail = (email: string): boolean => {
  * @param {string} name
  * @returns {boolean}
  */
-export const isValidName = (name: string): boolean => {
+export const isValidName = (name: string, field: string): boolean => {
+  if (name === "" || !name) throw new Error(`Invalid ${field} name.`);
   let nameRegex: RegExp = /^(?!-)[a-zA-Z-]*[a-zA-Z]$/;
   if (name.match(nameRegex) == null) {
-    return false;
+    throw new Error(`Invalid ${field} name.`);
   }
   return true;
 };
@@ -111,5 +113,5 @@ export const isLoggedIn = (): boolean => {
 };
 
 export const budgetFormatter = (budgetCost: number): string => {
-  return budgetCost.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+  return budgetCost.toLocaleString();
 };
