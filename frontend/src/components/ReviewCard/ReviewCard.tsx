@@ -1,18 +1,10 @@
-import { Avatar } from "@mantine/core";
 import { Rating } from "..";
 import "./ReviewCard.scss";
 
 const ReviewCard = () => {
   return (
     <div className="reviewCardContainer">
-      <div className="reviewTop">
-        <Avatar
-          src="https://m.media-amazon.com/images/M/MV5BMTA0ODI1ODk4NzdeQTJeQWpwZ15BbWU3MDkwNjkzOTY@._V1_.jpg"
-          alt="user-image"
-          radius="xl"
-        />
-        <h4>User One</h4>
-      </div>
+      <h4>User One</h4>
       <div className="reviewBottom">
         <div className="ratingContainer">
           <Rating rating="5" />

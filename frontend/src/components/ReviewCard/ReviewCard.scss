@@ -3,16 +3,16 @@
     border-radius: var(--border-radius-subtle);
     transition: background-color 0.2s ease 0s;
     padding: 5px 15px;
+    h4 {
+        margin: 15px 0;
+        font-size: var(--fz-xl);
+        text-align: center;
+    }
 
     .reviewTop {
         display: flex;
         align-items: center;
         justify-content: flex-start;
-
-        h4 {
-            margin: 15px 25px;
-            font-size: var(--fz-xl);
-        }
     }
 
     .reviewBottom {
