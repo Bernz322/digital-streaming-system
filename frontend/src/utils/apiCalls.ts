@@ -48,7 +48,6 @@ export const login = async (
     setCookie({
       cookieName: "accessToken",
       value: res.data.token,
-      daysToExpire: 1,
     });
     localStorage.setItem("loggedUser", JSON.stringify(res.data.user));
   }
@@ -81,5 +80,16 @@ export const register = async (
     data: registerUser,
   });
 
+  return res;
+};
+
+/**
+ * Fetch 10 movies in the database
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiFetchMovies = async () => {
+  const res = await apiRequest<APICustomResponse<{}>>(
+    `/movies?filter[limit]=10`
+  );
   return res;
 };
