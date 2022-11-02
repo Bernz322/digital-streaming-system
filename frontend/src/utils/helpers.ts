@@ -1,7 +1,8 @@
+import { IMovieReview } from "./types";
+
 export interface ISetCookie {
   cookieName: string;
   value: string;
-  daysToExpire: number;
 }
 
 export interface IDeleteCookie {
@@ -61,23 +62,11 @@ export const getCookie = (name: string): boolean | string => {
  * Sets cookie in the browser after login
  * @param {string} cookieName
  * @param {string} value
- * @param {number} daysToExpire
  * @returns {void}
  */
-export const setCookie = ({
-  cookieName,
-  value,
-  daysToExpire,
-}: ISetCookie): void => {
-  const toStore: string = value;
-  let currentDate: Date = new Date();
-  currentDate.setDate(currentDate.getDate() + daysToExpire);
-  document.cookie =
-    cookieName +
-    "=" +
-    toStore +
-    (daysToExpire == null ? "" : ";expires = " + currentDate.toUTCString()) +
-    "; path=/";
+export const setCookie = ({ cookieName, value }: ISetCookie): void => {
+  const cookieDuration: number = 21600;
+  document.cookie = `${cookieName}=${value};max-age=${cookieDuration}; path=/`;
 };
 
 /**
@@ -112,6 +101,26 @@ export const isLoggedIn = (): boolean => {
   );
 };
 
+/**
+ * Formater for money value. Ex. 500000 -> 500,000
+ * @returns {string}
+ */
 export const budgetFormatter = (budgetCost: number): string => {
   return budgetCost.toLocaleString();
+};
+
+/**
+ * Return movie rating value by getting all review ratings of that movie
+ * @param {movieReviews} movieReviews[]
+ * @returns {number}
+ */
+export const movieRating = (movieReviews: IMovieReview[]): number => {
+  let sum = 0;
+  movieReviews?.forEach((review) => {
+    if (review.isApproved) {
+      sum += review?.rating;
+    }
+  });
+  const reviewCount = movieReviews?.length || 1;
+  return sum / reviewCount || 0;
 };
