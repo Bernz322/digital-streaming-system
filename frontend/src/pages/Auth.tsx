@@ -29,13 +29,13 @@ const useStyles = createStyles((theme) => ({
     justifyContent: "center",
   },
   container: {
-    backgroundColor: theme.colors.gray[1],
+    backgroundColor: "#181818",
     borderRadius: 15,
     padding: "50px 35px",
     width: "600px",
   },
   title: {
-    color: theme.colors.gray[9],
+    color: theme.colors.blue[5],
   },
 }));
 
@@ -148,7 +148,7 @@ const Auth = () => {
             <Anchor
               component="button"
               type="button"
-              color="dark"
+              color="blue"
               onClick={() => toggle()}
               size="xs"
             >
