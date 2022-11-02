@@ -1,6 +1,6 @@
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
-import {Filter, repository} from '@loopback/repository';
+import {repository} from '@loopback/repository';
 import {
   post,
   param,
@@ -110,18 +110,7 @@ export class ActorsController {
           {
             relation: 'moviesCasted',
             scope: {
-              include: [
-                {
-                  relation: 'movieReviews',
-                  scope: {
-                    fields: {
-                      id: false,
-                      description: false,
-                      datePosted: false,
-                    },
-                  },
-                },
-              ],
+              include: [{relation: 'movieReviews'}],
             },
           },
         ],
@@ -202,7 +191,6 @@ export class ActorsController {
     })
     actors: Actors,
   ): Promise<CustomResponse<{}>> {
-    // TODO: Populate actor casted movies and return it also.
     try {
       validateName(actors.firstName, 'firstName');
       validateName(actors.lastName, 'lastName');

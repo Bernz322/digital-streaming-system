@@ -151,6 +151,10 @@ a {
             color: var(--mantine-color-blue-5);
         }
 
+        .disabledButton {
+            color: var(--mantine-color-blue-5);
+        }
+
         .sectionTop {
             display: flex;
             justify-content: space-between;
@@ -195,19 +199,17 @@ a {
                 }
                 p.movieDescription {
                     font-size: var(--fz-lg);
-                    margin-bottom: 10px;
                     min-width: 100%;
                     font-weight: 400;
-                    margin: 35px 0;
+                    margin: 35px 0 10px;
                 }
 
                 p.movieCost,
                 p.movieYear {
                     font-size: var(--fz-md);
-                    margin-bottom: 10px;
                     min-width: 100%;
                     font-weight: 400;
-                    margin: 25px 0;
+                    margin: 25px 0 10px;
 
                     span {
                         color: var(--light-grey);
