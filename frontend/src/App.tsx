@@ -3,8 +3,17 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { NotificationsProvider } from "@mantine/notifications";
 import { MantineProvider } from "@mantine/core";
 import { Navbar } from "./components";
+import {
+  Actors,
+  Auth,
+  Home,
+  IndividualActor,
+  IndividualMovie,
+  Movies,
+  Page404,
+} from "./pages";
 import "./styles/App.scss";
-import { Actors, Auth, Home, Movies, Page404 } from "./pages";
+import "font-awesome/css/font-awesome.css";
 
 const App = () => {
   /**
@@ -23,7 +32,11 @@ const App = () => {
   };
 
   return (
-    <MantineProvider withCSSVariables withNormalizeCSS>
+    <MantineProvider
+      theme={{ colorScheme: "dark" }}
+      withCSSVariables
+      withNormalizeCSS
+    >
       <NotificationsProvider position="top-right">
         <Navbar />
         <ScrollToTop />
@@ -31,7 +44,9 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/movies" element={<Movies />} />
+          <Route path="/movie/:id" element={<IndividualMovie />} />
           <Route path="/actors" element={<Actors />} />
+          <Route path="/actor/:id" element={<IndividualActor />} />
           <Route path="*" element={<Page404 />} />
         </Routes>
       </NotificationsProvider>

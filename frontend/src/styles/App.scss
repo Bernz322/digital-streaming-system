@@ -115,10 +115,41 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+
+    .search {
+        min-width: var(--site-max-width);
+        max-width: var(--site-max-width);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .searchInput {
+            min-width: 1050px;
+        }
+    }
 
     .innerContainer {
         min-width: var(--site-max-width);
         max-width: var(--site-max-width);
+
+        .actorsPageH1,
+        .reviewsPageH1,
+        .moviesPageH1 {
+            text-align: center;
+        }
+
+        .actorsPageH2,
+        .reviewsPageH2 {
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .noContentH1 {
+            font-size: clamp(1.5rem, 10vw, 4rem);
+            text-align: center;
+            color: var(--mantine-color-blue-5);
+        }
 
         .sectionTop {
             display: flex;
@@ -139,6 +170,118 @@ a {
             grid-gap: var(--spacing-xl);
             justify-items: center;
             max-width: var(--site-max-width);
+        }
+        // Single Movie page styles
+        .movieDetailsContainer {
+            display: flex;
+            justify-content: flex-start;
+            .movieDetailsLeft {
+                img.moviePoster {
+                    height: 420px;
+                    margin-right: 25px;
+                }
+            }
+
+            .movieDetailsRight {
+                .ratingContainer {
+                    max-width: 120px;
+                }
+
+                h1.movieTitle {
+                    margin: 0 0 35px;
+                    font-size: clamp(2.5rem, 10vw, 6rem);
+                    font-weight: 900;
+                    line-height: 1;
+                }
+                p.movieDescription {
+                    font-size: var(--fz-lg);
+                    margin-bottom: 10px;
+                    min-width: 100%;
+                    font-weight: 400;
+                    margin: 35px 0;
+                }
+
+                p.movieCost,
+                p.movieYear {
+                    font-size: var(--fz-md);
+                    margin-bottom: 10px;
+                    min-width: 100%;
+                    font-weight: 400;
+                    margin: 25px 0;
+
+                    span {
+                        color: var(--light-grey);
+                        font-size: var(--fz-sm);
+                        margin-right: 10px;
+                    }
+                }
+            }
+        }
+
+        .movieReviewsContainer {
+            .movieReviewForm {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-flow: column;
+                margin: 0 auto 50px;
+
+                .movieReviewFormWidth {
+                    max-width: 800px;
+                    width: 100%;
+                }
+            }
+        }
+
+        // Single Actor page styles
+        .actorDetailsContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 20px;
+
+            img.actorImg {
+                width: 300px;
+                height: 300px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+            .actorContainer {
+                width: 100%;
+
+                .actorProfile {
+                    margin: 25px 0;
+                    font-size: var(--fz-sm);
+                    color: var(--light-grey);
+                }
+
+                h1.actorName {
+                    font-size: clamp(2.5rem, 10vw, 6rem);
+                    font-weight: 900;
+                }
+
+                .actorDetails {
+                    display: flex;
+                    justify-content: space-evenly;
+                    padding: 0 10px;
+
+                    p.spanAge,
+                    p.spanGender {
+                        font-size: var(--fz-xxl);
+                        color: var(--mantine-color-blue-5);
+                        margin: 0;
+                    }
+
+                    p.spanLabel {
+                        font-size: var(--fz-sm);
+                        color: var(--light-grey);
+                        margin: 0;
+                    }
+                }
+            }
         }
     }
 }
