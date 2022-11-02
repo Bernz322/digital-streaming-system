@@ -1,7 +1,7 @@
 import "./Rating.scss";
 
 interface RatingProps {
-  rating: string;
+  rating: number;
 }
 
 const Rating = ({ rating }: RatingProps) => {
