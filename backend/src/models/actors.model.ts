@@ -37,7 +37,7 @@ export class Actors extends Entity {
 
   @property({
     type: 'string',
-    default: 'http://cdn.onlinewebfonts.com/svg/img_264570.png',
+    default: 'https://cdn.onlinewebfonts.com/svg/img_264570.png',
   })
   image: string;
 

@@ -90,18 +90,7 @@ export class MoviesController {
     try {
       const movies = await this.moviesRepository.find({
         ...filter,
-        include: [
-          {
-            relation: 'movieReviews',
-            scope: {
-              fields: {
-                id: false,
-                description: false,
-                datePosted: false,
-              },
-            },
-          },
-        ],
+        include: [{relation: 'movieReviews'}],
       });
 
       return {

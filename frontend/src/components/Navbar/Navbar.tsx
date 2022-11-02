@@ -1,8 +1,13 @@
+import { useCallback } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import { authLogout } from "../../features/auth/authSlice";
+import { useTypedDispatch, useTypedSelector } from "../../hooks/rtk-hooks";
 import "./Navbar.scss";
 
 const Navbar = () => {
+  const { loggedIn, user } = useTypedSelector((state) => state.auth);
+  const dispatch = useTypedDispatch();
   const links = [
     {
       label: "Home",
@@ -17,6 +22,11 @@ const Navbar = () => {
       to: "/actors",
     },
   ];
+
+  const handleLogout = useCallback(() => {
+    dispatch(authLogout());
+  }, [dispatch]);
+
   return (
     <header className="headerContainer">
       <nav className="innerNavContainer">
@@ -32,14 +42,22 @@ const Navbar = () => {
               </Link>
             );
           })}
-          <Link className="navLinks" to="/dashboard">
-            <h3>Dashboard</h3>
-          </Link>
+          {user.role === "admin" && (
+            <Link className="navLinks" to="/dashboard">
+              <h3>Dashboard</h3>
+            </Link>
+          )}
         </div>
         <div className="right">
-          <Link className="login" to={"/auth"}>
-            Login
-          </Link>
+          {loggedIn ? (
+            <Link className="login" onClick={handleLogout} to="/auth">
+              Logout
+            </Link>
+          ) : (
+            <Link className="login" to="/auth">
+              Login
+            </Link>
+          )}
         </div>
       </nav>
     </header>

@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { ILoginResponse } from "./types";
+import { ILoginResponse, IRegisterAPIProps, APICustomResponse } from "./types";
 import { getCookie, setCookie } from "./helpers";
 
 /**
@@ -52,5 +52,34 @@ export const login = async (
     });
     localStorage.setItem("loggedUser", JSON.stringify(res.data.user));
   }
+  return res;
+};
+
+/**
+ * Register API Request. After a successful registration, redirect to register success page
+ * @param {string} firstName
+ * @param {string} lastName
+ * @param {string} email
+ * @param {string} password
+ * @returns {APICustomResponse<{}>}
+ */
+export const register = async (
+  data: IRegisterAPIProps
+): Promise<APICustomResponse<{}>> => {
+  const registerUser = {
+    firstName: data.firstName,
+    lastName: data.lastName,
+    email: data.email,
+    password: data.password,
+  };
+  const res = await apiRequest<APICustomResponse<{}>>(`/users/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    data: registerUser,
+  });
+
   return res;
 };

@@ -1,4 +1,5 @@
-import { useCallback } from "react";
+import { FormEvent, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import {
   Button,
   Anchor,
@@ -13,8 +14,11 @@ import {
   Container,
 } from "@mantine/core";
 import { useToggle, upperFirst } from "@mantine/hooks";
-import { useForm } from "@mantine/form";
-import { isValidEmail, isValidName } from "../utils/helpers";
+import { showNotification } from "@mantine/notifications";
+import { isLoggedIn, isValidEmail, isValidName } from "../utils/helpers";
+import { authLogin, authRegister } from "../features/auth/authSlice";
+import { useTypedDispatch, useTypedSelector } from "../hooks/rtk-hooks";
+import { IRegisterAPIProps, IDispatchResponse } from "../utils/types";
 
 const useStyles = createStyles((theme) => ({
   paper: {
@@ -39,54 +43,74 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+export interface IRegisterForm {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
 const Auth = () => {
   const { classes } = useStyles();
+  const { isLoading } = useTypedSelector((state) => state.auth);
+  const dispatch = useTypedDispatch();
+  const navigate = useNavigate();
+  const [formValues, setFormValues] = useState<IRegisterForm>(
+    {} as IRegisterForm
+  );
 
   const [type, toggle] = useToggle(["login", "register"]);
-  const form = useForm({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-    },
 
-    validate: {
-      email: (val) => (isValidEmail(val) ? null : "Please enter a valid email"),
-      firstName: (val) =>
-        isValidName(val) ? null : "Please enter a valid first name",
-      lastName: (val) =>
-        isValidName(val) ? null : "Please enter a valid last name",
-      password: (val) =>
-        val.length <= 1 ? "Please enter a longer password" : null,
-    },
-  });
-
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (type === "register") {
-      const userData = {
-        firstName: form.values.firstName,
-        lastName: form.values.lastName,
-        email: form.values.email,
-        password: form.values.password,
-      };
-      console.log(userData);
-      // dispatch(register(userData))
+      try {
+        isValidName(formValues.firstName, "first name");
+        isValidName(formValues.lastName, "last name");
+        isValidEmail(formValues.email);
+        if (formValues.password === "" || !formValues.password)
+          throw new Error("Enter password.");
+
+        const userData: IRegisterAPIProps = {
+          firstName: formValues.firstName,
+          lastName: formValues.lastName,
+          email: formValues.email,
+          password: formValues.password,
+        };
+
+        dispatch(authRegister(userData));
+      } catch (error: any) {
+        showNotification({
+          title: "Something went wrong.",
+          message: error.message,
+          autoClose: 5000,
+          color: "red",
+        });
+      }
     } else {
-      const userData = {
-        email: form.values.email,
-        password: form.values.password,
-      };
-      console.log(userData);
-      // dispatch(login(userData))
+      try {
+        isValidEmail(formValues.email);
+        if (formValues.password === "" || !formValues.password)
+          throw new Error("Enter password.");
+
+        const res: IDispatchResponse = await dispatch(
+          authLogin({ email: formValues.email, password: formValues.password })
+        );
+        if (!res.error) {
+          navigate("/", { replace: true });
+        }
+      } catch (error: any) {
+        showNotification({
+          title: "Something went wrong.",
+          message: error.message,
+          autoClose: 5000,
+          color: "red",
+        });
+      }
     }
-  }, [
-    form.values.firstName,
-    form.values.email,
-    form.values.lastName,
-    form.values.password,
-    type,
-  ]);
+  };
+
+  if (isLoggedIn()) return <Navigate to="/" />;
 
   return (
     <Paper radius="md" p="xl" className={classes.paper}>
@@ -94,19 +118,18 @@ const Auth = () => {
         <Text size="lg" weight={500} className={classes.title}>
           Welcome to ratebox
         </Text>
-
-        <form onSubmit={form.onSubmit(() => handleSubmit())}>
+        <form onSubmit={handleSubmit}>
           <Stack>
             {type === "register" && (
               <TextInput
                 label="First name"
                 placeholder="Your first name"
-                value={form.values.firstName}
+                defaultValue={formValues.firstName}
                 onChange={(event) =>
-                  form.setFieldValue("firstName", event.currentTarget.value)
-                }
-                error={
-                  form.errors.firstName && "Please enter a valid first name"
+                  setFormValues({
+                    ...formValues,
+                    firstName: event.currentTarget.value,
+                  })
                 }
               />
             )}
@@ -115,32 +138,38 @@ const Auth = () => {
               <TextInput
                 label="Last name"
                 placeholder="Your last name"
-                value={form.values.lastName}
+                defaultValue={formValues.lastName}
                 onChange={(event) =>
-                  form.setFieldValue("lastName", event.currentTarget.value)
+                  setFormValues({
+                    ...formValues,
+                    lastName: event.currentTarget.value,
+                  })
                 }
-                error={form.errors.lastName && "Please enter a valid last name"}
               />
             )}
 
             <TextInput
               label="Email"
               placeholder="hello@mantine.dev"
-              value={form.values.email}
+              defaultValue={formValues.email}
               onChange={(event) =>
-                form.setFieldValue("email", event.currentTarget.value)
+                setFormValues({
+                  ...formValues,
+                  email: event.currentTarget.value,
+                })
               }
-              error={form.errors.email && "Please enter a valid email"}
             />
 
             <PasswordInput
               label="Password"
               placeholder="Your password"
-              value={form.values.password}
+              defaultValue={formValues.password}
               onChange={(event) =>
-                form.setFieldValue("password", event.currentTarget.value)
+                setFormValues({
+                  ...formValues,
+                  password: event.currentTarget.value,
+                })
               }
-              error={form.errors.password && "Please enter a longer password"}
             />
           </Stack>
 
@@ -156,8 +185,12 @@ const Auth = () => {
                 ? "Already have an account? Login"
                 : "Don't have an account? Register"}
             </Anchor>
-            <Button type="submit" disabled={false}>
-              {false ? <Loader color="white" size="sm" /> : upperFirst(type)}
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <Loader color="white" size="sm" />
+              ) : (
+                upperFirst(type)
+              )}
             </Button>
           </Group>
         </form>

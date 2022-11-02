@@ -1,5 +1,4 @@
 import isemail from 'isemail';
-import {HttpErrors} from '@loopback/rest';
 
 /**
  * Validates name
@@ -9,7 +8,7 @@ import {HttpErrors} from '@loopback/rest';
 export const validateName = (name: string, field: string) => {
   let nameRegex: RegExp = /^(?!-)[a-zA-Z-]*[a-zA-Z]$/;
   if (name.match(nameRegex) == null) {
-    throw new HttpErrors.UnprocessableEntity(`Invalid name in field ${field}`);
+    throw new Error(`Invalid name in field ${field}`);
   }
 };
 
@@ -20,6 +19,6 @@ export const validateName = (name: string, field: string) => {
  */
 export const validateEmail = (email: string) => {
   if (!isemail.validate(email)) {
-    throw new HttpErrors.UnprocessableEntity('Invalid email');
+    throw new Error('Invalid email format.');
   }
 };

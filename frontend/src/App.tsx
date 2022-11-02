@@ -37,7 +37,7 @@ const App = () => {
       withCSSVariables
       withNormalizeCSS
     >
-      <NotificationsProvider position="top-right">
+      <NotificationsProvider position="bottom-right">
         <Navbar />
         <ScrollToTop />
         <Routes>

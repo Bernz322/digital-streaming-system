@@ -8,7 +8,6 @@
     align-items: center;
     background-color: var(--black);
     padding: 10px;
-    background-color: var(--black);
 
     .innerNavContainer {
         width: var(--site-max-width);
@@ -27,7 +26,6 @@
                 margin: 0 15px;
                 font-size: var(--fz-lg);
                 transition: all ease-in 0.2;
-                text-decoration: none;
 
                 h3 {
                     margin: 0;
