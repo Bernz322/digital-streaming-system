@@ -152,13 +152,13 @@ export class UserController {
     credentials: Credentials,
   ): Promise<CustomResponse<{}>> {
     const {email} = credentials;
-
-    validateEmail(email);
-
     try {
+      validateEmail(email);
       const user = await this.userService.verifyCredentials(credentials);
       const userProfile = this.userService.convertToUserProfile(user);
       const token = await this.jwtService.generateToken(userProfile);
+      if (!userProfile.isActivated)
+        throw new Error('Your account is not yet activated by the admin.');
 
       return {
         status: 'success',

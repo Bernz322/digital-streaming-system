@@ -13,7 +13,7 @@ export class CustomUserService implements UserService<User, Credentials> {
 
   async verifyCredentials(credentials: Credentials): Promise<User> {
     const {email, password} = credentials;
-    const invalidCredentialsError = 'Invalid email or password.';
+    const invalidCredentialsError = 'Wrong credentials.';
 
     const foundUser = await this.userRepository.findOne({
       where: {email},
