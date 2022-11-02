@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Rating } from "..";
-import { IMovie } from "../../utils/types";
+import { movieRating } from "../../utils/helpers";
+import { IMovie, IMovieReview } from "../../utils/types";
 import "./MovieCard.scss";
 
 interface MovieProps {
@@ -8,11 +9,13 @@ interface MovieProps {
 }
 
 const MovieCard = ({ movie }: MovieProps) => {
+  const rating: number = movieRating(movie.movieReviews as IMovieReview[]);
+
   return (
     <div className="movieCardContainer">
       <Link to={`/movie/${movie.id}`} className="movieCardLink">
         <img src={movie.image} alt="movie" />
-        <Rating rating="5" />
+        <Rating rating={rating} />
         <h4 className="movieCardTitle">{movie.title}</h4>
         <div className="movieCardFooter">
           <span>Year released</span>

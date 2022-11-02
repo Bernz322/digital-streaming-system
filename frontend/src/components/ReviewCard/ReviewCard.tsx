@@ -7,7 +7,7 @@ const ReviewCard = () => {
       <h4>User One</h4>
       <div className="reviewBottom">
         <div className="ratingContainer">
-          <Rating rating="5" />
+          <Rating rating={5} />
         </div>
         <p className="review">
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quidem

@@ -104,6 +104,8 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     authReset: (state: IAuthState) => {
+      state.loggedIn = false;
+      state.user = {} as IUserLogin;
       state.isLoading = false;
     },
   },

@@ -107,7 +107,7 @@ const IndividualMovie = () => {
             <div className="movieDetailsRight">
               <h1 className="movieTitle">{movie.title}</h1>
               <div className="ratingContainer">
-                <MyRating rating="5" />
+                <MyRating rating={5} />
               </div>
               <p className="movieDescription">{movie.description}</p>
               <p className="movieCost">

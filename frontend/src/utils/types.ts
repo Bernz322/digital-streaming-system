@@ -40,6 +40,27 @@ export interface IMovie {
   image: string;
   cost: number;
   yearReleased: number;
+  movieReviews?: IMovieReview[];
+  movieCasters?: IActor[];
+  rating?: string;
+}
+
+export interface IMovieReview {
+  id: string;
+  description: string;
+  rating: number;
+  datePosted: string;
+  isApproved: boolean;
+  movieId: string;
+  userId: string;
+  userReviewer?: IMovieReviewer;
+}
+
+export interface IMovieReviewer {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 export interface IActor {
   id: string;
