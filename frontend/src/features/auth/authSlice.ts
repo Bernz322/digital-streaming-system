@@ -83,6 +83,12 @@ export const authRegister = createAsyncThunk(
           error.response.data.error.message) ||
         error.message ||
         error.toString();
+      showNotification({
+        title: "Something went wrong.",
+        message: message,
+        autoClose: 5000,
+        color: "red",
+      });
       return thunkAPI.rejectWithValue(message);
     }
   }
