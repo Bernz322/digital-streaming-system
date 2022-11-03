@@ -65,8 +65,8 @@ const Auth = () => {
     e.preventDefault();
     if (type === "register") {
       try {
-        isValidName(formValues.firstName, "first name");
-        isValidName(formValues.lastName, "last name");
+        isValidName(formValues.firstName, "first");
+        isValidName(formValues.lastName, "last");
         isValidEmail(formValues.email);
         if (formValues.password === "" || !formValues.password)
           throw new Error("Enter password.");
