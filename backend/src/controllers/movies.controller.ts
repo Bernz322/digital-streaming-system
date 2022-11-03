@@ -173,14 +173,18 @@ export class MoviesController {
   ): Promise<CustomResponse<{}>> {
     try {
       const searchParam = searchKey || '';
-      const moviesList = await this.moviesRepository.find({
-        where: {title: {like: searchParam}},
-        include: [{relation: 'movieReviews'}],
-      });
+      const searchParams = [{title: {like: searchParam, options: 'i'}}];
+      const filterObject = {
+        where: {or: searchParams},
+        order: ['title ASC'],
+        include: ['movieReviews'],
+      };
+
+      const moviesList = await this.moviesRepository.find(filterObject);
       return {
         status: 'success',
         data: moviesList,
-        message: 'Successfully fetched actor data.',
+        message: 'Successfully fetched movies.',
       };
     } catch (error) {
       return {
