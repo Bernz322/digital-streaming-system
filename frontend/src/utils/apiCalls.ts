@@ -1,5 +1,10 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { ILoginResponse, IRegisterAPIProps, APICustomResponse } from "./types";
+import {
+  ILoginResponse,
+  IRegisterAPIProps,
+  APICustomResponse,
+  IPostReviewProps,
+} from "./types";
 import { getCookie, setCookie } from "./helpers";
 
 /**
@@ -84,12 +89,104 @@ export const register = async (
 };
 
 /**
- * Fetch 10 movies in the database
+ * Fetch limited number of movies in the database
+ * @param {number} filterLimit
  * @returns {APICustomResponse<{}>}
  */
-export const apiFetchMovies = async () => {
+export const apiFetchLimitMovies = async (filterLimit: number) => {
   const res = await apiRequest<APICustomResponse<{}>>(
-    `/movies?filter[limit]=10`
+    `/movies?filter[limit]=${filterLimit}`
   );
+  return res;
+};
+
+/**
+ * Fetch all movies in the database
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiFetchAllMovies = async () => {
+  const res = await apiRequest<APICustomResponse<{}>>("/movies");
+  return res;
+};
+
+/**
+ * Fetch all movies by searched title
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiFetchSearchedMovies = async (title: string) => {
+  const res = await apiRequest<APICustomResponse<{}>>(
+    `/search/movies/${title}`
+  );
+  return res;
+};
+
+/**
+ * Fetch movie by id
+ * @param {number} movieId
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiFetchMovieById = async (movieId: string) => {
+  const res = await apiRequest<APICustomResponse<{}>>(`/movies/${movieId}`);
+  return res;
+};
+
+/**
+ * Fetch all actors
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiFetchAllActors = async () => {
+  const res = await apiRequest<APICustomResponse<{}>>(`/actors`);
+  return res;
+};
+
+/**
+ * Fetch all actors by searched first name or last name
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiFetchSearchedActors = async (name: string) => {
+  const res = await apiRequest<APICustomResponse<{}>>(`/search/actors/${name}`);
+  return res;
+};
+
+/**
+ * Fetch actor by id
+ * @param {number} actorId
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiFetchActorById = async (actorId: string) => {
+  const res = await apiRequest<APICustomResponse<{}>>(`/actors/${actorId}`);
+  return res;
+};
+
+/**
+ * Submit movie review
+ * @param {number} actorId
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiPostMovieReview = async (
+  data: IPostReviewProps
+): Promise<APICustomResponse<{}>> => {
+  const reviewData = {
+    description: data.description,
+    rating: data.rating,
+    movieId: data.movieId,
+  };
+  const res = await apiRequest<APICustomResponse<{}>>(`/reviews`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    data: reviewData,
+  });
+  return res;
+};
+
+/**
+ * Fetch all actors
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiFetchAllUsers = async () => {
+  const res = await apiRequest<APICustomResponse<{}>>(`/users`);
   return res;
 };

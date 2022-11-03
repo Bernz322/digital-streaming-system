@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MovieCard } from "..";
-import { fetchMovies } from "../../features/movie/movieSlice";
+import { fetchLimitMovies } from "../../features/movie/movieSlice";
 import { useTypedDispatch, useTypedSelector } from "../../hooks/rtk-hooks";
 
 const MoviesSection = () => {
@@ -9,7 +9,7 @@ const MoviesSection = () => {
   const dispatch = useTypedDispatch();
 
   useEffect(() => {
-    dispatch(fetchMovies());
+    dispatch(fetchLimitMovies(10));
   }, [dispatch]);
 
   return (

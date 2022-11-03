@@ -1,22 +1,25 @@
+import dayjs from "dayjs";
 import { Rating } from "..";
+import { IMovieReview } from "../../utils/types";
 import "./ReviewCard.scss";
 
-const ReviewCard = () => {
+interface IReviewCardProps {
+  review: IMovieReview;
+}
+
+const ReviewCard = ({ review }: IReviewCardProps) => {
+  const reviewerFullName = `${review?.userReviewer?.firstName} ${review?.userReviewer?.lastName}`;
   return (
     <div className="reviewCardContainer">
-      <h4>User One</h4>
+      <h4>{reviewerFullName}</h4>
       <div className="reviewBottom">
         <div className="ratingContainer">
-          <Rating rating={5} />
+          <Rating rating={review.rating} />
         </div>
-        <p className="review">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quidem
-          cupiditate eaque ab dolore? Libero, ipsa! Molestiae provident ex in
-          deserunt cum, iusto qui at consequuntur similique rem blanditiis,
-          aspernatur voluptatum.
-        </p>
+        <p className="review">{review.description}</p>
         <h3>
-          <span>Reviewed on: </span> November 18, 2022
+          <span>Reviewed on: </span>{" "}
+          {dayjs(review.datePosted).format("DD/MM/YYYY")}
         </h3>
       </div>
     </div>

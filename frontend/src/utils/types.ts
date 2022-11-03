@@ -42,7 +42,7 @@ export interface IMovie {
   yearReleased: number;
   movieReviews?: IMovieReview[];
   movieCasters?: IActor[];
-  rating?: string;
+  rating?: number;
 }
 
 export interface IMovieReview {
@@ -69,9 +69,16 @@ export interface IActor {
   gender: "male" | "female";
   age: number;
   image: string;
-  link: string;
-  moviesCasted?: number;
+  link?: string;
+  moviesCasted?: IMovie[];
 }
+
+export interface IPostReviewProps {
+  description: string;
+  rating: number;
+  movieId: string;
+}
+
 export interface IDispatchResponse {
   error?: {
     message?: string;

@@ -6,6 +6,7 @@ import { Navbar } from "./components";
 import {
   Actors,
   Auth,
+  Dashboard,
   Home,
   IndividualActor,
   IndividualMovie,
@@ -14,8 +15,10 @@ import {
 } from "./pages";
 import "./styles/App.scss";
 import "font-awesome/css/font-awesome.css";
+import { useTypedSelector } from "./hooks/rtk-hooks";
 
 const App = () => {
+  const { user, loggedIn } = useTypedSelector((state) => state.auth);
   /**
    * Ensures that everytime we switch to another route, we will always be on the top page
    * https://v5.reactrouter.com/web/guides/scroll-restoration
@@ -37,7 +40,7 @@ const App = () => {
       withCSSVariables
       withNormalizeCSS
     >
-      <NotificationsProvider position="bottom-right">
+      <NotificationsProvider position="top-right">
         <Navbar />
         <ScrollToTop />
         <Routes>
@@ -47,6 +50,9 @@ const App = () => {
           <Route path="/movie/:id" element={<IndividualMovie />} />
           <Route path="/actors" element={<Actors />} />
           <Route path="/actor/:id" element={<IndividualActor />} />
+          {loggedIn && user.role === "admin" && (
+            <Route path="/dashboard" element={<Dashboard />} />
+          )}
           <Route path="*" element={<Page404 />} />
         </Routes>
       </NotificationsProvider>

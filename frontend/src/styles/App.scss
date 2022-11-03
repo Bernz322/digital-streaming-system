@@ -121,7 +121,7 @@ a {
         min-width: var(--site-max-width);
         max-width: var(--site-max-width);
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
 
         .searchInput {
@@ -196,6 +196,7 @@ a {
                     font-size: clamp(2.5rem, 10vw, 6rem);
                     font-weight: 900;
                     line-height: 1;
+                    text-transform: capitalize;
                 }
                 p.movieDescription {
                     font-size: var(--fz-lg);
@@ -263,6 +264,7 @@ a {
                 h1.actorName {
                     font-size: clamp(2.5rem, 10vw, 6rem);
                     font-weight: 900;
+                    text-transform: capitalize;
                 }
 
                 .actorDetails {
@@ -275,6 +277,7 @@ a {
                         font-size: var(--fz-xxl);
                         color: var(--mantine-color-blue-5);
                         margin: 0;
+                        text-transform: capitalize;
                     }
 
                     p.spanLabel {

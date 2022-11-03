@@ -1,60 +1,51 @@
-import { Button, Input } from "@mantine/core";
+import { Button, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons";
+import { useEffect, useState } from "react";
 import { ActorCard } from "../components";
-import { IActor } from "../utils/types";
+import {
+  fetchAllActors,
+  fetchSearchedActors,
+} from "../features/actor/actorSlice";
+import { useTypedDispatch, useTypedSelector } from "../hooks/rtk-hooks";
 
 const Actors = () => {
-  const actors: IActor[] = [
-    {
-      id: "6360ea98e7653b1108a97703",
-      firstName: "Joel",
-      lastName: "Edgerton",
-      gender: "male",
-      age: 48,
-      image:
-        "https://m.media-amazon.com/images/M/MV5BMTA0ODI1ODk4NzdeQTJeQWpwZ15BbWU3MDkwNjkzOTY@._V1_.jpg",
-      link: "https://www.imdb.com/name/nm0249291/?ref_=tt_ov_st",
-    },
-    {
-      id: "6360eac6e7653b1108a97704",
-      firstName: "Sean",
-      lastName: "Harris",
-      gender: "male",
-      age: 48,
-      image:
-        "https://m.media-amazon.com/images/M/MV5BMTM3NTI1NzI4MF5BMl5BanBnXkFtZTcwODU1MTg4Nw@@._V1_.jpg",
-      link: "https://www.imdb.com/name/nm0365317/?ref_=tt_ov_st",
-      moviesCasted: 3,
-    },
-    {
-      id: "6360eb32e7653b1108a97705",
-      firstName: "Jada",
-      lastName: "Alberts",
-      gender: "female",
-      age: 46,
-      image:
-        "https://m.media-amazon.com/images/M/MV5BYTY0ZTU1YTItMTgyZS00YzVhLTg1ZGQtMzlkYTBiYTExMDZjXkEyXkFqcGdeQXVyMjgzMDAyMjY@._V1_UY1200_CR84,0,630,1200_AL_.jpg",
-      link: "https://www.imdb.com/name/nm3415084/?ref_=tt_ov_st",
-      moviesCasted: 1,
-    },
-  ];
+  const { actors } = useTypedSelector((state) => state.actor);
+  const dispatch = useTypedDispatch();
+  const [actorName, setActorName] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
+
+  useEffect(() => {
+    dispatch(fetchAllActors());
+  }, [dispatch]);
+
+  const handleSearchClick = () => {
+    if (actorName === "") return setError(true);
+    dispatch(fetchSearchedActors(actorName));
+  };
   return (
     <main className="pageContainer">
       <div className="sectionContainer">
         <div className="search">
-          <Input
+          <TextInput
             icon={<IconSearch />}
             placeholder="Find actor"
             className="searchInput"
+            error={actorName === "" && error && "Enter actor name"}
+            value={actorName}
+            onChange={(e) => setActorName(e.target.value)}
           />
-          <Button>Search Actor</Button>
+          <Button onClick={() => handleSearchClick()}>Search Actor</Button>
         </div>
         <div className="innerContainer">
           <h1 className="actorsPageH1">Actors</h1>
-          <h1 className="noContentH1">There are no actors available.</h1>
+          {actors.length <= 0 && (
+            <h1 className="noContentH1">There are no actors available.</h1>
+          )}
           <div className="container">
             {actors.map((actor) => {
-              return <ActorCard actor={actor} key={actor.id} />;
+              return (
+                <ActorCard actor={actor} key={actor.id} isActorsPage={true} />
+              );
             })}
           </div>
         </div>
