@@ -5,3 +5,5 @@ export { default as MovieCard } from "./MovieCard/MovieCard";
 export { default as ActorCard } from "./ActorCard/ActorCard";
 export { default as Rating } from "./Rating/Rating";
 export { default as ReviewCard } from "./ReviewCard/ReviewCard";
+export { default as TableMovies } from "./TableMovies/TableMovies";
+export { default as TableUsers } from "./TableUsers/TableUsers";
