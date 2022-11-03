@@ -106,7 +106,7 @@ export const isLoggedIn = (): boolean => {
  * @returns {string}
  */
 export const budgetFormatter = (budgetCost: number): string => {
-  return budgetCost.toLocaleString();
+  return budgetCost?.toLocaleString();
 };
 
 /**
