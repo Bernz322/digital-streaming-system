@@ -4,8 +4,9 @@ import "./ActorCard.scss";
 
 interface ActorProps {
   actor: IActor;
+  isActorsPage: boolean;
 }
-const ActorCard = ({ actor }: ActorProps) => {
+const ActorCard = ({ actor, isActorsPage }: ActorProps) => {
   return (
     <div className="actorCardContainer">
       <Link to={`/actor/${actor.id}`} className="actorCardLink">
@@ -13,7 +14,9 @@ const ActorCard = ({ actor }: ActorProps) => {
         <h4 className="actorCardName">
           {actor.firstName} {actor.lastName}
         </h4>
-        <p>Casted {actor.moviesCasted || 0} movies</p>
+        {isActorsPage && (
+          <p>Casted {actor?.moviesCasted?.toString() || 0} movie/s</p>
+        )}
       </Link>
     </div>
   );
