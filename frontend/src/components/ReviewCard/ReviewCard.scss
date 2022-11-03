@@ -3,6 +3,10 @@
     border-radius: var(--border-radius-subtle);
     transition: background-color 0.2s ease 0s;
     padding: 5px 15px;
+    min-width: 276px;
+    max-width: 276px;
+    min-height: 250px;
+    max-height: fit-content;
     h4 {
         margin: 15px 0;
         font-size: var(--fz-xl);
@@ -16,6 +20,16 @@
     }
 
     .reviewBottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-flow: column nowrap;
+        min-height: 190px;
+
+        .ratingContainer {
+            width: 100%;
+        }
+
         p.review {
             font-size: var(--fz-sm);
             margin-bottom: 10px;
