@@ -1,27 +1,41 @@
-import { Button, Input } from "@mantine/core";
+import { Button, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MovieCard } from "../components";
-import { fetchMovies } from "../features/movie/movieSlice";
+import {
+  fetchAllMovies,
+  fetchSearchedMovies,
+} from "../features/movie/movieSlice";
 import { useTypedDispatch, useTypedSelector } from "../hooks/rtk-hooks";
 
 const Movies = () => {
   const { movies } = useTypedSelector((state) => state.movie);
   const dispatch = useTypedDispatch();
+  const [movieName, setMovieName] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
-    dispatch(fetchMovies());
+    dispatch(fetchAllMovies());
   }, [dispatch]);
+
+  const handleSearchClick = () => {
+    if (movieName === "") return setError(true);
+    dispatch(fetchSearchedMovies(movieName));
+  };
+
   return (
     <main className="pageContainer">
       <div className="sectionContainer">
         <div className="search">
-          <Input
+          <TextInput
             icon={<IconSearch />}
             placeholder="Find movie"
             className="searchInput"
+            error={movieName === "" && error && "Enter movie name"}
+            value={movieName}
+            onChange={(e) => setMovieName(e.target.value)}
           />
-          <Button>Search Movie</Button>
+          <Button onClick={() => handleSearchClick()}>Search Movie</Button>
         </div>
         <div className="innerContainer">
           <h1 className="moviesPageH1">Movies</h1>
