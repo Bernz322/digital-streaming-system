@@ -181,3 +181,12 @@ export const apiPostMovieReview = async (
   });
   return res;
 };
+
+/**
+ * Fetch all actors
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiFetchAllUsers = async () => {
+  const res = await apiRequest<APICustomResponse<{}>>(`/users`);
+  return res;
+};
