@@ -17,7 +17,8 @@ export interface IDeleteCookie {
  * @returns {boolean}
  */
 export const isValidEmail = (email: string): boolean => {
-  if (email === "" || !email) throw new Error("Invalid email.");
+  if (email?.trim() === "" || !email)
+    throw new Error("Field email is required.");
   let atPosition: number = email.indexOf("@");
   let dotPosition: number = email.lastIndexOf(".");
 
@@ -34,12 +35,30 @@ export const isValidEmail = (email: string): boolean => {
  * @returns {boolean}
  */
 export const isValidName = (name: string, field: string): boolean => {
-  if (name === "" || !name) throw new Error(`Invalid ${field} name.`);
-  let nameRegex: RegExp = /^(?!-)[a-zA-Z-]*[a-zA-Z]$/;
-  if (name.match(nameRegex) == null) {
+  if (name?.trim() === "" || !name)
+    throw new Error(`Field ${field} name is required.`);
+  let nameRegex: RegExp = /^[a-zA-Z]+[- ']{0,1}[a-zA-Z]+$/;
+  if (name?.trim().match(nameRegex) == null) {
     throw new Error(`Invalid ${field} name.`);
   }
   return true;
+};
+
+export const isNotEmpty = (text: string, field: string): boolean => {
+  if (text?.trim() === "" || !text)
+    throw new Error(`Field ${field} is required.`);
+  return true;
+};
+
+export const isValidUrl = (urlString: string, field: string): boolean => {
+  if (field === "actor link") return true;
+  if (urlString?.trim() === "" || !urlString)
+    throw new Error(`Field ${field} is required.`);
+  try {
+    return Boolean(new URL(urlString));
+  } catch (e) {
+    throw new Error(`Invalid ${field} url.`);
+  }
 };
 
 /**
@@ -116,11 +135,13 @@ export const budgetFormatter = (budgetCost: number): string => {
  */
 export const movieRating = (movieReviews: IMovieReview[]): number => {
   let sum = 0;
+  let length = 0;
   movieReviews?.forEach((review) => {
     if (review.isApproved) {
       sum += review?.rating;
+      length++;
     }
   });
-  const reviewCount = movieReviews?.length || 1;
-  return sum / reviewCount || 0;
+  const reviewCount = length || 1;
+  return parseFloat((sum / reviewCount || 0).toFixed(2));
 };

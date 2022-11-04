@@ -55,9 +55,12 @@ const Auth = () => {
   const { isLoading } = useTypedSelector((state) => state.auth);
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
-  const [formValues, setFormValues] = useState<IRegisterForm>(
-    {} as IRegisterForm
-  );
+  const [formValues, setFormValues] = useState<IRegisterForm>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  } as IRegisterForm);
 
   const [type, toggle] = useToggle(["login", "register"]);
 
@@ -69,7 +72,7 @@ const Auth = () => {
         isValidName(formValues.lastName, "last");
         isValidEmail(formValues.email);
         if (formValues.password === "" || !formValues.password)
-          throw new Error("Enter password.");
+          throw new Error("Field password is required.");
 
         const userData: IRegisterAPIProps = {
           firstName: formValues.firstName,
@@ -78,20 +81,28 @@ const Auth = () => {
           password: formValues.password,
         };
 
-        dispatch(authRegister(userData));
+        const res: IDispatchResponse = await dispatch(authRegister(userData));
+        if (!res.error) {
+          setFormValues({
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+          });
+        }
       } catch (error: any) {
         showNotification({
-          title: "Something went wrong.",
+          title: "Registration failed. See message below for more info.",
           message: error.message,
-          autoClose: 5000,
-          color: "red",
+          autoClose: 3000,
+          color: "yellow",
         });
       }
     } else {
       try {
         isValidEmail(formValues.email);
         if (formValues.password === "" || !formValues.password)
-          throw new Error("Enter password.");
+          throw new Error("Field password is required.");
 
         const res: IDispatchResponse = await dispatch(
           authLogin({ email: formValues.email, password: formValues.password })
@@ -101,10 +112,10 @@ const Auth = () => {
         }
       } catch (error: any) {
         showNotification({
-          title: "Something went wrong.",
+          title: "Login failed. See message below for more info",
           message: error.message,
-          autoClose: 5000,
-          color: "red",
+          autoClose: 3000,
+          color: "yellow",
         });
       }
     }
@@ -124,13 +135,14 @@ const Auth = () => {
               <TextInput
                 label="First name"
                 placeholder="Your first name"
-                defaultValue={formValues.firstName}
+                value={formValues?.firstName}
                 onChange={(event) =>
                   setFormValues({
                     ...formValues,
                     firstName: event.currentTarget.value,
                   })
                 }
+                withAsterisk
               />
             )}
 
@@ -138,38 +150,41 @@ const Auth = () => {
               <TextInput
                 label="Last name"
                 placeholder="Your last name"
-                defaultValue={formValues.lastName}
+                value={formValues?.lastName}
                 onChange={(event) =>
                   setFormValues({
                     ...formValues,
                     lastName: event.currentTarget.value,
                   })
                 }
+                withAsterisk
               />
             )}
 
             <TextInput
               label="Email"
               placeholder="hello@mantine.dev"
-              defaultValue={formValues.email}
+              value={formValues?.email}
               onChange={(event) =>
                 setFormValues({
                   ...formValues,
                   email: event.currentTarget.value,
                 })
               }
+              withAsterisk
             />
 
             <PasswordInput
               label="Password"
               placeholder="Your password"
-              defaultValue={formValues.password}
+              value={formValues?.password}
               onChange={(event) =>
                 setFormValues({
                   ...formValues,
                   password: event.currentTarget.value,
                 })
               }
+              withAsterisk
             />
           </Stack>
 

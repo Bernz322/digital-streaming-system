@@ -13,6 +13,9 @@ import {
   APICustomResponse,
   IUserLogin,
 } from "../../utils/types";
+import { actorReset } from "../actor/actorSlice";
+import { movieReset } from "../movie/movieSlice";
+import { userReset } from "../user/userSlice";
 
 export interface IAuthState {
   loggedIn: boolean;
@@ -46,9 +49,9 @@ export const authLogin = createAsyncThunk(
         error.message ||
         error.toString();
       showNotification({
-        title: "Something went wrong.",
+        title: "Login failed. See message below for more info.",
         message: message,
-        autoClose: 5000,
+        autoClose: 3000,
         color: "red",
       });
       return thunkAPI.rejectWithValue(message);
@@ -72,8 +75,8 @@ export const authRegister = createAsyncThunk(
       return showNotification({
         title: "Registered successfully.",
         message: "Please wait for your account activation.",
-        autoClose: 5000,
-        color: "yellow",
+        autoClose: 3000,
+        color: "green",
       });
     } catch (error: any) {
       const message: string =
@@ -84,9 +87,9 @@ export const authRegister = createAsyncThunk(
         error.message ||
         error.toString();
       showNotification({
-        title: "Something went wrong.",
+        title: "Registration failed. See message below for more info.",
         message: message,
-        autoClose: 5000,
+        autoClose: 3000,
         color: "red",
       });
       return thunkAPI.rejectWithValue(message);
@@ -95,15 +98,21 @@ export const authRegister = createAsyncThunk(
 );
 
 // Logout User
-export const authLogout = createAsyncThunk("auth/logout", async () => {
-  deleteCookie({
-    cookieName: "accessToken",
-    path: "/",
-    domain: "localhost",
-  });
-  localStorage.removeItem("loggedUser");
-  // TODO: Reset all states here
-});
+export const authLogout = createAsyncThunk(
+  "auth/logout",
+  async (_, { dispatch }) => {
+    deleteCookie({
+      cookieName: "accessToken",
+      path: "/",
+      domain: "localhost",
+    });
+    localStorage.removeItem("loggedUser");
+    dispatch(authReset());
+    dispatch(actorReset());
+    dispatch(movieReset());
+    dispatch(userReset());
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
