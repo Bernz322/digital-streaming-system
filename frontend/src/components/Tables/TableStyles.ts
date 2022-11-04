@@ -7,6 +7,7 @@ export const useStyles = createStyles((theme) => ({
     padding: 25,
     marginTop: 25,
     minWidth: 1200,
+    maxWidth: 1200,
   },
   root: {
     position: "relative",
@@ -39,12 +40,18 @@ export const useStyles = createStyles((theme) => ({
     width: "100%",
     flex: 6,
   },
+  txt: {
+    minWidth: "fit-content",
+    maxWidth: 180,
+    color: "white",
+  },
 }));
 
 export const tableCustomStyles = {
   rows: {
     style: {
       padding: "5px 0",
+      maxWidth: "1150px",
     },
   },
 };

@@ -4,6 +4,11 @@ import {
   IRegisterAPIProps,
   APICustomResponse,
   IPostReviewProps,
+  IPatchUserAPIProps,
+  IPostActor,
+  IPostMovie,
+  IPatchMovie,
+  IPatchReviewProps,
 } from "./types";
 import { getCookie, setCookie } from "./helpers";
 
@@ -93,7 +98,9 @@ export const register = async (
  * @param {number} filterLimit
  * @returns {APICustomResponse<{}>}
  */
-export const apiFetchLimitMovies = async (filterLimit: number) => {
+export const apiFetchLimitMovies = async (
+  filterLimit: number
+): Promise<APICustomResponse<{}>> => {
   const res = await apiRequest<APICustomResponse<{}>>(
     `/movies?filter[limit]=${filterLimit}`
   );
@@ -104,7 +111,7 @@ export const apiFetchLimitMovies = async (filterLimit: number) => {
  * Fetch all movies in the database
  * @returns {APICustomResponse<{}>}
  */
-export const apiFetchAllMovies = async () => {
+export const apiFetchAllMovies = async (): Promise<APICustomResponse<{}>> => {
   const res = await apiRequest<APICustomResponse<{}>>("/movies");
   return res;
 };
@@ -113,7 +120,9 @@ export const apiFetchAllMovies = async () => {
  * Fetch all movies by searched title
  * @returns {APICustomResponse<{}>}
  */
-export const apiFetchSearchedMovies = async (title: string) => {
+export const apiFetchSearchedMovies = async (
+  title: string
+): Promise<APICustomResponse<{}>> => {
   const res = await apiRequest<APICustomResponse<{}>>(
     `/search/movies/${title}`
   );
@@ -125,8 +134,73 @@ export const apiFetchSearchedMovies = async (title: string) => {
  * @param {number} movieId
  * @returns {APICustomResponse<{}>}
  */
-export const apiFetchMovieById = async (movieId: string) => {
+export const apiFetchMovieById = async (
+  movieId: string
+): Promise<APICustomResponse<{}>> => {
   const res = await apiRequest<APICustomResponse<{}>>(`/movies/${movieId}`);
+  return res;
+};
+
+/**
+ * Create new movie
+ * @param {number} actorId
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiPostMovie = async (
+  data: IPostMovie
+): Promise<APICustomResponse<{}>> => {
+  const movieData: IPostMovie = {
+    title: data.title,
+    description: data.description,
+    cost: data.cost,
+    yearReleased: data.yearReleased,
+    image: data.image,
+    actors: data.actors,
+  };
+  const res = await apiRequest<APICustomResponse<{}>>(`/movies`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    data: movieData,
+  });
+  return res;
+};
+
+/**
+ * Create new movie
+ * @param {number} actorId
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiUpdateMovieById = async (
+  data: IPatchMovie
+): Promise<APICustomResponse<{}>> => {
+  let { id, ...updatedMovie } = data;
+  const res = await apiRequest<APICustomResponse<{}>>(`/movies/${data.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: updatedMovie,
+  });
+  return res;
+};
+
+/**
+ * Create new movie
+ * @param {number} actorId
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiDeleteMovieById = async (
+  id: string
+): Promise<APICustomResponse<{}>> => {
+  const res = await apiRequest<APICustomResponse<{}>>(`/movies/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   return res;
 };
 
@@ -134,7 +208,7 @@ export const apiFetchMovieById = async (movieId: string) => {
  * Fetch all actors
  * @returns {APICustomResponse<{}>}
  */
-export const apiFetchAllActors = async () => {
+export const apiFetchAllActors = async (): Promise<APICustomResponse<{}>> => {
   const res = await apiRequest<APICustomResponse<{}>>(`/actors`);
   return res;
 };
@@ -143,7 +217,9 @@ export const apiFetchAllActors = async () => {
  * Fetch all actors by searched first name or last name
  * @returns {APICustomResponse<{}>}
  */
-export const apiFetchSearchedActors = async (name: string) => {
+export const apiFetchSearchedActors = async (
+  name: string
+): Promise<APICustomResponse<{}>> => {
   const res = await apiRequest<APICustomResponse<{}>>(`/search/actors/${name}`);
   return res;
 };
@@ -153,8 +229,82 @@ export const apiFetchSearchedActors = async (name: string) => {
  * @param {number} actorId
  * @returns {APICustomResponse<{}>}
  */
-export const apiFetchActorById = async (actorId: string) => {
+export const apiFetchActorById = async (
+  actorId: string
+): Promise<APICustomResponse<{}>> => {
   const res = await apiRequest<APICustomResponse<{}>>(`/actors/${actorId}`);
+  return res;
+};
+
+/**
+ * Create new actor
+ * @param {number} actorId
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiPostActor = async (
+  data: IPostActor
+): Promise<APICustomResponse<{}>> => {
+  const actorData: IPostActor = {
+    firstName: data.firstName,
+    lastName: data.lastName,
+    gender: data.gender,
+    age: data.age,
+    image: data.image,
+    link: data.link,
+  };
+  const res = await apiRequest<APICustomResponse<{}>>(`/actors`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    data: actorData,
+  });
+  return res;
+};
+
+/**
+ * Create new actor
+ * @param {number} actorId
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiUpdateActorById = async (
+  data: IPostActor
+): Promise<APICustomResponse<{}>> => {
+  let { id, ...updatedActor } = data;
+  const res = await apiRequest<APICustomResponse<{}>>(`/actors/${data.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: updatedActor,
+  });
+  return res;
+};
+
+/**
+ * Create new actor
+ * @param {number} actorId
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiDeleteActorById = async (
+  id: string
+): Promise<APICustomResponse<{}>> => {
+  const res = await apiRequest<APICustomResponse<{}>>(`/actors/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return res;
+};
+
+export const apiFetchMovieReviewsById = async (
+  movieId: string
+): Promise<APICustomResponse<{}>> => {
+  const res = await apiRequest<APICustomResponse<{}>>(
+    `/reviews/movie/${movieId}`
+  );
   return res;
 };
 
@@ -183,10 +333,78 @@ export const apiPostMovieReview = async (
 };
 
 /**
- * Fetch all actors
+ * Update user by id
  * @returns {APICustomResponse<{}>}
  */
-export const apiFetchAllUsers = async () => {
+export const apiUpdateReviewById = async (
+  data: IPatchReviewProps
+): Promise<APICustomResponse<{}>> => {
+  let { id, ...isApproved } = data;
+  const res = await apiRequest<APICustomResponse<{}>>(`/reviews/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: isApproved,
+  });
+  return res;
+};
+
+/**
+ * Update user by id
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiDeleteReviewById = async (
+  id: string
+): Promise<APICustomResponse<{}>> => {
+  const res = await apiRequest<APICustomResponse<{}>>(`/reviews/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return res;
+};
+
+/**
+ * Fetch all users
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiFetchAllUsers = async (): Promise<APICustomResponse<{}>> => {
   const res = await apiRequest<APICustomResponse<{}>>(`/users`);
+  return res;
+};
+
+/**
+ * Update user by id
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiUpdateUserById = async (
+  data: IPatchUserAPIProps
+): Promise<APICustomResponse<{}>> => {
+  let { id, ...updatedUser } = data;
+  const res = await apiRequest<APICustomResponse<{}>>(`/users/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: updatedUser,
+  });
+  return res;
+};
+
+/**
+ * Update user by id
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiDeleteUserById = async (
+  id: string
+): Promise<APICustomResponse<{}>> => {
+  const res = await apiRequest<APICustomResponse<{}>>(`/users/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   return res;
 };

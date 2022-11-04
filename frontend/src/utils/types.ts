@@ -24,13 +24,21 @@ export interface IRegisterAPIProps {
   email: string;
   password: string;
 }
-export interface IUser {
+export interface IPatchUserAPIProps {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
   role: string;
   isActivated: boolean;
+}
+export interface IUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  isActivated: boolean | string;
   dateCreated: string;
 }
 export interface IMovie {
@@ -43,6 +51,20 @@ export interface IMovie {
   movieReviews?: IMovieReview[];
   movieCasters?: IActor[];
   rating?: number;
+}
+export interface IPostMovie {
+  title: string;
+  description: string;
+  cost: number;
+  yearReleased: number;
+  image: string;
+  actors: string[];
+}
+export interface IPatchMovie {
+  id: string;
+  description: string;
+  cost: number;
+  image: string;
 }
 
 export interface IMovieReview {
@@ -73,10 +95,25 @@ export interface IActor {
   moviesCasted?: IMovie[];
 }
 
+export interface IPostActor {
+  id?: string;
+  firstName: string;
+  lastName: string;
+  gender: "male" | "female";
+  age: number;
+  image: string;
+  link?: string;
+}
+
 export interface IPostReviewProps {
   description: string;
   rating: number;
   movieId: string;
+}
+
+export interface IPatchReviewProps {
+  id: string;
+  isApproved: boolean | string;
 }
 
 export interface IDispatchResponse {

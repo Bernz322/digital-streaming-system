@@ -21,6 +21,7 @@ import {
 import {
   CustomResponse,
   CustomResponseSchema,
+  isValidUrl,
   PostMovieRequest,
   PostMovieSchema,
 } from '../utils';
@@ -45,7 +46,7 @@ export class MoviesController {
   async create(
     @requestBody({
       description:
-        'Create new movie. Actors and image properties can be left blank. (Requires token and admin role authorization)',
+        'Create new movie. Actors properties can be left blank. (Requires token and admin role authorization)',
       content: {
         'application/json': {
           schema: PostMovieSchema,
@@ -55,6 +56,7 @@ export class MoviesController {
     movies: Omit<PostMovieRequest, 'id'>,
   ): Promise<CustomResponse<{}>> {
     try {
+      isValidUrl(movies.image, 'movie image');
       const movie = await this.moviesRepository.create(
         _.omit(movies, ['actors']),
       );
@@ -141,16 +143,20 @@ export class MoviesController {
         ],
       });
       let sum = 0;
+      let length = 0;
       movies?.movieReviews?.forEach(review => {
         if (review.isApproved) {
           sum += review?.rating;
+          length++;
         }
       });
-      const reviewCount = movies?.movieReviews?.length || 1;
-
+      const reviewCount = length || 1;
       return {
         status: 'success',
-        data: {...movies, rating: sum / reviewCount},
+        data: {
+          ...movies,
+          rating: parseFloat((sum / reviewCount || 0).toFixed(2)),
+        },
         message: 'Successfully fetched all movies.',
       };
     } catch (error) {
@@ -220,6 +226,7 @@ export class MoviesController {
     movies: Movies,
   ): Promise<CustomResponse<{}>> {
     try {
+      isValidUrl(movies.image, 'movie image');
       await this.moviesRepository.updateById(id, movies);
       const updatedMovie = await this.moviesRepository.findById(id);
       return {

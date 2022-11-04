@@ -13,7 +13,12 @@ import {
 } from '@loopback/rest';
 import {Actors} from '../models';
 import {ActorsRepository, MovieCastRepository} from '../repositories';
-import {CustomResponse, CustomResponseSchema, validateName} from '../utils';
+import {
+  CustomResponse,
+  CustomResponseSchema,
+  isValidUrl,
+  validateName,
+} from '../utils';
 
 export class ActorsController {
   constructor(
@@ -33,7 +38,7 @@ export class ActorsController {
   async create(
     @requestBody({
       description:
-        'Add new actor. Image and link fields is not required. Enter valid name fields. Gender must only be male or female and age should be greater than 0. (Requires token and admin role authorization)',
+        'Add new actor. Enter valid name fields. Gender must only be male or female and age should be greater than 0. (Requires token and admin role authorization)',
       content: {
         'application/json': {
           schema: getModelSchemaRef(Actors, {
@@ -52,6 +57,8 @@ export class ActorsController {
         throw new Error('Gender should only be either male or female');
       if (actors.age < 1)
         throw new Error('Actor age cannot be less than a year.');
+      isValidUrl(actors.link, 'actor link');
+      isValidUrl(actors.image, 'actor image');
 
       const actorCreated = await this.actorsRepository.create(actors);
       return {
@@ -198,6 +205,8 @@ export class ActorsController {
         throw new Error('Gender should only be either male or female');
       if (actors.age < 1)
         throw new Error('Actor age cannot be less than a year.');
+      isValidUrl(actors.link, 'actor link');
+      isValidUrl(actors.image, 'actor image');
 
       await this.actorsRepository.updateById(id, actors);
       const updatedActor = await this.actorsRepository.findById(id);

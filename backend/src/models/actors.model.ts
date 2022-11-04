@@ -37,8 +37,7 @@ export class Actors extends Entity {
 
   @property({
     type: 'string',
-    default:
-      'https://www.limestone.edu/sites/default/files/images/2019-11/user.jpg',
+    required: true,
   })
   image: string;
 

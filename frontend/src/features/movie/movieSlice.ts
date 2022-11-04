@@ -6,24 +6,40 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit";
 import {
+  apiDeleteMovieById,
+  apiDeleteReviewById,
   apiFetchAllMovies,
   apiFetchLimitMovies,
   apiFetchMovieById,
+  apiFetchMovieReviewsById,
   apiFetchSearchedMovies,
+  apiPostMovie,
   apiPostMovieReview,
+  apiUpdateMovieById,
+  apiUpdateReviewById,
 } from "../../utils/apiCalls";
-import { APICustomResponse, IMovie, IPostReviewProps } from "../../utils/types";
+import {
+  APICustomResponse,
+  IMovie,
+  IMovieReview,
+  IPatchMovie,
+  IPatchReviewProps,
+  IPostMovie,
+  IPostReviewProps,
+} from "../../utils/types";
 
 export interface IMovieState {
   isLoading: boolean;
   movies: IMovie[];
   selectedMovie: IMovie;
+  selectedMovieReviews: IMovieReview[];
 }
 
 const initialState: IMovieState = {
   isLoading: false,
   movies: [] as IMovie[],
   selectedMovie: {} as IMovie,
+  selectedMovieReviews: [],
 };
 
 // Fetch movies (with limit)
@@ -171,6 +187,184 @@ export const postMovieReview = createAsyncThunk(
   }
 );
 
+// Add Movie
+export const addMovie = createAsyncThunk(
+  "movies/addMovie",
+  async (data: IPostMovie, thunkAPI) => {
+    const movieData: IPostMovie = {
+      title: data.title,
+      description: data.description,
+      cost: data.cost,
+      yearReleased: data.yearReleased,
+      image: data.image,
+      actors: data.actors,
+    };
+    try {
+      const res: APICustomResponse<{}> = await apiPostMovie(movieData);
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message: string =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error &&
+          error.response.data.error.message) ||
+        error.message ||
+        error.toString();
+      showNotification({
+        title: "Something went wrong.",
+        message: message,
+        autoClose: 5000,
+        color: "red",
+      });
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Update Movie by Id
+export const updateMovieById = createAsyncThunk(
+  "movies/updateMovieById",
+  async (data: IPatchMovie, thunkAPI) => {
+    const movieData: IPatchMovie = {
+      id: data.id,
+      description: data.description,
+      cost: data.cost,
+      image: data.image,
+    };
+    try {
+      const res: APICustomResponse<{}> = await apiUpdateMovieById(movieData);
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message: string =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error &&
+          error.response.data.error.message) ||
+        error.message ||
+        error.toString();
+      showNotification({
+        title: "Something went wrong.",
+        message: message,
+        autoClose: 5000,
+        color: "red",
+      });
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const deleteMovieById = createAsyncThunk(
+  "actors/deleteActorById",
+  async (id: string, thunkAPI) => {
+    try {
+      const res: APICustomResponse<{}> = await apiDeleteMovieById(id);
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message: string =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error &&
+          error.response.data.error.message) ||
+        error.message ||
+        error.toString();
+      showNotification({
+        title: "Something went wrong.",
+        message: message,
+        autoClose: 5000,
+        color: "red",
+      });
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Fetch movie reviews by id
+export const fetchMovieReviewsById = createAsyncThunk(
+  "reviews/fetchMovieReviewsById",
+  async (movieId: string, thunkAPI) => {
+    try {
+      const res = await apiFetchMovieReviewsById(movieId);
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message: string =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error &&
+          error.response.data.error.message) ||
+        error.message ||
+        error.toString();
+      showNotification({
+        title: "Something went wrong.",
+        message: message,
+        autoClose: 5000,
+        color: "red",
+      });
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Update Movie Review status by Id
+export const updateMovieReviewById = createAsyncThunk(
+  "reviews/updateMovieReviewById",
+  async (data: IPatchReviewProps, thunkAPI) => {
+    const reviewData: IPatchReviewProps = {
+      id: data.id,
+      isApproved: data.isApproved,
+    };
+    try {
+      const res: APICustomResponse<{}> = await apiUpdateReviewById(reviewData);
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message: string =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error &&
+          error.response.data.error.message) ||
+        error.message ||
+        error.toString();
+      showNotification({
+        title: "Something went wrong.",
+        message: message,
+        autoClose: 5000,
+        color: "red",
+      });
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const deleteMovieReviewById = createAsyncThunk(
+  "review/deleteMovieReviewById",
+  async (id: string, thunkAPI) => {
+    try {
+      const res: APICustomResponse<{}> = await apiDeleteReviewById(id);
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message: string =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error &&
+          error.response.data.error.message) ||
+        error.message ||
+        error.toString();
+      showNotification({
+        title: "Something went wrong.",
+        message: message,
+        autoClose: 5000,
+        color: "red",
+      });
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const movieSlice = createSlice({
   name: "movie",
   initialState,
@@ -179,6 +373,7 @@ const movieSlice = createSlice({
       state.isLoading = false;
       state.movies = [] as IMovie[];
       state.selectedMovie = {} as IMovie;
+      state.selectedMovieReviews = [] as IMovieReview[];
     },
   },
   extraReducers: (builder: ActionReducerMapBuilder<IMovieState>) => {
@@ -246,6 +441,98 @@ const movieSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(postMovieReview.rejected, (state: IMovieState) => {
+        state.isLoading = false;
+      })
+      .addCase(addMovie.pending, (state: IMovieState) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        addMovie.fulfilled,
+        (state: IMovieState, action: PayloadAction<APICustomResponse<{}>>) => {
+          state.isLoading = false;
+          state.movies.push(action.payload.data as IMovie);
+        }
+      )
+      .addCase(addMovie.rejected, (state: IMovieState) => {
+        state.isLoading = false;
+      })
+      .addCase(updateMovieById.pending, (state: IMovieState) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        updateMovieById.fulfilled,
+        (state: IMovieState, action: PayloadAction<APICustomResponse<{}>>) => {
+          const data = action.payload.data as IMovie;
+          state.isLoading = false;
+          state.movies = state.movies.map((movie) => {
+            return movie.id === data.id ? data : movie;
+          });
+        }
+      )
+      .addCase(updateMovieById.rejected, (state: IMovieState) => {
+        state.isLoading = false;
+      })
+      .addCase(deleteMovieById.pending, (state: IMovieState) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        deleteMovieById.fulfilled,
+        (state: IMovieState, action: PayloadAction<APICustomResponse<{}>>) => {
+          state.isLoading = false;
+          state.movies = state.movies.filter((movie) => {
+            return movie.id !== action.payload.data;
+          });
+        }
+      )
+      .addCase(deleteMovieById.rejected, (state: IMovieState) => {
+        state.isLoading = false;
+      })
+      .addCase(fetchMovieReviewsById.pending, (state: IMovieState) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        fetchMovieReviewsById.fulfilled,
+        (state: IMovieState, action: PayloadAction<APICustomResponse<{}>>) => {
+          state.isLoading = false;
+          state.selectedMovieReviews = action.payload.data as IMovieReview[];
+        }
+      )
+      .addCase(fetchMovieReviewsById.rejected, (state: IMovieState) => {
+        state.isLoading = false;
+      })
+      .addCase(updateMovieReviewById.pending, (state: IMovieState) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        updateMovieReviewById.fulfilled,
+        (state: IMovieState, action: PayloadAction<APICustomResponse<{}>>) => {
+          const data = action.payload.data as IMovieReview;
+          state.isLoading = false;
+          state.selectedMovieReviews = state.selectedMovieReviews.map(
+            (review) => {
+              return review.id === data.id ? data : review;
+            }
+          );
+        }
+      )
+      .addCase(updateMovieReviewById.rejected, (state: IMovieState) => {
+        state.isLoading = false;
+      })
+      .addCase(deleteMovieReviewById.pending, (state: IMovieState) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        deleteMovieReviewById.fulfilled,
+        (state: IMovieState, action: PayloadAction<APICustomResponse<{}>>) => {
+          state.isLoading = false;
+          state.selectedMovieReviews = state.selectedMovieReviews.filter(
+            (review) => {
+              return review.id !== action.payload.data;
+            }
+          );
+        }
+      )
+      .addCase(deleteMovieReviewById.rejected, (state: IMovieState) => {
         state.isLoading = false;
       });
   },

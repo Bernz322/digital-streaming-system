@@ -89,6 +89,13 @@ h6 {
     letter-spacing: -0.04em;
 }
 
+.flexCenterStart {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    max-width: 330px;
+}
+
 main.pageContainer {
     position: relative;
     top: 95px;

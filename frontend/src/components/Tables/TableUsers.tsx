@@ -1,10 +1,10 @@
 import {
   Button,
-  Checkbox,
   Group,
   Modal,
   Paper,
   PasswordInput,
+  SegmentedControl,
   Space,
   Text,
   TextInput,
@@ -12,16 +12,26 @@ import {
 } from "@mantine/core";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { IconArrowDown, IconEdit, IconTrash } from "@tabler/icons";
-import { IRegisterAPIProps, IUser } from "../../utils/types";
-import { useEffect, useState } from "react";
+import {
+  IDispatchResponse,
+  IPatchUserAPIProps,
+  IRegisterAPIProps,
+  IUser,
+} from "../../utils/types";
+import { useCallback, useEffect, useState } from "react";
 import { tableCustomStyles, useStyles } from "./TableStyles";
 import { useTypedDispatch, useTypedSelector } from "../../hooks/rtk-hooks";
-import { fetchAllUsers } from "../../features/user/userSlice";
+import {
+  addUser,
+  deleteUserById,
+  fetchAllUsers,
+  updateUserById,
+} from "../../features/user/userSlice";
 import { isValidEmail, isValidName } from "../../utils/helpers";
 import { showNotification } from "@mantine/notifications";
 
 const TableUsers = () => {
-  const { users, isLoading } = useTypedSelector((state) => state.user);
+  const { users } = useTypedSelector((state) => state.user);
   const dispatch = useTypedDispatch();
   const { classes } = useStyles();
 
@@ -41,17 +51,18 @@ const TableUsers = () => {
   const [userIdToDelete, setUserIdToDelete] = useState<string>("");
 
   // Add User Action
-  const handleAddUser = () => {
+  const handleAddUser = async () => {
     try {
       isValidName(newUser.firstName, "first");
       isValidName(newUser.lastName, "last");
       isValidEmail(newUser.email);
       if (newUser.password === "" || !newUser.password)
         throw new Error("Enter password.");
-      console.log(newUser);
-      // dispatch(addUser(newUserData));
-      setAddUserModal(false);
-      setNewUser({} as IRegisterAPIProps);
+      const res: IDispatchResponse = await dispatch(addUser(newUser));
+      if (!res.error) {
+        setAddUserModal(false);
+        setNewUser({} as IRegisterAPIProps);
+      }
     } catch (error: any) {
       showNotification({
         title: "Something went wrong.",
@@ -63,25 +74,30 @@ const TableUsers = () => {
   };
 
   // Update  User Action
-  const handleUserUpdateActionClick = (userRowData: IUser) => {
+  const handleUserUpdateActionClick = useCallback((userRowData: IUser) => {
     setEditUserModal(true);
     setSelectedUserData(userRowData);
-  };
-  const handleUserUpdate = () => {
+  }, []);
+  const handleUserUpdate = async () => {
     try {
       isValidName(selectedUserData.firstName, "first");
       isValidName(selectedUserData.lastName, "last");
       isValidEmail(selectedUserData.email);
-      const updateUserData = {
+      const isTrueSet = selectedUserData.isActivated === "true";
+      const updateUserData: IPatchUserAPIProps = {
+        id: selectedUserData.id,
         firstName: selectedUserData.firstName,
         lastName: selectedUserData.lastName,
         email: selectedUserData.email,
         role: selectedUserData.role,
-        isActivated: selectedUserData.isActivated,
+        isActivated: isTrueSet,
       };
-      console.log(updateUserData);
-      // dispatch(updateUser(updateUserData));
-      setEditUserModal(false);
+      const res: IDispatchResponse = await dispatch(
+        updateUserById(updateUserData)
+      );
+      if (!res.error) {
+        setEditUserModal(false);
+      }
     } catch (error: any) {
       showNotification({
         title: "Something went wrong.",
@@ -93,13 +109,13 @@ const TableUsers = () => {
   };
 
   // Delete User Action
-  const handleUserDeleteActionClick = (id: string) => {
+  const handleUserDeleteActionClick = useCallback((id: string) => {
     setUserIdToDelete(id);
     setDeleteUserModal(true);
-  };
+  }, []);
+
   const handleUserDelete = () => {
-    // dispatch(deleteUser(userIdToDelete))
-    console.log(userIdToDelete);
+    dispatch(deleteUserById(userIdToDelete));
     setDeleteUserModal(false);
   };
 
@@ -169,7 +185,7 @@ const TableUsers = () => {
     dispatch(fetchAllUsers());
   }, [dispatch]);
 
-  const filteredItems = users?.filter(
+  const filteredItems: IUser[] = users?.filter(
     (item) =>
       item.firstName.toLowerCase().includes(filterByName.toLowerCase()) ||
       item.lastName.toLowerCase().includes(filterByName.toLowerCase())
@@ -178,7 +194,7 @@ const TableUsers = () => {
     <Paper className={classes.paper}>
       <Group position="apart" className={classes.head}>
         <TextInput
-          placeholder="Search User name"
+          placeholder="Search user name"
           classNames={classes}
           value={filterByName}
           onChange={(event) => setFilterByName(event.currentTarget.value)}
@@ -196,10 +212,11 @@ const TableUsers = () => {
         data={filteredItems}
         pagination
         dense
-        progressPending={isLoading}
         sortIcon={<IconArrowDown />}
         theme="dark"
         customStyles={tableCustomStyles}
+        fixedHeader={true}
+        fixedHeaderScrollHeight="250px"
       />
 
       {/* Add User Modals */}
@@ -293,27 +310,37 @@ const TableUsers = () => {
             })
           }
         />
-        <Checkbox
-          mt="md"
-          checked={selectedUserData?.isActivated}
-          label="Activated"
-          onChange={(e) =>
+
+        <SegmentedControl
+          defaultValue={selectedUserData?.isActivated?.toString()}
+          mt="15px"
+          onChange={(value) =>
             setSelectedUserData({
               ...selectedUserData,
-              isActivated: e.currentTarget.checked,
+              isActivated: value,
             })
           }
+          data={[
+            { label: "Status", value: "status", disabled: true },
+            { label: "Activate", value: "true" },
+            { label: "Deactivate", value: "false" },
+          ]}
         />
-        <Checkbox
-          mt="md"
-          checked={selectedUserData?.role === "admin" ? true : false}
-          label="Admin"
-          onChange={(e) =>
+
+        <SegmentedControl
+          defaultValue={selectedUserData?.role}
+          mt="15px"
+          onChange={(value) =>
             setSelectedUserData({
               ...selectedUserData,
-              role: e.currentTarget.checked ? "admin" : "user",
+              role: value,
             })
           }
+          data={[
+            { label: "Role", value: "role", disabled: true },
+            { label: "Admin", value: "admin" },
+            { label: "User", value: "user" },
+          ]}
         />
 
         <Button

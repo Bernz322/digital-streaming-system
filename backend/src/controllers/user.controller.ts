@@ -292,6 +292,13 @@ export class UserController {
     user: User,
   ): Promise<CustomResponse<{}>> {
     try {
+      const rootAdmin = await this.myUserRepo.find({
+        order: ['dateCreated ASC'],
+        limit: 1,
+      });
+      if (rootAdmin[0].id === id)
+        throw new Error('You cannot edit the root admin.');
+
       // Validate email and name
       if (user.firstName) validateName(user.firstName, 'firstName');
       if (user.lastName) validateName(user.lastName, 'lastName');
@@ -338,7 +345,7 @@ export class UserController {
   ): Promise<CustomResponse<{}>> {
     try {
       const rootAdmin = await this.myUserRepo.find({
-        order: ['dateCreated DESC'],
+        order: ['dateCreated ASC'],
         limit: 1,
       });
       if (rootAdmin[0].id === id)

@@ -6,11 +6,14 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit";
 import {
+  apiDeleteActorById,
   apiFetchActorById,
   apiFetchAllActors,
   apiFetchSearchedActors,
+  apiPostActor,
+  apiUpdateActorById,
 } from "../../utils/apiCalls";
-import { APICustomResponse, IActor } from "../../utils/types";
+import { APICustomResponse, IActor, IPostActor } from "../../utils/types";
 
 export interface IActorState {
   isLoading: boolean;
@@ -26,7 +29,7 @@ const initialState: IActorState = {
 
 // Fetch all actors
 export const fetchAllActors = createAsyncThunk(
-  "movies/fetchAllActors",
+  "actors/fetchAllActors",
   async (_, thunkAPI) => {
     try {
       const res = await apiFetchAllActors();
@@ -53,7 +56,7 @@ export const fetchAllActors = createAsyncThunk(
 
 // Fetch searched actors by first name or last name
 export const fetchSearchedActors = createAsyncThunk(
-  "movies/fetchSearchedActors",
+  "actors/fetchSearchedActors",
   async (name: string, thunkAPI) => {
     try {
       const res = await apiFetchSearchedActors(name);
@@ -80,10 +83,108 @@ export const fetchSearchedActors = createAsyncThunk(
 
 // Fetch actor by id
 export const fetchActorById = createAsyncThunk(
-  "movies/fetchActorById",
+  "actors/fetchActorById",
   async (actorId: string, thunkAPI) => {
     try {
       const res = await apiFetchActorById(actorId);
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message: string =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error &&
+          error.response.data.error.message) ||
+        error.message ||
+        error.toString();
+      showNotification({
+        title: "Something went wrong.",
+        message: message,
+        autoClose: 5000,
+        color: "red",
+      });
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Add Actor
+export const addActor = createAsyncThunk(
+  "actors/addActor",
+  async (data: IPostActor, thunkAPI) => {
+    const actorData: IPostActor = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      gender: data.gender,
+      age: data.age,
+      image: data.image,
+      link: data.link,
+    };
+    try {
+      const res: APICustomResponse<{}> = await apiPostActor(actorData);
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message: string =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error &&
+          error.response.data.error.message) ||
+        error.message ||
+        error.toString();
+      showNotification({
+        title: "Something went wrong.",
+        message: message,
+        autoClose: 5000,
+        color: "red",
+      });
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Update Actor by Id
+export const updateActorById = createAsyncThunk(
+  "actors/updateActorById",
+  async (data: IPostActor, thunkAPI) => {
+    const actorData: IPostActor = {
+      id: data.id,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      gender: data.gender,
+      age: data.age,
+      image: data.image,
+      link: data.link,
+    };
+    try {
+      const res: APICustomResponse<{}> = await apiUpdateActorById(actorData);
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message: string =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error &&
+          error.response.data.error.message) ||
+        error.message ||
+        error.toString();
+      showNotification({
+        title: "Something went wrong.",
+        message: message,
+        autoClose: 5000,
+        color: "red",
+      });
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Delete Actor by Id
+export const deleteActorById = createAsyncThunk(
+  "actors/deleteActorById",
+  async (id: string, thunkAPI) => {
+    try {
+      const res: APICustomResponse<{}> = await apiDeleteActorById(id);
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
@@ -160,6 +261,50 @@ const actorSlice = createSlice({
       .addCase(fetchActorById.rejected, (state: IActorState) => {
         state.isLoading = false;
         state.selectedActor = {} as IActor;
+      })
+      .addCase(addActor.pending, (state: IActorState) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        addActor.fulfilled,
+        (state: IActorState, action: PayloadAction<APICustomResponse<{}>>) => {
+          state.isLoading = false;
+          state.actors.push(action.payload.data as IActor);
+        }
+      )
+      .addCase(addActor.rejected, (state: IActorState) => {
+        state.isLoading = false;
+      })
+      .addCase(updateActorById.pending, (state: IActorState) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        updateActorById.fulfilled,
+        (state: IActorState, action: PayloadAction<APICustomResponse<{}>>) => {
+          const data = action.payload.data as IActor;
+          state.isLoading = false;
+          state.actors = state.actors.map((actor) => {
+            return actor.id === data.id ? data : actor;
+          });
+        }
+      )
+      .addCase(updateActorById.rejected, (state: IActorState) => {
+        state.isLoading = false;
+      })
+      .addCase(deleteActorById.pending, (state: IActorState) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        deleteActorById.fulfilled,
+        (state: IActorState, action: PayloadAction<APICustomResponse<{}>>) => {
+          state.isLoading = false;
+          state.actors = state.actors.filter((actor) => {
+            return actor.id !== action.payload.data;
+          });
+        }
+      )
+      .addCase(deleteActorById.rejected, (state: IActorState) => {
+        state.isLoading = false;
       });
   },
 });

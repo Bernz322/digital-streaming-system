@@ -93,7 +93,7 @@ const IndividualMovie = () => {
           </div>
           <div className="movieReviewsContainer">
             <h2 className="reviewsPageH2">Reviews</h2>
-            {((approvedReviews && (approvedReviews?.length as number) <= 0) ||
+            {((approvedReviews && approvedReviews?.length <= 0) ||
               !approvedReviews) && (
               <h1 className="noContentH1">
                 This movie has no user reviews yet.

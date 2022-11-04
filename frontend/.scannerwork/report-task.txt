@@ -1,6 +1,6 @@
-projectKey=front-test
+projectKey=front-partial
 serverUrl=http://localhost:9000
 serverVersion=9.7.0.61563
-dashboardUrl=http://localhost:9000/dashboard?id=front-test
-ceTaskId=AYQ3xsn723ZbpN7qnNSC
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYQ3xsn723ZbpN7qnNSC
+dashboardUrl=http://localhost:9000/dashboard?id=front-partial
+ceTaskId=AYRAlqyJuVvftEPd2edx
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYRAlqyJuVvftEPd2edx

@@ -8,6 +8,7 @@ import {
   getModelSchemaRef,
   patch,
   del,
+  get,
   requestBody,
   response,
 } from '@loopback/rest';
@@ -119,6 +120,46 @@ export class ReviewsController {
       return {
         status: 'success',
         data: updatedMovie,
+        message: 'Review updated successfully.',
+      };
+    } catch (error) {
+      return {
+        status: 'fail',
+        data: null,
+        message: error ? error.message : 'Updating review failed.',
+      };
+    }
+  }
+
+  @get('/reviews/movie/{id}')
+  @response(204, {
+    description: 'Return all reviews of movie.',
+    content: {'application/json': {schema: CustomResponseSchema}},
+  })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
+  async getById(
+    @param.path.string('id') id: string,
+  ): Promise<CustomResponse<{}>> {
+    try {
+      const movieReviews = await this.reviewsRepository.find({
+        where: {movieId: id},
+        include: [
+          {
+            relation: 'userReviewer',
+            scope: {
+              fields: {
+                role: false,
+                isActivated: false,
+                dateCreated: false,
+              },
+            },
+          },
+        ],
+      });
+      return {
+        status: 'success',
+        data: movieReviews,
         message: 'Review updated successfully.',
       };
     } catch (error) {
