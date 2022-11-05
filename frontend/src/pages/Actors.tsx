@@ -1,6 +1,6 @@
+import { useCallback, useEffect, useState } from "react";
 import { Button, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons";
-import { useEffect, useState } from "react";
 import { ActorCard } from "../components";
 import {
   fetchAllActors,
@@ -18,10 +18,10 @@ const Actors = () => {
     dispatch(fetchAllActors());
   }, [dispatch]);
 
-  const handleSearchClick = () => {
-    if (actorName === "") return setError(true);
+  const handleSearchClick = useCallback(() => {
+    if (actorName.trim() === "") return setError(true);
     dispatch(fetchSearchedActors(actorName));
-  };
+  }, [dispatch, actorName]);
   return (
     <main className="pageContainer">
       <div className="sectionContainer">
