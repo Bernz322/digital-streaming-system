@@ -21,6 +21,8 @@ import {
 import {
   CustomResponse,
   CustomResponseSchema,
+  isNotEmpty,
+  isNotNull,
   isValidUrl,
   PostMovieRequest,
   PostMovieSchema,
@@ -46,7 +48,7 @@ export class MoviesController {
   async create(
     @requestBody({
       description:
-        'Create new movie. Actors properties can be left blank. (Requires token and admin role authorization)',
+        'Create new movie. All fields are required. (Requires token and admin role authorization)',
       content: {
         'application/json': {
           schema: PostMovieSchema,
@@ -56,7 +58,17 @@ export class MoviesController {
     movies: Omit<PostMovieRequest, 'id'>,
   ): Promise<CustomResponse<{}>> {
     try {
+      // Validate input fields
+      isNotEmpty(movies.title, 'movie title');
+      isNotEmpty(movies.description, 'movie description');
+      if (movies.cost < 0 || !movies.cost)
+        throw new Error('Movie budget cost cannot be less than 0.');
+      if (movies.yearReleased < 0 || !movies.yearReleased)
+        throw new Error('Movie year released cannot be of negative value.');
       isValidUrl(movies.image, 'movie image');
+      if (movies.actors.length <= 0 || !movies.actors)
+        throw new Error('Movie cannot have 0 actor.');
+
       const movie = await this.moviesRepository.create(
         _.omit(movies, ['actors']),
       );
@@ -212,7 +224,7 @@ export class MoviesController {
     @param.path.string('id') id: string,
     @requestBody({
       description:
-        'Update movie image and cost (provide movie id). (Requires token and admin role authorization)',
+        'Update movie image, description and cost (provide movie id). (Requires token and admin role authorization)',
       content: {
         'application/json': {
           schema: getModelSchemaRef(Movies, {
@@ -226,7 +238,21 @@ export class MoviesController {
     movies: Movies,
   ): Promise<CustomResponse<{}>> {
     try {
-      isValidUrl(movies.image, 'movie image');
+      // Validate input fields
+      if (movies.hasOwnProperty('description')) {
+        isNotNull(movies.description, 'movie description');
+      }
+
+      if (movies.hasOwnProperty('cost')) {
+        if (movies.cost < 0 || !movies.cost)
+          throw new Error('Movie budget cost cannot be less than 0.');
+      }
+
+      if (movies.hasOwnProperty('image')) {
+        isNotNull(movies.image, 'image');
+        isValidUrl(movies.image, 'movie image');
+      }
+
       await this.moviesRepository.updateById(id, movies);
       const updatedMovie = await this.moviesRepository.findById(id);
       return {
@@ -245,7 +271,8 @@ export class MoviesController {
 
   @del('/movies/{id}')
   @response(204, {
-    description: 'Returns deleted movie id.',
+    description:
+      'Returns deleted movie id. (Requires token and admin role authorization)',
     content: {'application/json': {schema: CustomResponseSchema}},
   })
   @authenticate('jwt')
@@ -254,6 +281,13 @@ export class MoviesController {
     @param.path.string('id') id: string,
   ): Promise<CustomResponse<{}>> {
     try {
+      const movieToDelete = await this.moviesRepository.findById(id);
+      const eligibleForDeletion =
+        new Date().getFullYear() - movieToDelete.yearReleased >= 1;
+
+      if (!eligibleForDeletion)
+        throw new Error('Movies only 1 year older can be deleted.');
+
       await this.moviesRepository.deleteById(id);
       await this.movieCastRepository.deleteAll({movieId: id});
       await this.reviewsRepository.deleteAll({movieId: id});
