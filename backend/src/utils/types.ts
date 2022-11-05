@@ -11,6 +11,7 @@ export type Credentials = {
 
 export type PostMovieRequest = {
   title: string;
+  description: string;
   cost: number;
   image: string;
   yearReleased: number;
