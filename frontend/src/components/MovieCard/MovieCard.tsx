@@ -1,3 +1,4 @@
+import { upperFirst } from "@mantine/hooks";
 import { Link } from "react-router-dom";
 import { Rating } from "..";
 import { movieRating } from "../../utils/helpers";
@@ -16,7 +17,7 @@ const MovieCard = ({ movie }: MovieProps) => {
       <Link to={`/movie/${movie.id}`} className="movieCardLink">
         <img src={movie.image} alt="movie" />
         <Rating rating={rating} />
-        <h4 className="movieCardTitle">{movie.title}</h4>
+        <h4 className="movieCardTitle">{upperFirst(movie.title)}</h4>
         <div className="movieCardFooter">
           <span>Year released</span>
           <span>{movie.yearReleased}</span>
