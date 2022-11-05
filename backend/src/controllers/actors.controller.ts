@@ -17,7 +17,8 @@ import {
   CustomResponse,
   CustomResponseSchema,
   isValidUrl,
-  validateName,
+  isValidName,
+  isNotNull,
 } from '../utils';
 
 export class ActorsController {
@@ -51,14 +52,15 @@ export class ActorsController {
     actors: Omit<Actors, 'id'>,
   ): Promise<CustomResponse<{}>> {
     try {
-      validateName(actors.firstName, 'firstName');
-      validateName(actors.lastName, 'lastName');
+      // Validate input fields
+      isValidName(actors.firstName, 'firstName');
+      isValidName(actors.lastName, 'lastName');
       if (actors.gender !== 'male' && actors.gender !== 'female')
         throw new Error('Gender should only be either male or female');
-      if (actors.age < 1)
+      if (actors.age < 1 || !actors.age)
         throw new Error('Actor age cannot be less than a year.');
-      isValidUrl(actors.link, 'actor link');
       isValidUrl(actors.image, 'actor image');
+      isValidUrl(actors.link, 'actor link');
 
       const actorCreated = await this.actorsRepository.create(actors);
       return {
@@ -131,7 +133,7 @@ export class ActorsController {
       return {
         status: 'fail',
         data: null,
-        message: 'Fetching actor data failed.',
+        message: error ? error.message : 'Fetching actor data failed.',
       };
     }
   }
@@ -169,7 +171,7 @@ export class ActorsController {
       return {
         status: 'fail',
         data: null,
-        message: 'Fetching actor data failed.',
+        message: error ? error.message : 'Fetching actor data failed.',
       };
     }
   }
@@ -199,14 +201,31 @@ export class ActorsController {
     actors: Actors,
   ): Promise<CustomResponse<{}>> {
     try {
-      validateName(actors.firstName, 'firstName');
-      validateName(actors.lastName, 'lastName');
-      if (actors.gender !== 'male' && actors.gender !== 'female')
-        throw new Error('Gender should only be either male or female');
-      if (actors.age < 1)
-        throw new Error('Actor age cannot be less than a year.');
-      isValidUrl(actors.link, 'actor link');
-      isValidUrl(actors.image, 'actor image');
+      // Validate input fields
+      if (actors.hasOwnProperty('firstName')) {
+        isNotNull(actors.firstName, 'firstName');
+        isValidName(actors.firstName, 'firstName');
+      }
+      if (actors.hasOwnProperty('lastName')) {
+        isNotNull(actors.lastName, 'lastName');
+        isValidName(actors.lastName, 'lastName');
+      }
+      if (actors.hasOwnProperty('gender')) {
+        if (actors.gender !== 'male' && actors.gender !== 'female')
+          throw new Error('Gender should only be either male or female');
+      }
+      if (actors.hasOwnProperty('age')) {
+        if (actors.age < 1 || !actors.age)
+          throw new Error('Actor age cannot be less than a year.');
+      }
+      if (actors.hasOwnProperty('image')) {
+        isNotNull(actors.image, 'image');
+        isValidUrl(actors.image, 'actor image');
+      }
+      if (actors.hasOwnProperty('link')) {
+        isNotNull(actors.link, 'link');
+        isValidUrl(actors.link, 'actor link');
+      }
 
       await this.actorsRepository.updateById(id, actors);
       const updatedActor = await this.actorsRepository.findById(id);
@@ -227,7 +246,8 @@ export class ActorsController {
 
   @del('/actors/{id}')
   @response(204, {
-    description: 'Returns deleted actor id.',
+    description:
+      'Returns deleted actor id. (Requires token and admin role authorization)',
     content: {'application/json': {schema: CustomResponseSchema}},
   })
   @authenticate('jwt')

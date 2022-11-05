@@ -33,8 +33,10 @@ import {
   UserLoginSchema,
   CustomResponse,
   validateEmail,
-  validateName,
+  isValidName,
+  isNotEmpty,
   CustomResponseSchema,
+  isNotNull,
 } from '../utils';
 import {authorize} from '@loopback/authorization';
 @model()
@@ -81,17 +83,18 @@ export class UserController {
     user: Omit<NewUserRequest, 'id'>,
   ): Promise<CustomResponse<{}>> {
     try {
-      // Validate email and name
+      // Validate input fields
       validateEmail(user.email);
-      validateName(user.firstName, 'firstName');
-      validateName(user.lastName, 'lastName');
+      isValidName(user.firstName, 'firstName');
+      isValidName(user.lastName, 'lastName');
+      isNotEmpty(user.password, 'password');
 
       const emailExists = await this.userRepository.findOne({
         where: {email: user.email},
       });
 
       if (emailExists) {
-        throw new Error('Email already exists.');
+        throw new Error('Email is already taken.');
       }
 
       // Create new user
@@ -144,7 +147,7 @@ export class UserController {
   })
   async login(
     @requestBody({
-      description: 'Enter email and password for logging in.',
+      description: 'Fill in all fields for logging in.',
       content: {
         'application/json': {schema: UserLoginSchema},
       },
@@ -153,7 +156,10 @@ export class UserController {
   ): Promise<CustomResponse<{}>> {
     const {email} = credentials;
     try {
+      // Validate input fields
       validateEmail(email);
+      isNotEmpty(credentials.password, 'password');
+
       const user = await this.userService.verifyCredentials(credentials);
       const userProfile = this.userService.convertToUserProfile(user);
       const token = await this.jwtService.generateToken(userProfile);
@@ -274,6 +280,7 @@ export class UserController {
     content: {'application/json': {schema: CustomResponseSchema}},
   })
   @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -299,18 +306,28 @@ export class UserController {
       if (rootAdmin[0].id === id)
         throw new Error('You cannot edit the root admin.');
 
-      // Validate email and name
-      if (user.firstName) validateName(user.firstName, 'firstName');
-      if (user.lastName) validateName(user.lastName, 'lastName');
-      if (user.email) {
+      // Validate input fields
+      if (user.hasOwnProperty('firstName')) {
+        isNotNull(user.firstName, 'firstName');
+        isValidName(user.firstName, 'firstName');
+      }
+
+      if (user.hasOwnProperty('lastName')) {
+        isNotNull(user.lastName, 'lastName');
+        isValidName(user.lastName, 'lastName');
+      }
+
+      if (user.hasOwnProperty('email')) {
+        isNotNull(user.email, 'email');
         validateEmail(user.email);
         const emailExists = await this.myUserRepo.findOne({
           where: {email: user.email},
         });
 
         if (emailExists && emailExists.id !== id)
-          throw new Error('Email already exists');
+          throw new Error('Email is already taken.');
       }
+
       if (user.role) {
         if (user.role !== 'admin' && user.role !== 'user')
           throw new Error('Role should only be either admin or user');
@@ -335,7 +352,8 @@ export class UserController {
 
   @del('/users/{id}')
   @response(204, {
-    description: 'Returns deleted user id.',
+    description:
+      'Returns deleted user id. (Requires token and admin role authorization)',
     content: {'application/json': {schema: CustomResponseSchema}},
   })
   @authenticate('jwt')

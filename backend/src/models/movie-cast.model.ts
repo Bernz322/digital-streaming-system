@@ -26,8 +26,4 @@ export class MovieCast extends Entity {
   }
 }
 
-export interface MovieCastRelations {
-  // describe navigational properties here
-}
-
-export type MovieCastWithRelations = MovieCast & MovieCastRelations;
+export type MovieCastWithRelations = MovieCast;

@@ -5,13 +5,12 @@ import {
   BelongsToAccessor,
 } from '@loopback/repository';
 import {MongodbDataSource} from '../datasources';
-import {Reviews, ReviewsRelations, User} from '../models';
+import {Reviews, User} from '../models';
 import {UserRepository} from './user.repository';
 
 export class ReviewsRepository extends DefaultCrudRepository<
   Reviews,
-  typeof Reviews.prototype.id,
-  ReviewsRelations
+  typeof Reviews.prototype.id
 > {
   public readonly userReviewer: BelongsToAccessor<
     User,

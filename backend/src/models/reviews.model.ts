@@ -34,6 +34,7 @@ export class Reviews extends Entity {
     default: false,
   })
   isApproved: boolean;
+
   @property({
     type: 'string',
     required: true,
@@ -48,8 +49,4 @@ export class Reviews extends Entity {
   }
 }
 
-export interface ReviewsRelations {
-  // describe navigational properties here
-}
-
-export type ReviewsWithRelations = Reviews & ReviewsRelations;
+export type ReviewsWithRelations = Reviews;
