@@ -35,7 +35,7 @@ export class ReviewsController {
     currentLoggedUser: UserProfile,
     @requestBody({
       description:
-        'Add new review to a movie. (Requires token and user only role authorization).',
+        'Add new review to a movie. All fields are required. (Requires token and user only role authorization).',
       content: {
         'application/json': {
           schema: getModelSchemaRef(Reviews, {
@@ -48,12 +48,14 @@ export class ReviewsController {
     reviews: Omit<Reviews, 'id'>,
   ): Promise<CustomResponse<{}>> {
     try {
+      // Validate input fields
       if (!reviews.description && reviews.description === '')
         throw new Error('Description is required.');
       if (!reviews.movieId && reviews.movieId === '')
         throw new Error('Movie ID to review is required.');
-      if (!reviews.rating || reviews.rating > 5 || reviews.rating < 0)
+      if (reviews.rating > 5 || reviews.rating < 0)
         throw new Error('Rating can only be between 0 - 5.');
+
       const userMovieReviewChecker = await this.reviewsRepository.find({
         where: {
           and: [{userId: currentLoggedUser.id}, {movieId: reviews.movieId}],
@@ -112,6 +114,7 @@ export class ReviewsController {
     reviews: Reviews,
   ): Promise<CustomResponse<{}>> {
     try {
+      // Validate input field
       if (typeof reviews.isApproved !== 'boolean')
         throw new Error('isApproved should only be a boolean type.');
 
@@ -175,7 +178,8 @@ export class ReviewsController {
   @authenticate('jwt')
   @authorize({allowedRoles: ['admin']})
   @response(204, {
-    description: 'Returns deleted movie id.',
+    description:
+      'Returns deleted review id. (Requires token and admin role authorization)',
     content: {'application/json': {schema: CustomResponseSchema}},
   })
   async deleteById(
