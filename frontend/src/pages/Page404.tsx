@@ -1,52 +1,9 @@
-import {
-  Button,
-  Container,
-  createStyles,
-  Group,
-  Paper,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Button, Container, Group, Paper, Text, Title } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-
-const useStyles = createStyles((theme) => ({
-  root: {
-    paddingTop: 80,
-    paddingBottom: 80,
-  },
-
-  label: {
-    textAlign: "center",
-    fontWeight: 900,
-    fontSize: 220,
-    lineHeight: 1,
-    marginBottom: theme.spacing.xl * 1.5,
-    color: theme.colors.red[8],
-  },
-
-  title: {
-    textAlign: "center",
-    fontWeight: 900,
-    fontSize: 38,
-    color: theme.colors.blue[5],
-  },
-
-  description: {
-    maxWidth: 500,
-    margin: "auto",
-    marginTop: theme.spacing.xl,
-    marginBottom: theme.spacing.xl * 1.5,
-  },
-
-  paper: {
-    backgroundColor: "#121212",
-    minHeight: "100vh",
-    paddingTop: "95px",
-  },
-}));
+import { usePage404Styles } from "../styles/Page404Styles";
 
 const Page404 = () => {
-  const { classes } = useStyles();
+  const { classes } = usePage404Styles();
   let navigate = useNavigate();
   return (
     <Paper radius={0} className={classes.paper}>
