@@ -1,20 +1,24 @@
 import { Carousel } from "@mantine/carousel";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MovieCard } from "../components";
 import { fetchActorById } from "../features/actor/actorSlice";
 import { useTypedDispatch, useTypedSelector } from "../hooks/rtk-hooks";
+import { IDispatchResponse, IMovie } from "../utils/types";
 
 const IndividualActor = () => {
   const { selectedActor } = useTypedSelector((state) => state.actor);
   const dispatch = useTypedDispatch();
   const { id } = useParams();
+  const navigate = useNavigate();
   const actorFullName = `${selectedActor.firstName} ${selectedActor.lastName}`;
   const actorLink =
     selectedActor.link || `https://www.google.com/search?q=${actorFullName}`;
   useEffect(() => {
-    dispatch(fetchActorById(id as string));
-  }, [dispatch, id]);
+    dispatch(fetchActorById(id as string)).then((res: IDispatchResponse) => {
+      if (res.error) navigate("/actors");
+    });
+  }, [dispatch, id, navigate]);
 
   return (
     <main className="pageContainer">
@@ -61,7 +65,7 @@ const IndividualActor = () => {
                   slideGap="md"
                   align="start"
                 >
-                  {selectedActor?.moviesCasted?.map((movie: any) => {
+                  {selectedActor?.moviesCasted?.map((movie: IMovie) => {
                     return (
                       <Carousel.Slide size="25%" gap="xl" key={movie.id}>
                         <MovieCard movie={movie} />

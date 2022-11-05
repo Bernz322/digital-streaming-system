@@ -1,29 +1,33 @@
 import { Carousel } from "@mantine/carousel";
 import { Button, Rating, Textarea } from "@mantine/core";
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ActorCard, Rating as MyRating, ReviewCard } from "../components";
 import { fetchMovieById, postMovieReview } from "../features/movie/movieSlice";
 import { useTypedDispatch, useTypedSelector } from "../hooks/rtk-hooks";
 import { budgetFormatter } from "../utils/helpers";
+import { IDispatchResponse } from "../utils/types";
 
 const IndividualMovie = () => {
   const { loggedIn } = useTypedSelector((state) => state.auth);
   const { selectedMovie } = useTypedSelector((state) => state.movie);
   const dispatch = useTypedDispatch();
   const { id } = useParams();
+  const navigate = useNavigate();
   const [reviewComment, setReviewComment] = useState<string>("");
   const [reviewRating, setReviewRating] = useState<number>(3);
   const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
-    dispatch(fetchMovieById(id as string));
-  }, [dispatch, id]);
+    dispatch(fetchMovieById(id as string)).then((res: IDispatchResponse) => {
+      if (res.error) navigate("/movies");
+    });
+  }, [dispatch, id, navigate]);
 
   const handleMovieReviewSubmit = useCallback(() => {
     if (reviewComment === "") return setError(true);
     const reviewData = {
-      description: reviewComment,
+      description: reviewComment.trim(),
       rating: reviewRating,
       movieId: id as string,
     };
