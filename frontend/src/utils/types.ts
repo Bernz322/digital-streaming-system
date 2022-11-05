@@ -6,11 +6,6 @@ export interface ILoginResponse {
   };
   message: string;
 }
-export interface APICustomResponse<T> {
-  status: string;
-  data?: T | T[] | null;
-  message?: string;
-}
 export interface IUserLogin {
   id: string;
   name: string;
@@ -66,7 +61,6 @@ export interface IPatchMovie {
   cost: number;
   image: string;
 }
-
 export interface IMovieReview {
   id: string;
   description: string;
@@ -77,7 +71,6 @@ export interface IMovieReview {
   userId: string;
   userReviewer?: IMovieReviewer;
 }
-
 export interface IMovieReviewer {
   id: string;
   firstName: string;
@@ -94,7 +87,6 @@ export interface IActor {
   link?: string;
   moviesCasted?: IMovie[];
 }
-
 export interface IPostActor {
   id?: string;
   firstName: string;
@@ -104,18 +96,15 @@ export interface IPostActor {
   image: string;
   link?: string;
 }
-
 export interface IPostReviewProps {
   description: string;
   rating: number;
   movieId: string;
 }
-
 export interface IPatchReviewProps {
   id: string;
   isApproved: boolean | string;
 }
-
 export interface IDispatchResponse {
   error?: {
     message?: string;
@@ -123,4 +112,9 @@ export interface IDispatchResponse {
   meta: any;
   payload: any;
   type: string;
+}
+export interface APICustomResponse<T> {
+  status: string;
+  data?: T | T[] | null;
+  message?: string;
 }

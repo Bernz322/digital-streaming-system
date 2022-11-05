@@ -1,6 +1,6 @@
+import { useCallback, useEffect, useState } from "react";
 import { Button, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons";
-import { useEffect, useState } from "react";
 import { MovieCard } from "../components";
 import {
   fetchAllMovies,
@@ -18,10 +18,10 @@ const Movies = () => {
     dispatch(fetchAllMovies());
   }, [dispatch]);
 
-  const handleSearchClick = () => {
-    if (movieName === "") return setError(true);
+  const handleSearchClick = useCallback(() => {
+    if (movieName.trim() === "") return setError(true);
     dispatch(fetchSearchedMovies(movieName));
-  };
+  }, [dispatch, movieName]);
 
   return (
     <main className="pageContainer">

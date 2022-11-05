@@ -3,7 +3,6 @@ import { Navigate, useNavigate } from "react-router-dom";
 import {
   Button,
   Anchor,
-  createStyles,
   Group,
   Loader,
   Paper,
@@ -15,43 +14,24 @@ import {
 } from "@mantine/core";
 import { useToggle, upperFirst } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import { isLoggedIn, isValidEmail, isValidName } from "../utils/helpers";
+import {
+  isLoggedIn,
+  isNotEmpty,
+  isValidEmail,
+  isValidName,
+} from "../utils/helpers";
 import { authLogin, authRegister } from "../features/auth/authSlice";
 import { useTypedDispatch, useTypedSelector } from "../hooks/rtk-hooks";
 import { IRegisterAPIProps, IDispatchResponse } from "../utils/types";
-
-const useStyles = createStyles((theme) => ({
-  paper: {
-    backgroundColor: "#282828",
-    minHeight: "100vh",
-    paddingTop: 500,
-    paddingBottom: 105,
-    paddingLeft: 15,
-    paddingRight: 15,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  container: {
-    backgroundColor: "#181818",
-    borderRadius: 15,
-    padding: "50px 35px",
-    width: "600px",
-  },
-  title: {
-    color: theme.colors.blue[5],
-  },
-}));
-
+import { useAuthPageStyles } from "../styles/AuthPageStyles";
 export interface IRegisterForm {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
 }
-
 const Auth = () => {
-  const { classes } = useStyles();
+  const { classes } = useAuthPageStyles();
   const { isLoading } = useTypedSelector((state) => state.auth);
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
@@ -64,21 +44,22 @@ const Auth = () => {
 
   const [type, toggle] = useToggle(["login", "register"]);
 
+  // Submit either the registration action or login action
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (type === "register") {
       try {
+        // Validate input fields
         isValidName(formValues.firstName, "first");
         isValidName(formValues.lastName, "last");
         isValidEmail(formValues.email);
-        if (formValues.password === "" || !formValues.password)
-          throw new Error("Field password is required.");
+        isNotEmpty(formValues.password, "password");
 
         const userData: IRegisterAPIProps = {
-          firstName: formValues.firstName,
-          lastName: formValues.lastName,
-          email: formValues.email,
-          password: formValues.password,
+          firstName: formValues.firstName.trim(),
+          lastName: formValues.lastName.trim(),
+          email: formValues.email.trim(),
+          password: formValues.password.trim(),
         };
 
         const res: IDispatchResponse = await dispatch(authRegister(userData));
@@ -100,12 +81,15 @@ const Auth = () => {
       }
     } else {
       try {
+        // Validate input fields
         isValidEmail(formValues.email);
-        if (formValues.password === "" || !formValues.password)
-          throw new Error("Field password is required.");
+        isNotEmpty(formValues.password, "password");
 
         const res: IDispatchResponse = await dispatch(
-          authLogin({ email: formValues.email, password: formValues.password })
+          authLogin({
+            email: formValues.email.trim(),
+            password: formValues.password.trim(),
+          })
         );
         if (!res.error) {
           navigate("/", { replace: true });
@@ -121,6 +105,7 @@ const Auth = () => {
     }
   };
 
+  // Check if user is already logged in. If yes, then make Auth Page inaccessable.
   if (isLoggedIn()) return <Navigate to="/" />;
 
   return (

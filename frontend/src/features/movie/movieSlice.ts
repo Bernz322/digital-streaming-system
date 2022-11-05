@@ -18,6 +18,7 @@ import {
   apiUpdateMovieById,
   apiUpdateReviewById,
 } from "../../utils/apiCalls";
+import { isError } from "../../utils/helpers";
 import {
   APICustomResponse,
   IMovie,
@@ -51,19 +52,10 @@ export const fetchLimitMovies = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        `Fetching ${limit} amount of movies failed. See message below for more info.`
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -78,19 +70,10 @@ export const fetchAllMovies = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Fetching all movies failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -105,19 +88,10 @@ export const fetchSearchedMovies = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Fetching movies by title failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -132,19 +106,77 @@ export const fetchMovieById = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Fetching movie by id failed. See message below for more info."
+      );
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Add Movie
+export const addMovie = createAsyncThunk(
+  "movies/addMovie",
+  async (data: IPostMovie, thunkAPI) => {
+    const movieData: IPostMovie = {
+      title: data.title,
+      description: data.description,
+      cost: data.cost,
+      yearReleased: data.yearReleased,
+      image: data.image,
+      actors: data.actors,
+    };
+    try {
+      const res: APICustomResponse<{}> = await apiPostMovie(movieData);
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message = isError(
+        error,
+        "Adding movie failed. See message below for more info."
+      );
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Update Movie by Id
+export const updateMovieById = createAsyncThunk(
+  "movies/updateMovieById",
+  async (data: IPatchMovie, thunkAPI) => {
+    const movieData: IPatchMovie = {
+      id: data.id,
+      description: data.description,
+      cost: data.cost,
+      image: data.image,
+    };
+    try {
+      const res: APICustomResponse<{}> = await apiUpdateMovieById(movieData);
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message = isError(
+        error,
+        "Updating movie failed. See message below for more info."
+      );
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const deleteMovieById = createAsyncThunk(
+  "movies/deleteMovieById",
+  async (id: string, thunkAPI) => {
+    try {
+      const res: APICustomResponse<{}> = await apiDeleteMovieById(id);
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message = isError(
+        error,
+        "Deleting movie failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -169,113 +201,10 @@ export const postMovieReview = createAsyncThunk(
         color: "yellow",
       });
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-// Add Movie
-export const addMovie = createAsyncThunk(
-  "movies/addMovie",
-  async (data: IPostMovie, thunkAPI) => {
-    const movieData: IPostMovie = {
-      title: data.title,
-      description: data.description,
-      cost: data.cost,
-      yearReleased: data.yearReleased,
-      image: data.image,
-      actors: data.actors,
-    };
-    try {
-      const res: APICustomResponse<{}> = await apiPostMovie(movieData);
-      if (res.status === "fail") throw new Error(res.message);
-      return res;
-    } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-// Update Movie by Id
-export const updateMovieById = createAsyncThunk(
-  "movies/updateMovieById",
-  async (data: IPatchMovie, thunkAPI) => {
-    const movieData: IPatchMovie = {
-      id: data.id,
-      description: data.description,
-      cost: data.cost,
-      image: data.image,
-    };
-    try {
-      const res: APICustomResponse<{}> = await apiUpdateMovieById(movieData);
-      if (res.status === "fail") throw new Error(res.message);
-      return res;
-    } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const deleteMovieById = createAsyncThunk(
-  "actors/deleteActorById",
-  async (id: string, thunkAPI) => {
-    try {
-      const res: APICustomResponse<{}> = await apiDeleteMovieById(id);
-      if (res.status === "fail") throw new Error(res.message);
-      return res;
-    } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Adding review failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -290,19 +219,10 @@ export const fetchMovieReviewsById = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Fetching all movie reviews failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -321,45 +241,27 @@ export const updateMovieReviewById = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Updating review failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const deleteMovieReviewById = createAsyncThunk(
-  "review/deleteMovieReviewById",
+  "reviews/deleteMovieReviewById",
   async (id: string, thunkAPI) => {
     try {
       const res: APICustomResponse<{}> = await apiDeleteReviewById(id);
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Deleting review failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }

@@ -1,4 +1,3 @@
-import { showNotification } from "@mantine/notifications";
 import {
   ActionReducerMapBuilder,
   createAsyncThunk,
@@ -13,6 +12,7 @@ import {
   apiPostActor,
   apiUpdateActorById,
 } from "../../utils/apiCalls";
+import { isError } from "../../utils/helpers";
 import { APICustomResponse, IActor, IPostActor } from "../../utils/types";
 
 export interface IActorState {
@@ -36,19 +36,10 @@ export const fetchAllActors = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Fetching all actors failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -63,19 +54,10 @@ export const fetchSearchedActors = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Fetching actor by name failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -90,19 +72,10 @@ export const fetchActorById = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Fetching actor by id failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -125,19 +98,10 @@ export const addActor = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Adding actor failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -161,19 +125,10 @@ export const updateActorById = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Updating actor failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -188,19 +143,10 @@ export const deleteActorById = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Deleting actor failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }

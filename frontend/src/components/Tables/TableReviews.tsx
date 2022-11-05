@@ -8,8 +8,11 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
+import { upperFirst } from "@mantine/hooks";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { IconArrowDown, IconEdit, IconTrash, IconEye } from "@tabler/icons";
+import dayjs from "dayjs";
 import { useTypedDispatch, useTypedSelector } from "../../hooks/rtk-hooks";
 import {
   IDispatchResponse,
@@ -17,14 +20,11 @@ import {
   IPatchReviewProps,
 } from "../../utils/types";
 import { useStyles, tableCustomStyles } from "./TableStyles";
-import { upperFirst } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
 import {
   deleteMovieReviewById,
   updateMovieReviewById,
   fetchAllMovies,
 } from "../../features/movie/movieSlice";
-import dayjs from "dayjs";
 
 const TableReviews = () => {
   const { selectedMovieReviews } = useTypedSelector((state) => state.movie);
@@ -36,7 +36,7 @@ const TableReviews = () => {
   const [editReviewModal, setEditReviewModal] = useState<boolean>(false);
   const [deleteReviewModal, setDeleteReviewModal] = useState<boolean>(false);
 
-  // Movie states for updating, deleting
+  // Review states for viewing ,updating and deleting
   const [viewReviewData, setViewReviewData] = useState<IMovieReview>(
     {} as IMovieReview
   );
@@ -50,7 +50,7 @@ const TableReviews = () => {
     setViewReviewData(review);
   }, []);
 
-  // Update  Review Action
+  // Open update modal and set current row item data to selectedReviewData state
   const handleReviewUpdateActionClick = useCallback(
     (movieRowData: IPatchReviewProps) => {
       setEditReviewModal(true);
@@ -58,7 +58,8 @@ const TableReviews = () => {
     },
     []
   );
-  const handleReviewUpdate = async () => {
+  // Update Review Action (PATCH request)
+  const handleReviewUpdate = useCallback(async () => {
     try {
       const isTrueSet = selectedReviewData.isApproved === "true";
       const updateReviewData: IPatchReviewProps = {
@@ -74,24 +75,25 @@ const TableReviews = () => {
       }
     } catch (error: any) {
       showNotification({
-        title: "Something went wrong.",
+        title: "Updating review failed. See message below for more info.",
         message: error.message,
-        autoClose: 5000,
-        color: "red",
+        autoClose: 3000,
+        color: "yellow",
       });
     }
-  };
+  }, [dispatch, selectedReviewData.id, selectedReviewData.isApproved]);
 
-  // Delete Review Action
+  // Open delete modal and set current row item id to reviewIdToDelete state
   const handleReviewDeleteActionClick = useCallback((id: string) => {
     setReviewIdToDelete(id);
     setDeleteReviewModal(true);
   }, []);
-  const handleReviewDelete = async () => {
+  // Delete Review Action (DELETE request)
+  const handleReviewDelete = useCallback(async () => {
     dispatch(deleteMovieReviewById(reviewIdToDelete));
     await dispatch(fetchAllMovies());
     setDeleteReviewModal(false);
-  };
+  }, [dispatch, reviewIdToDelete]);
 
   // Review Table Columns
   const reviewsColumns: TableColumn<IMovieReview>[] = [
@@ -170,8 +172,6 @@ const TableReviews = () => {
         sortIcon={<IconArrowDown />}
         theme="dark"
         customStyles={tableCustomStyles}
-        fixedHeader={true}
-        fixedHeaderScrollHeight="250px"
       />
 
       {/* View Review Modal */}
@@ -254,7 +254,7 @@ const TableReviews = () => {
           mt="lg"
           onClick={handleReviewUpdate}
         >
-          Update
+          Update Review
         </Button>
       </Modal>
 
