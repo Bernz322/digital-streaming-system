@@ -54,8 +54,4 @@ export class Movies extends Entity {
   }
 }
 
-export interface MoviesRelations {
-  // describe navigational properties here
-}
-
-export type MoviesWithRelations = Movies & MoviesRelations;
+export type MoviesWithRelations = Movies;

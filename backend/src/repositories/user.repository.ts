@@ -6,14 +6,13 @@ import {
   HasManyRepositoryFactory,
 } from '@loopback/repository';
 import {MongodbDataSource} from '../datasources';
-import {User, UserRelations, UserCredential, Reviews} from '../models';
+import {User, UserCredential, Reviews} from '../models';
 import {UserCredentialRepository} from './user-credential.repository';
 import {ReviewsRepository} from './reviews.repository';
 
 export class UserRepository extends DefaultCrudRepository<
   User,
-  typeof User.prototype.id,
-  UserRelations
+  typeof User.prototype.id
 > {
   public readonly userCredentials: HasOneRepositoryFactory<
     UserCredential,

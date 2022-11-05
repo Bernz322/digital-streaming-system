@@ -56,8 +56,4 @@ export class Actors extends Entity {
   }
 }
 
-export interface ActorsRelations {
-  // describe navigational properties here
-}
-
-export type ActorsWithRelations = Actors & ActorsRelations;
+export type ActorsWithRelations = Actors;

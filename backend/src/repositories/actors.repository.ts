@@ -5,14 +5,13 @@ import {
   HasManyThroughRepositoryFactory,
 } from '@loopback/repository';
 import {MongodbDataSource} from '../datasources';
-import {Actors, ActorsRelations, MovieCast, Movies} from '../models';
+import {Actors, MovieCast, Movies} from '../models';
 import {MoviesRepository} from './movies.repository';
 import {MovieCastRepository} from './movie-cast.repository';
 
 export class ActorsRepository extends DefaultCrudRepository<
   Actors,
-  typeof Actors.prototype.id,
-  ActorsRelations
+  typeof Actors.prototype.id
 > {
   public readonly moviesCasted: HasManyThroughRepositoryFactory<
     Movies,
