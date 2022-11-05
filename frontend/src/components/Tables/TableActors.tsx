@@ -38,7 +38,7 @@ const TableActors = () => {
 
   // Modal Open/Close states
   const [addActorModal, setAddActorModal] = useState<boolean>(false);
-  const [editActorModal, setEditActorModal] = useState<boolean>(false);
+  const [updateActorModal, setUpdateActorModal] = useState<boolean>(false);
   const [deleteActorModal, setDeleteActorModal] = useState<boolean>(false);
 
   // Actor states for adding, updating, deleting
@@ -55,9 +55,22 @@ const TableActors = () => {
   );
   const [actorIdToDelete, setActorIdToDelete] = useState<string>("");
 
-  // Add Actor Action
-  const handleAddActor = async () => {
+  // Fetch all actors
+  useEffect(() => {
+    dispatch(fetchAllActors());
+  }, [dispatch]);
+
+  // Filter actors state by searched first or last name values inside table
+  const filteredItems: IActor[] = actors?.filter(
+    (item) =>
+      item.firstName.toLowerCase().includes(filterByName.toLowerCase()) ||
+      item.lastName.toLowerCase().includes(filterByName.toLowerCase())
+  );
+
+  // Add Actor Action (POST request)
+  const handleAddActor = useCallback(async () => {
     try {
+      // Validate input fields
       isValidName(newActor.firstName, "first");
       isValidName(newActor.lastName, "last");
       if (newActor.gender !== "male" && newActor.gender !== "female")
@@ -66,6 +79,7 @@ const TableActors = () => {
         throw new Error("Actor age cannot be less than a year.");
       isValidUrl(newActor.image, "actor image");
       isValidUrl(newActor.link as string, "actor link");
+
       const res: IDispatchResponse = await dispatch(addActor(newActor));
       if (!res.error) {
         setAddActorModal(false);
@@ -80,21 +94,23 @@ const TableActors = () => {
       }
     } catch (error: any) {
       showNotification({
-        title: "Something went wrong.",
+        title: "Adding actor failed. See message below for more info.",
         message: error.message,
-        autoClose: 5000,
-        color: "red",
+        autoClose: 3000,
+        color: "yellow",
       });
     }
-  };
+  }, [dispatch, newActor]);
 
-  // Update  Actor Action
+  // Open update modal and set current row item data to selectedActorData state
   const handleActorUpdateActionClick = useCallback((actorRowData: IActor) => {
-    setEditActorModal(true);
+    setUpdateActorModal(true);
     setSelectedActorData(actorRowData);
   }, []);
-  const handleActorUpdate = async () => {
+  // Update  Actor Action (PATCH request)
+  const handleActorUpdate = useCallback(async () => {
     try {
+      // Validate input fields
       isValidName(selectedActorData.firstName, "first");
       isValidName(selectedActorData.lastName, "last");
       if (
@@ -106,42 +122,52 @@ const TableActors = () => {
         throw new Error("Actor age cannot be less than a year.");
       isValidUrl(selectedActorData.image, "actor image");
       isValidUrl(selectedActorData.link as string, "actor link");
+
       const updateActorData: IPostActor = {
         id: selectedActorData.id,
-        firstName: selectedActorData.firstName,
-        lastName: selectedActorData.lastName,
+        firstName: selectedActorData?.firstName.trim(),
+        lastName: selectedActorData?.lastName.trim(),
         gender: selectedActorData.gender,
         age: selectedActorData.age,
-        image: selectedActorData.image,
-        link: selectedActorData.link,
+        image: selectedActorData?.image.trim(),
+        link: selectedActorData?.link?.trim(),
       };
 
       const res: IDispatchResponse = await dispatch(
         updateActorById(updateActorData)
       );
       if (!res.error) {
-        setEditActorModal(false);
+        setUpdateActorModal(false);
       }
     } catch (error: any) {
       showNotification({
-        title: "Something went wrong.",
+        title: "Updating actor failed. See message below for more info.",
         message: error.message,
-        autoClose: 5000,
-        color: "red",
+        autoClose: 3000,
+        color: "yellow",
       });
     }
-  };
+  }, [
+    dispatch,
+    selectedActorData.id,
+    selectedActorData.firstName,
+    selectedActorData.lastName,
+    selectedActorData.gender,
+    selectedActorData.age,
+    selectedActorData.image,
+    selectedActorData.link,
+  ]);
 
-  // Delete Actor Action
+  // Open delete modal and set current row item id to actorIdToDelete state
   const handleActorDeleteActionClick = useCallback((id: string) => {
     setActorIdToDelete(id);
     setDeleteActorModal(true);
   }, []);
-
-  const handleActorDelete = () => {
+  // Delete Actor Action (DELETE request)
+  const handleActorDelete = useCallback(() => {
     dispatch(deleteActorById(actorIdToDelete));
     setDeleteActorModal(false);
-  };
+  }, [dispatch, actorIdToDelete]);
 
   // Actor Table Columns
   const actorsColumns: TableColumn<IActor>[] = [
@@ -221,15 +247,6 @@ const TableActors = () => {
     },
   ];
 
-  useEffect(() => {
-    dispatch(fetchAllActors());
-  }, [dispatch]);
-
-  const filteredItems: IActor[] = actors?.filter(
-    (item) =>
-      item.firstName.toLowerCase().includes(filterByName.toLowerCase()) ||
-      item.lastName.toLowerCase().includes(filterByName.toLowerCase())
-  );
   return (
     <Paper className={classes.paper}>
       <Group position="apart" className={classes.head}>
@@ -255,8 +272,6 @@ const TableActors = () => {
         sortIcon={<IconArrowDown />}
         theme="dark"
         customStyles={tableCustomStyles}
-        fixedHeader={true}
-        fixedHeaderScrollHeight="250px"
       />
 
       {/* Add Actor Modals */}
@@ -282,6 +297,7 @@ const TableActors = () => {
           onChange={(e) =>
             setNewActor({ ...newActor, lastName: e.currentTarget.value })
           }
+          withAsterisk
         />
         <NumberInput
           placeholder="Actor age"
@@ -291,6 +307,7 @@ const TableActors = () => {
             setNewActor({ ...newActor, age: value as number })
           }
           hideControls
+          withAsterisk
         />
         <TextInput
           placeholder="Actor link (e.g. IMDB or Wikipedia)"
@@ -307,6 +324,7 @@ const TableActors = () => {
           onChange={(e) =>
             setNewActor({ ...newActor, image: e.currentTarget.value })
           }
+          withAsterisk
         />
 
         <SegmentedControl
@@ -337,8 +355,8 @@ const TableActors = () => {
 
       {/* Edit Actor Modal */}
       <Modal
-        opened={editActorModal}
-        onClose={() => setEditActorModal(false)}
+        opened={updateActorModal}
+        onClose={() => setUpdateActorModal(false)}
         title="Update Actor"
         centered
       >
@@ -352,6 +370,7 @@ const TableActors = () => {
               firstName: e.currentTarget.value,
             })
           }
+          withAsterisk
         />
         <TextInput
           placeholder="Last Name"
@@ -363,6 +382,7 @@ const TableActors = () => {
               lastName: e.currentTarget.value,
             })
           }
+          withAsterisk
         />
         <NumberInput
           placeholder="Actor age"
@@ -371,6 +391,8 @@ const TableActors = () => {
           onChange={(value) =>
             setSelectedActorData({ ...selectedActorData, age: value as number })
           }
+          withAsterisk
+          hideControls
         />
         <TextInput
           placeholder="Actor link (e.g. IMDB or Wikipedia)"
@@ -382,6 +404,7 @@ const TableActors = () => {
               link: e.currentTarget.value,
             })
           }
+          withAsterisk
         />
         <TextInput
           placeholder="Actor Image URL"
@@ -393,6 +416,7 @@ const TableActors = () => {
               image: e.currentTarget.value,
             })
           }
+          withAsterisk
         />
         <SegmentedControl
           defaultValue={selectedActorData?.gender}
@@ -416,7 +440,7 @@ const TableActors = () => {
           mt="lg"
           onClick={handleActorUpdate}
         >
-          Update
+          Update Actor
         </Button>
       </Modal>
 

@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from "react";
 import {
   Button,
   Group,
@@ -10,6 +11,8 @@ import {
   TextInput,
   Tooltip,
 } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
+import { upperFirst } from "@mantine/hooks";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { IconArrowDown, IconEdit, IconTrash } from "@tabler/icons";
 import {
@@ -18,7 +21,7 @@ import {
   IRegisterAPIProps,
   IUser,
 } from "../../utils/types";
-import { useCallback, useEffect, useState } from "react";
+
 import { tableCustomStyles, useStyles } from "./TableStyles";
 import { useTypedDispatch, useTypedSelector } from "../../hooks/rtk-hooks";
 import {
@@ -27,8 +30,7 @@ import {
   fetchAllUsers,
   updateUserById,
 } from "../../features/user/userSlice";
-import { isValidEmail, isValidName } from "../../utils/helpers";
-import { showNotification } from "@mantine/notifications";
+import { isNotEmpty, isValidEmail, isValidName } from "../../utils/helpers";
 
 const TableUsers = () => {
   const { users } = useTypedSelector((state) => state.user);
@@ -40,7 +42,7 @@ const TableUsers = () => {
 
   // Modal Open/Close states
   const [addUserModal, setAddUserModal] = useState<boolean>(false);
-  const [editUserModal, setEditUserModal] = useState<boolean>(false);
+  const [updateUserModal, setUpdateUserModal] = useState<boolean>(false);
   const [deleteUserModal, setDeleteUserModal] = useState<boolean>(false);
 
   // User states for adding, updating, deleting
@@ -50,14 +52,27 @@ const TableUsers = () => {
   const [selectedUserData, setSelectedUserData] = useState<IUser>({} as IUser);
   const [userIdToDelete, setUserIdToDelete] = useState<string>("");
 
-  // Add User Action
-  const handleAddUser = async () => {
+  // Fetch all users
+  useEffect(() => {
+    dispatch(fetchAllUsers());
+  }, [dispatch]);
+
+  // Filter users state by searched first or last name values inside table
+  const filteredItems: IUser[] = users?.filter(
+    (item) =>
+      item.firstName.toLowerCase().includes(filterByName.toLowerCase()) ||
+      item.lastName.toLowerCase().includes(filterByName.toLowerCase())
+  );
+
+  // Add User Action (POST request)
+  const handleAddUser = useCallback(async () => {
     try {
+      // Validate input fields
       isValidName(newUser.firstName, "first");
       isValidName(newUser.lastName, "last");
       isValidEmail(newUser.email);
-      if (newUser.password === "" || !newUser.password)
-        throw new Error("Enter password.");
+      isNotEmpty(newUser.password, "password");
+
       const res: IDispatchResponse = await dispatch(addUser(newUser));
       if (!res.error) {
         setAddUserModal(false);
@@ -65,20 +80,21 @@ const TableUsers = () => {
       }
     } catch (error: any) {
       showNotification({
-        title: "Something went wrong.",
+        title: "Adding user failed. See message below for more info.",
         message: error.message,
-        autoClose: 5000,
-        color: "red",
+        autoClose: 3000,
+        color: "yellow",
       });
     }
-  };
+  }, [dispatch, newUser]);
 
-  // Update  User Action
-  const handleUserUpdateActionClick = useCallback((userRowData: IUser) => {
-    setEditUserModal(true);
+  // Open update modal and set current row item data to selectedUserData state
+  const updateUserAction = useCallback((userRowData: IUser) => {
+    setUpdateUserModal(true);
     setSelectedUserData(userRowData);
   }, []);
-  const handleUserUpdate = async () => {
+  // Update User Action (PATCH request)
+  const handleUserUpdate = useCallback(async () => {
     try {
       isValidName(selectedUserData.firstName, "first");
       isValidName(selectedUserData.lastName, "last");
@@ -86,9 +102,9 @@ const TableUsers = () => {
       const isTrueSet = selectedUserData.isActivated === "true";
       const updateUserData: IPatchUserAPIProps = {
         id: selectedUserData.id,
-        firstName: selectedUserData.firstName,
-        lastName: selectedUserData.lastName,
-        email: selectedUserData.email,
+        firstName: selectedUserData?.firstName?.trim(),
+        lastName: selectedUserData?.lastName?.trim(),
+        email: selectedUserData?.email?.trim(),
         role: selectedUserData.role,
         isActivated: isTrueSet,
       };
@@ -96,39 +112,47 @@ const TableUsers = () => {
         updateUserById(updateUserData)
       );
       if (!res.error) {
-        setEditUserModal(false);
+        setUpdateUserModal(false);
       }
     } catch (error: any) {
       showNotification({
-        title: "Something went wrong.",
+        title: "Updating user failed. See message below for more info.",
         message: error.message,
-        autoClose: 5000,
-        color: "red",
+        autoClose: 3000,
+        color: "yellow",
       });
     }
-  };
+  }, [
+    dispatch,
+    selectedUserData.id,
+    selectedUserData.firstName,
+    selectedUserData.lastName,
+    selectedUserData.email,
+    selectedUserData.isActivated,
+    selectedUserData.role,
+  ]);
 
-  // Delete User Action
+  // Open delete modal and set current row item id to userIdToDelete state
   const handleUserDeleteActionClick = useCallback((id: string) => {
     setUserIdToDelete(id);
     setDeleteUserModal(true);
   }, []);
-
-  const handleUserDelete = () => {
+  // Delete User Action (DELETE request)
+  const handleUserDelete = useCallback(() => {
     dispatch(deleteUserById(userIdToDelete));
     setDeleteUserModal(false);
-  };
+  }, [dispatch, userIdToDelete]);
 
   // User Table Columns
   const usersColumns: TableColumn<IUser>[] = [
     {
       name: "First Name",
-      selector: (row) => row.firstName,
+      selector: (row) => upperFirst(row.firstName),
       sortable: true,
     },
     {
       name: "Last Name",
-      selector: (row) => row.lastName,
+      selector: (row) => upperFirst(row.lastName),
       sortable: true,
     },
     {
@@ -139,7 +163,7 @@ const TableUsers = () => {
     },
     {
       name: "Role",
-      selector: (row) => row.role,
+      selector: (row) => upperFirst(row.role),
       sortable: true,
     },
     {
@@ -159,7 +183,7 @@ const TableUsers = () => {
               ml="sm"
               size="xs"
               color="blue"
-              onClick={() => handleUserUpdateActionClick(row)}
+              onClick={() => updateUserAction(row)}
             >
               <IconEdit size={14} strokeWidth={2} />
             </Button>
@@ -181,15 +205,6 @@ const TableUsers = () => {
     },
   ];
 
-  useEffect(() => {
-    dispatch(fetchAllUsers());
-  }, [dispatch]);
-
-  const filteredItems: IUser[] = users?.filter(
-    (item) =>
-      item.firstName.toLowerCase().includes(filterByName.toLowerCase()) ||
-      item.lastName.toLowerCase().includes(filterByName.toLowerCase())
-  );
   return (
     <Paper className={classes.paper}>
       <Group position="apart" className={classes.head}>
@@ -215,8 +230,6 @@ const TableUsers = () => {
         sortIcon={<IconArrowDown />}
         theme="dark"
         customStyles={tableCustomStyles}
-        fixedHeader={true}
-        fixedHeaderScrollHeight="250px"
       />
 
       {/* Add User Modals */}
@@ -233,6 +246,7 @@ const TableUsers = () => {
           onChange={(e) =>
             setNewUser({ ...newUser, firstName: e.currentTarget.value })
           }
+          withAsterisk
         />
         <TextInput
           placeholder="Last Name"
@@ -241,6 +255,7 @@ const TableUsers = () => {
           onChange={(e) =>
             setNewUser({ ...newUser, lastName: e.currentTarget.value })
           }
+          withAsterisk
         />
         <TextInput
           placeholder="juandelacruz@gmail.com"
@@ -249,6 +264,7 @@ const TableUsers = () => {
           onChange={(e) =>
             setNewUser({ ...newUser, email: e.currentTarget.value })
           }
+          withAsterisk
         />
         <PasswordInput
           placeholder="password143"
@@ -257,6 +273,7 @@ const TableUsers = () => {
           onChange={(e) =>
             setNewUser({ ...newUser, password: e.currentTarget.value })
           }
+          withAsterisk
           autoComplete="new-password"
         />
 
@@ -272,8 +289,8 @@ const TableUsers = () => {
 
       {/* Edit User Modal */}
       <Modal
-        opened={editUserModal}
-        onClose={() => setEditUserModal(false)}
+        opened={updateUserModal}
+        onClose={() => setUpdateUserModal(false)}
         title="Update user"
         centered
       >
@@ -287,6 +304,7 @@ const TableUsers = () => {
               firstName: e.currentTarget.value,
             })
           }
+          withAsterisk
         />
         <TextInput
           label="Last Name"
@@ -298,6 +316,7 @@ const TableUsers = () => {
               lastName: e.currentTarget.value,
             })
           }
+          withAsterisk
         />
         <TextInput
           label="Email"
@@ -309,6 +328,7 @@ const TableUsers = () => {
               email: e.currentTarget.value,
             })
           }
+          withAsterisk
         />
 
         <SegmentedControl
@@ -349,7 +369,7 @@ const TableUsers = () => {
           mt="lg"
           onClick={handleUserUpdate}
         >
-          Update
+          Update User
         </Button>
       </Modal>
 

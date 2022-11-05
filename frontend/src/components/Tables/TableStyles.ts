@@ -29,7 +29,7 @@ export const useStyles = createStyles((theme) => ({
     "&::placeholder": {
       transition: "color 150ms ease",
     },
-    width: "200px",
+    width: 200,
   },
   head: {
     [theme.fn.smallerThan("xs")]: {
@@ -51,7 +51,7 @@ export const tableCustomStyles = {
   rows: {
     style: {
       padding: "5px 0",
-      maxWidth: "1150px",
+      maxWidth: 1150,
     },
   },
 };

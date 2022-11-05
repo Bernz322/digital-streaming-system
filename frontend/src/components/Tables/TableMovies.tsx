@@ -13,6 +13,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { upperFirst } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
 import { useCallback, useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
@@ -40,7 +41,7 @@ import {
   fetchMovieReviewsById,
   updateMovieById,
 } from "../../features/movie/movieSlice";
-import { showNotification } from "@mantine/notifications";
+import { addActor } from "../../features/actor/actorSlice";
 import {
   budgetFormatter,
   isNotEmpty,
@@ -48,7 +49,6 @@ import {
   isValidUrl,
   movieRating,
 } from "../../utils/helpers";
-import { addActor } from "../../features/actor/actorSlice";
 
 const TableMovies = () => {
   const { movies, isLoading } = useTypedSelector((state) => state.movie);
@@ -57,13 +57,15 @@ const TableMovies = () => {
   const navigate = useNavigate();
   const { classes } = useStyles();
 
-  // Name search filter state
+  // Title search filter state
   const [filterByTitle, setFilterByTitle] = useState<string>("");
+  // Actor search filter state
+  const [searchValue, onSearchChange] = useState("");
 
   // Modal Open/Close states
   const [addMovieModal, setAddMovieModal] = useState<boolean>(false);
   const [addActorModal, setAddActorModal] = useState<boolean>(false);
-  const [editMovieModal, setEditMovieModal] = useState<boolean>(false);
+  const [updateMovieModal, setUpdateMovieModal] = useState<boolean>(false);
   const [deleteMovieModal, setDeleteMovieModal] = useState<boolean>(false);
 
   // Movie states for adding, updating, deleting
@@ -88,9 +90,25 @@ const TableMovies = () => {
   );
   const [movieIdToDelete, setMovieIdToDelete] = useState<string>("");
 
-  // Add Movie Action
-  const handleAddMovie = async () => {
+  //Fetch all movies
+  useEffect(() => {
+    dispatch(fetchAllMovies());
+  }, [dispatch]);
+
+  /* Inside add movie modal, actors multiple select input has to have an array of objects containing value and label [{value, label}]. Hence, actorsList mapping is done*/
+  const actorsList = actors.map((actor) => {
+    return { value: actor.id, label: `${actor.firstName} ${actor.lastName}` };
+  });
+
+  // Filter movies state by searched title value inside table
+  const filteredItems: IMovie[] = movies?.filter((item) =>
+    item.title.toLowerCase().includes(filterByTitle.toLowerCase())
+  );
+
+  // Add Movie Action (POST request)
+  const handleAddMovie = useCallback(async () => {
     try {
+      // Validate input Fields
       isNotEmpty(newMovie.title, "movie title");
       isNotEmpty(newMovie.description, "movie description");
       if (newMovie.cost < 0 || !newMovie.cost)
@@ -100,6 +118,7 @@ const TableMovies = () => {
       isValidUrl(newMovie.image, "movie image");
       if (newMovie.actors.length <= 0 || !newMovie.actors)
         throw new Error("Movie cannot have 0 actor.");
+
       const res: IDispatchResponse = await dispatch(addMovie(newMovie));
       if (!res.error) {
         setAddMovieModal(false);
@@ -114,17 +133,18 @@ const TableMovies = () => {
       }
     } catch (error: any) {
       showNotification({
-        title: "Something went wrong.",
+        title: "Adding movie failed. See message below for more info.",
         message: error.message,
-        autoClose: 5000,
-        color: "red",
+        autoClose: 3000,
+        color: "yellow",
       });
     }
-  };
+  }, [dispatch, newMovie]);
 
-  // Add Actor Action
-  const handleAddActor = async () => {
+  // Add Actor Action (POST request)
+  const handleAddActor = useCallback(async () => {
     try {
+      // Validate input fields
       isValidName(newActor.firstName, "first");
       isValidName(newActor.lastName, "last");
       if (newActor.gender !== "male" && newActor.gender !== "female")
@@ -133,6 +153,7 @@ const TableMovies = () => {
         throw new Error("Actor age cannot be less than a year.");
       isValidUrl(newActor.image, "actor image");
       isValidUrl(newActor.link as string, "actor link");
+
       const res: IDispatchResponse = await dispatch(addActor(newActor));
       if (!res.error) {
         setAddActorModal(false);
@@ -147,24 +168,26 @@ const TableMovies = () => {
       }
     } catch (error: any) {
       showNotification({
-        title: "Something went wrong.",
+        title: "Adding actor failed. See message below for more info.",
         message: error.message,
-        autoClose: 5000,
-        color: "red",
+        autoClose: 3000,
+        color: "yellow",
       });
     }
-  };
+  }, [dispatch, newActor]);
 
-  // Update Movie Action
+  // Open update modal and set current row item data to selectedMovieData state
   const handleMovieUpdateActionClick = useCallback(
     (movieRowData: IPatchMovie) => {
-      setEditMovieModal(true);
+      setUpdateMovieModal(true);
       setSelectedMovieData(movieRowData);
     },
     []
   );
-  const handleMovieUpdate = async () => {
+  // Update Movie Action (PATCH request)
+  const handleMovieUpdate = useCallback(async () => {
     try {
+      // Validate input fields
       isNotEmpty(selectedMovieData.description, "movie description");
       if (selectedMovieData.cost < 0 || !selectedMovieData.cost)
         throw new Error("Movie budget cost cannot be less than 0.");
@@ -172,33 +195,40 @@ const TableMovies = () => {
 
       const updateMovieData: IPatchMovie = {
         id: selectedMovieData.id,
-        description: selectedMovieData.description,
+        description: selectedMovieData?.description.trim(),
         cost: selectedMovieData.cost,
-        image: selectedMovieData.image,
+        image: selectedMovieData?.image.trim(),
       };
 
       const res: IDispatchResponse = await dispatch(
         updateMovieById(updateMovieData)
       );
       if (!res.error) {
-        setEditMovieModal(false);
+        setUpdateMovieModal(false);
       }
     } catch (error: any) {
       showNotification({
-        title: "Something went wrong.",
+        title: "Updating movie failed. See message below for more info.",
         message: error.message,
-        autoClose: 5000,
-        color: "red",
+        autoClose: 3000,
+        color: "yellow",
       });
     }
-  };
+  }, [
+    dispatch,
+    selectedMovieData.id,
+    selectedMovieData.description,
+    selectedMovieData.cost,
+    selectedMovieData.image,
+  ]);
 
-  // Delete Movie Action
+  // Open delete modal and set current row item id to movieIdToDelete state
   const handleMovieDeleteActionClick = useCallback((id: string) => {
     setMovieIdToDelete(id);
     setDeleteMovieModal(true);
   }, []);
-  const handleActorDelete = () => {
+  // Delete Movie Action (DELETE request)
+  const handleMovieDelete = () => {
     dispatch(deleteMovieById(movieIdToDelete));
     setDeleteMovieModal(false);
   };
@@ -258,7 +288,6 @@ const TableMovies = () => {
               size="xs"
               color="green"
               disabled={isLoading}
-              loading={isLoading}
               onClick={() => dispatch(fetchMovieReviewsById(row.id))}
             >
               <IconMessageDots size={14} strokeWidth={2} />
@@ -292,17 +321,6 @@ const TableMovies = () => {
     },
   ];
 
-  useEffect(() => {
-    dispatch(fetchAllMovies());
-  }, [dispatch]);
-
-  const actorsList = actors.map((actor) => {
-    return { value: actor.id, label: `${actor.firstName} ${actor.lastName}` };
-  });
-
-  const filteredItems: IMovie[] = movies?.filter((item) =>
-    item.title.toLowerCase().includes(filterByTitle.toLowerCase())
-  );
   return (
     <Paper className={classes.paper}>
       <Group position="apart" className={classes.head}>
@@ -328,8 +346,6 @@ const TableMovies = () => {
         sortIcon={<IconArrowDown />}
         theme="dark"
         customStyles={tableCustomStyles}
-        fixedHeader={true}
-        fixedHeaderScrollHeight="300px"
       />
 
       {/* Add Movie Modal */}
@@ -395,6 +411,10 @@ const TableMovies = () => {
           label="Pick Actors"
           placeholder="Pick all that are involved in this movie"
           onChange={(value) => setNewMovie({ ...newMovie, actors: value })}
+          searchable
+          searchValue={searchValue}
+          onSearchChange={onSearchChange}
+          nothingFound="Nothing found"
           withAsterisk
         />
         <Button
@@ -440,6 +460,7 @@ const TableMovies = () => {
           onChange={(e) =>
             setNewActor({ ...newActor, lastName: e.currentTarget.value })
           }
+          withAsterisk
         />
         <NumberInput
           placeholder="Actor age"
@@ -449,6 +470,7 @@ const TableMovies = () => {
             setNewActor({ ...newActor, age: value as number })
           }
           hideControls
+          withAsterisk
         />
         <TextInput
           placeholder="Actor link (e.g. IMDB or Wikipedia)"
@@ -465,6 +487,7 @@ const TableMovies = () => {
           onChange={(e) =>
             setNewActor({ ...newActor, image: e.currentTarget.value })
           }
+          withAsterisk
         />
 
         <SegmentedControl
@@ -495,9 +518,9 @@ const TableMovies = () => {
 
       {/* Edit Movie Modal */}
       <Modal
-        opened={editMovieModal}
-        onClose={() => setEditMovieModal(false)}
-        title="Add Movie"
+        opened={updateMovieModal}
+        onClose={() => setUpdateMovieModal(false)}
+        title="Update Movie"
         centered
       >
         <Textarea
@@ -547,7 +570,7 @@ const TableMovies = () => {
           mt="lg"
           onClick={handleMovieUpdate}
         >
-          Add Movie
+          Update Movie
         </Button>
       </Modal>
 
@@ -566,7 +589,7 @@ const TableMovies = () => {
             radius="md"
             className={classes.btn}
             color="red"
-            onClick={() => handleActorDelete()}
+            onClick={() => handleMovieDelete()}
           >
             Yes
           </Button>
