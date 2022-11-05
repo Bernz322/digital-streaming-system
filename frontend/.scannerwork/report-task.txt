@@ -1,6 +1,6 @@
-projectKey=front-partial
+projectKey=dss-frontend
 serverUrl=http://localhost:9000
 serverVersion=9.7.0.61563
-dashboardUrl=http://localhost:9000/dashboard?id=front-partial
-ceTaskId=AYRAlqyJuVvftEPd2edx
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYRAlqyJuVvftEPd2edx
+dashboardUrl=http://localhost:9000/dashboard?id=dss-frontend
+ceTaskId=AYRFymn24q91Z9j-uipt
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYRFymn24q91Z9j-uipt
