@@ -1,4 +1,3 @@
-import { showNotification } from "@mantine/notifications";
 import {
   ActionReducerMapBuilder,
   createAsyncThunk,
@@ -11,6 +10,7 @@ import {
   apiUpdateUserById,
   register,
 } from "../../utils/apiCalls";
+import { isError } from "../../utils/helpers";
 import {
   APICustomResponse,
   IPatchUserAPIProps,
@@ -37,19 +37,10 @@ export const fetchAllUsers = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Fetching all users failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -57,7 +48,7 @@ export const fetchAllUsers = createAsyncThunk(
 
 // Add User
 export const addUser = createAsyncThunk(
-  "user/addUser",
+  "users/addUser",
   async (data: IRegisterAPIProps, thunkAPI) => {
     const userData: IRegisterAPIProps = {
       firstName: data.firstName,
@@ -70,19 +61,10 @@ export const addUser = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Adding user failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -90,26 +72,17 @@ export const addUser = createAsyncThunk(
 
 // Update User by Id
 export const updateUserById = createAsyncThunk(
-  "user/updateUserById",
+  "users/updateUserById",
   async (data: IPatchUserAPIProps, thunkAPI) => {
     try {
       const res: APICustomResponse<{}> = await apiUpdateUserById(data);
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Updating user failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -117,33 +90,24 @@ export const updateUserById = createAsyncThunk(
 
 // Delete User by Id
 export const deleteUserById = createAsyncThunk(
-  "user/deleteUserById",
+  "users/deleteUserById",
   async (id: string, thunkAPI) => {
     try {
       const res: APICustomResponse<{}> = await apiDeleteUserById(id);
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Something went wrong.",
-        message: message,
-        autoClose: 5000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Deleting user failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 const userSlice = createSlice({
-  name: "movie",
+  name: "user",
   initialState,
   reducers: {
     userReset: (state: IUserState) => {

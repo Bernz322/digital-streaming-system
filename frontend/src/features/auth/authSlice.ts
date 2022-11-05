@@ -6,7 +6,7 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit";
 import { login, register } from "../../utils/apiCalls";
-import { deleteCookie, isLoggedIn } from "../../utils/helpers";
+import { deleteCookie, isError, isLoggedIn } from "../../utils/helpers";
 import {
   ILoginResponse,
   IRegisterAPIProps,
@@ -41,19 +41,10 @@ export const authLogin = createAsyncThunk(
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Login failed. See message below for more info.",
-        message: message,
-        autoClose: 3000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Login failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -79,19 +70,10 @@ export const authRegister = createAsyncThunk(
         color: "green",
       });
     } catch (error: any) {
-      const message: string =
-        (error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message) ||
-        error.message ||
-        error.toString();
-      showNotification({
-        title: "Registration failed. See message below for more info.",
-        message: message,
-        autoClose: 3000,
-        color: "red",
-      });
+      const message = isError(
+        error,
+        "Registration failed. See message below for more info."
+      );
       return thunkAPI.rejectWithValue(message);
     }
   }
