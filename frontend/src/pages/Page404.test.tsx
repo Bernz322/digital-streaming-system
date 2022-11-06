@@ -1,9 +1,11 @@
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import { Page404 } from ".";
 
 describe("Test 404 Page", () => {
+  afterEach(cleanup);
+
   test("should render the page with 404", () => {
     render(
       <BrowserRouter>
