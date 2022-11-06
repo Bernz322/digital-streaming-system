@@ -5,7 +5,7 @@ import { fetchLimitMovies } from "../../features/movie/movieSlice";
 import { useTypedDispatch, useTypedSelector } from "../../hooks/rtk-hooks";
 
 const MoviesSection = () => {
-  const { movies } = useTypedSelector((state) => state.movie);
+  const { movies, isLoading } = useTypedSelector((state) => state.movie);
   const dispatch = useTypedDispatch();
 
   useEffect(() => {
@@ -25,10 +25,14 @@ const MoviesSection = () => {
             </Link>
           </h2>
         </div>
-        {movies.length <= 0 && (
-          <h1 className="noContentH1">There are no movies available.</h1>
+        {isLoading && movies.length <= 0 ? (
+          <h1 className="noContentH1">Please wait.</h1>
+        ) : (
+          movies.length <= 0 && (
+            <h1 className="noContentH1">There are no movies available.</h1>
+          )
         )}
-        <div className="container">
+        <div className="container" data-testid="movieCardContainer">
           {movies.map((movie) => {
             return <MovieCard movie={movie} key={movie.id} />;
           })}
