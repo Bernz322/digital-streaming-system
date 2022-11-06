@@ -9,7 +9,7 @@ import {
 import { useTypedDispatch, useTypedSelector } from "../hooks/rtk-hooks";
 
 const Actors = () => {
-  const { actors } = useTypedSelector((state) => state.actor);
+  const { actors, isLoading } = useTypedSelector((state) => state.actor);
   const dispatch = useTypedDispatch();
   const [actorName, setActorName] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
@@ -30,7 +30,7 @@ const Actors = () => {
             icon={<IconSearch />}
             placeholder="Find actor"
             className="searchInput"
-            error={actorName === "" && error && "Enter actor name"}
+            error={actorName.trim() === "" && error && "Enter actor name"}
             value={actorName}
             onChange={(e) => setActorName(e.target.value)}
           />
@@ -38,13 +38,19 @@ const Actors = () => {
         </div>
         <div className="innerContainer">
           <h1 className="actorsPageH1">Actors</h1>
-          {actors.length <= 0 && (
-            <h1 className="noContentH1">There are no actors available.</h1>
+          {isLoading ? (
+            <h1 className="noContentH1">Please wait.</h1>
+          ) : (
+            actors.length <= 0 && (
+              <h1 className="noContentH1">There are no actors available.</h1>
+            )
           )}
           <div className="container">
             {actors.map((actor) => {
               return (
-                <ActorCard actor={actor} key={actor.id} isActorsPage={true} />
+                !isLoading && (
+                  <ActorCard actor={actor} key={actor.id} isActorsPage={true} />
+                )
               );
             })}
           </div>
