@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { IActor } from "../../utils/types";
 import "./ActorCard.scss";
 
-interface ActorProps {
+export interface ActorProps {
   actor: IActor;
   isActorsPage: boolean;
 }
