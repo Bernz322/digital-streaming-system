@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import {
   Button,
   Anchor,
@@ -34,7 +34,6 @@ const Auth = () => {
   const { classes } = useAuthPageStyles();
   const { isLoading } = useTypedSelector((state) => state.auth);
   const dispatch = useTypedDispatch();
-  const navigate = useNavigate();
   const [formValues, setFormValues] = useState<IRegisterForm>({
     firstName: "",
     lastName: "",
@@ -85,15 +84,12 @@ const Auth = () => {
         isValidEmail(formValues.email);
         isNotEmpty(formValues.password, "password");
 
-        const res: IDispatchResponse = await dispatch(
+        await dispatch(
           authLogin({
             email: formValues.email.trim(),
             password: formValues.password.trim(),
           })
         );
-        if (!res.error) {
-          navigate("/", { replace: true });
-        }
       } catch (error: any) {
         showNotification({
           title: "Login failed. See message below for more info",
