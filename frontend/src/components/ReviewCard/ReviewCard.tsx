@@ -17,7 +17,9 @@ const ReviewCard = ({ review }: IReviewCardProps) => {
         <div className="ratingContainer">
           <Rating rating={review.rating} />
         </div>
-        <p className="review">{review.description}</p>
+        <p className="review" data-testid="reviewCardDescription">
+          {review.description}
+        </p>
         <h3>
           <span>Reviewed on: </span>
           {dayjs(review.datePosted).format("DD-MM-YYYY")}

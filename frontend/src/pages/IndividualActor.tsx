@@ -7,7 +7,7 @@ import { useTypedDispatch, useTypedSelector } from "../hooks/rtk-hooks";
 import { IDispatchResponse, IMovie } from "../utils/types";
 
 const IndividualActor = () => {
-  const { selectedActor } = useTypedSelector((state) => state.actor);
+  const { selectedActor, isLoading } = useTypedSelector((state) => state.actor);
   const dispatch = useTypedDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -51,10 +51,14 @@ const IndividualActor = () => {
           </div>
           <div className="movieActorsContainer">
             <h2 className="actorsPageH2">Movies Casted</h2>
-            {!selectedActor.moviesCasted && (
-              <h1 className="noContentH1">
-                This actor has no movies casted yet.
-              </h1>
+            {isLoading ? (
+              <h1 className="noContentH1">Please wait.</h1>
+            ) : (
+              !selectedActor.moviesCasted && (
+                <h1 className="noContentH1">
+                  This actor has no movies casted yet.
+                </h1>
+              )
             )}
             {selectedActor?.moviesCasted && (
               <div className="container">

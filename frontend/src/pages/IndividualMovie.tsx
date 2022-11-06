@@ -10,7 +10,7 @@ import { IDispatchResponse } from "../utils/types";
 
 const IndividualMovie = () => {
   const { loggedIn } = useTypedSelector((state) => state.auth);
-  const { selectedMovie } = useTypedSelector((state) => state.movie);
+  const { selectedMovie, isLoading } = useTypedSelector((state) => state.movie);
   const dispatch = useTypedDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -24,14 +24,15 @@ const IndividualMovie = () => {
     });
   }, [dispatch, id, navigate]);
 
-  const handleMovieReviewSubmit = useCallback(() => {
+  const handleMovieReviewSubmit = useCallback(async () => {
     if (reviewComment === "") return setError(true);
     const reviewData = {
       description: reviewComment.trim(),
       rating: reviewRating,
       movieId: id as string,
     };
-    dispatch(postMovieReview(reviewData));
+    const res: IDispatchResponse = await dispatch(postMovieReview(reviewData));
+    if (!res.error) setReviewComment("");
   }, [reviewComment, reviewRating, id, dispatch]);
 
   const approvedReviews = selectedMovie?.movieReviews?.filter((review) => {
@@ -68,13 +69,17 @@ const IndividualMovie = () => {
           </div>
           <div className="movieActorsContainer">
             <h2 className="actorsPageH2">Actors/ Casts</h2>
-            {(selectedMovie?.movieCasters &&
-              selectedMovie?.movieCasters.length <= 0) ||
+            {isLoading ? (
+              <h1 className="noContentH1">Please wait.....</h1>
+            ) : (
+              (selectedMovie?.movieCasters &&
+                selectedMovie?.movieCasters.length <= 0) ||
               (!selectedMovie?.movieCasters && (
                 <h1 className="noContentH1">
                   This movie has no actors/ casts.
                 </h1>
-              ))}
+              ))
+            )}
             {selectedMovie?.movieCasters && (
               <div className="container">
                 <Carousel
@@ -117,6 +122,7 @@ const IndividualMovie = () => {
                 radius="md"
                 autosize
                 minRows={2}
+                value={reviewComment}
                 onChange={(e) => setReviewComment(e.target.value)}
                 error={
                   reviewComment === "" && error && "Please enter your review."

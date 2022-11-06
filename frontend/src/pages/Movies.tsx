@@ -9,7 +9,7 @@ import {
 import { useTypedDispatch, useTypedSelector } from "../hooks/rtk-hooks";
 
 const Movies = () => {
-  const { movies } = useTypedSelector((state) => state.movie);
+  const { movies, isLoading } = useTypedSelector((state) => state.movie);
   const dispatch = useTypedDispatch();
   const [movieName, setMovieName] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
@@ -31,7 +31,7 @@ const Movies = () => {
             icon={<IconSearch />}
             placeholder="Find movie"
             className="searchInput"
-            error={movieName === "" && error && "Enter movie name"}
+            error={movieName.trim() === "" && error && "Enter movie name"}
             value={movieName}
             onChange={(e) => setMovieName(e.target.value)}
           />
@@ -39,12 +39,16 @@ const Movies = () => {
         </div>
         <div className="innerContainer">
           <h1 className="moviesPageH1">Movies</h1>
-          {movies.length <= 0 && (
-            <h1 className="noContentH1">There are no movies available.</h1>
+          {isLoading ? (
+            <h1 className="noContentH1">Please wait.</h1>
+          ) : (
+            movies.length <= 0 && (
+              <h1 className="noContentH1">There are no movies available.</h1>
+            )
           )}
           <div className="container">
             {movies.map((movie) => {
-              return <MovieCard movie={movie} key={movie.id} />;
+              return !isLoading && <MovieCard movie={movie} key={movie.id} />;
             })}
           </div>
         </div>
