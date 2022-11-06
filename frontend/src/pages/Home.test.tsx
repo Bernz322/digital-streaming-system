@@ -1,10 +1,12 @@
-import { screen } from "@testing-library/react";
+import { cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import { Home } from ".";
 import { renderWithProviders } from "../utils/test-utils";
 
 describe("Test Home Page", () => {
+  afterEach(cleanup);
+
   test("should render hero section", () => {
     renderWithProviders(
       <BrowserRouter>
@@ -22,6 +24,7 @@ describe("Test Home Page", () => {
     expect(pHeadingElement).toBeInTheDocument();
     expect(logoImgElement).toBeInTheDocument();
   });
+
   test("should render movies library container", () => {
     renderWithProviders(
       <BrowserRouter>
@@ -35,6 +38,7 @@ describe("Test Home Page", () => {
     expect(headingElement[0]).toBeInTheDocument();
     expect(seeAllElement).toBeInTheDocument();
   });
+
   test("should navigate me to '/movies' route when 'Movies Library' is clicked", () => {
     renderWithProviders(
       <BrowserRouter>
@@ -46,6 +50,7 @@ describe("Test Home Page", () => {
     userEvent.click(element);
     expect(window.location.pathname).toEqual("/movies");
   });
+
   test("should navigate me to '/movies' route when 'SEE ALL' is clicked", () => {
     renderWithProviders(
       <BrowserRouter>

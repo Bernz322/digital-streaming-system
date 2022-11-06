@@ -7,21 +7,12 @@ import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { Movies } from ".";
 import { renderWithProviders } from "../utils/test-utils";
-import { mockMovies } from "../utils/db.mocks";
+import { mockMovies, mockSearchedMovies } from "../utils/db.mocks";
 import { IMovie } from "../utils/types";
-import { server } from "../mocks/server";
-
-// Enable API mocking before tests.
-beforeAll(() => server.listen({ onUnhandledRequest: "bypass" }));
-
-// Reset any runtime request handlers we may add during the tests.
-afterEach(() => server.resetHandlers());
-
-// Disable API mocking after the tests are done.
-afterAll(() => server.close());
 
 describe("Test All Movies Page", () => {
   afterEach(cleanup);
+
   test("should render movie search input", () => {
     renderWithProviders(
       <BrowserRouter>
@@ -57,6 +48,7 @@ describe("Test All Movies Page", () => {
       mockMovies.length
     );
     expect(store.getState().movie.movies.length).toEqual(mockMovies.length);
+    expect(store.getState().movie.movies).toEqual(mockMovies);
   });
 
   test('should not render "There are no movies available" h1 tag', async () => {
@@ -122,15 +114,26 @@ describe("Test All Movies Page", () => {
         <Movies />
       </BrowserRouter>
     );
+    // Render all movies first
+    await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
+    expect(screen.getAllByRole("img", { name: "movie" }).length).toBe(
+      mockMovies.length
+    );
 
+    // Perform movie search
     const searchInputElement: HTMLInputElement = screen.getByRole("textbox");
     const searchBtnElement = screen.getByRole("button");
     userEvent.type(searchInputElement, "john");
     userEvent.click(searchBtnElement);
 
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
+    expect(screen.queryByText("Please wait.")).not.toBeInTheDocument();
 
-    expect(screen.getAllByRole("img", { name: "movie" }).length).toBe(3);
-    expect(store.getState().movie.movies.length).toEqual(3);
+    const searchedMovies = await screen.findAllByTestId("movieCard");
+    expect(searchedMovies.length).toBe(mockSearchedMovies.length);
+    expect(store.getState().movie.movies.length).toEqual(
+      mockSearchedMovies.length
+    );
+    expect(store.getState().movie.movies).toEqual(mockSearchedMovies);
   });
 });

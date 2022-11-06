@@ -253,3 +253,25 @@ export const mockUsers: IUser[] = [
     role: "user",
   },
 ];
+
+export const mockLoginResponseData = {
+  token:
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNjVjYmMzZTMwM2ZjNjIyODM2M2I5ZCIsIm5hbWUiOiJhZG1pbiByb290Iiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjY3NzM1ODk1LCJleHAiOjE2Njc3NTc0OTV9.IKLrqHW1Ci61oy50lqde70SJgRiK8RKug3_FB4MRHZY",
+  user: {
+    id: "6365cbc3e303fc6228363b9d",
+    name: "admin root",
+    email: "admin@root.com",
+    role: "admin",
+    isActivated: true,
+  },
+};
+
+export const mockRegisterResponseData = {
+  dateCreated: "2022-11-05T23:57:58.575Z",
+  email: "john@doe.com",
+  firstName: "John",
+  id: "6367094d5c935e220c912f54",
+  isActivated: true,
+  lastName: "Doe",
+  role: "user",
+};

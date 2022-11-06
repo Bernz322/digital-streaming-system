@@ -33,7 +33,7 @@ import {
 import { isNotEmpty, isValidEmail, isValidName } from "../../utils/helpers";
 
 const TableUsers = () => {
-  const { users } = useTypedSelector((state) => state.user);
+  const { users, isLoading } = useTypedSelector((state) => state.user);
   const dispatch = useTypedDispatch();
   const { classes } = useStyles();
 
@@ -184,6 +184,7 @@ const TableUsers = () => {
               size="xs"
               color="blue"
               onClick={() => updateUserAction(row)}
+              data-testid="rowUpdateUserBtn"
             >
               <IconEdit size={14} strokeWidth={2} />
             </Button>
@@ -195,6 +196,7 @@ const TableUsers = () => {
               size="xs"
               color="red"
               onClick={() => handleUserDeleteActionClick(row.id)}
+              data-testid="rowDeleteUserBtn"
             >
               <IconTrash size={14} strokeWidth={2} />
             </Button>
@@ -227,6 +229,7 @@ const TableUsers = () => {
         data={filteredItems}
         pagination
         dense
+        progressPending={isLoading}
         sortIcon={<IconArrowDown />}
         theme="dark"
         customStyles={tableCustomStyles}
