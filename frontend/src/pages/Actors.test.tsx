@@ -7,18 +7,8 @@ import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { Actors } from ".";
 import { renderWithProviders } from "../utils/test-utils";
-import { mockActors } from "../utils/db.mocks";
+import { mockActors, mockSearchedActor } from "../utils/db.mocks";
 import { IActor } from "../utils/types";
-import { server } from "../mocks/server";
-
-// Enable API mocking before tests.
-beforeAll(() => server.listen({ onUnhandledRequest: "bypass" }));
-
-// Reset any runtime request handlers we may add during the tests.
-afterEach(() => server.resetHandlers());
-
-// Disable API mocking after the tests are done.
-afterAll(() => server.close());
 
 describe("Test All Actors Page", () => {
   afterEach(cleanup);
@@ -58,6 +48,7 @@ describe("Test All Actors Page", () => {
       mockActors.length
     );
     expect(store.getState().actor.actors.length).toEqual(mockActors.length);
+    expect(store.getState().actor.actors).toEqual(mockActors);
   });
 
   test('should not render "There are no actors available" h1 tag', async () => {
@@ -122,7 +113,14 @@ describe("Test All Actors Page", () => {
         <Actors />
       </BrowserRouter>
     );
+    // Fetch and render all actors first
+    await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
 
+    expect(screen.getAllByRole("img", { name: "actor" }).length).toBe(
+      mockActors.length
+    );
+
+    // Perform search actor
     const searchInputElement: HTMLInputElement = screen.getByRole("textbox");
     const searchBtnElement = screen.getByRole("button");
     userEvent.type(searchInputElement, "keanu");
@@ -130,7 +128,12 @@ describe("Test All Actors Page", () => {
 
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
 
-    expect(screen.getAllByRole("img", { name: "actor" }).length).toBe(1);
-    expect(store.getState().actor.actors.length).toEqual(1);
+    expect(screen.getAllByRole("img", { name: "actor" }).length).toBe(
+      mockSearchedActor.length
+    );
+    expect(store.getState().actor.actors.length).toEqual(
+      mockSearchedActor.length
+    );
+    expect(store.getState().actor.actors).toEqual(mockSearchedActor);
   });
 });
