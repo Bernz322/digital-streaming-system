@@ -1,13 +1,16 @@
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { Hero } from "..";
 
 describe("Render all elements", () => {
+  afterEach(cleanup);
+
   test("should render app name", () => {
     render(<Hero />);
     const appNameElement = screen.getByRole("heading", { level: 1 });
 
     expect(appNameElement).toBeInTheDocument();
   });
+
   test("should all hero section elements", () => {
     render(<Hero />);
 

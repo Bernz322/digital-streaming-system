@@ -1,10 +1,12 @@
-import { screen } from "@testing-library/react";
+import { cleanup, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "../utils/test-utils";
 import { Dashboard } from ".";
 
 describe("Test Dashboard Page", () => {
+  afterEach(cleanup);
+
   test("should render sidebar elements", () => {
     renderWithProviders(
       <BrowserRouter>
@@ -30,6 +32,7 @@ describe("Test Dashboard Page", () => {
     expect(actorsLinkElement).toBeInTheDocument();
     expect(moviesLinkElement).toBeInTheDocument();
   });
+
   test("should render all 4 tables", () => {
     renderWithProviders(
       <BrowserRouter>
@@ -47,6 +50,7 @@ describe("Test Dashboard Page", () => {
     expect(moviesTableElement).toBeInTheDocument();
     expect(reviewsTableElement).toBeInTheDocument();
   });
+
   test("should render all tables on dashboard link click", () => {
     renderWithProviders(
       <BrowserRouter>
@@ -68,6 +72,7 @@ describe("Test Dashboard Page", () => {
     expect(moviesTableElement).toBeInTheDocument();
     expect(reviewsTableElement).toBeInTheDocument();
   });
+
   test("should render users table only on users link click", () => {
     renderWithProviders(
       <BrowserRouter>
@@ -83,6 +88,7 @@ describe("Test Dashboard Page", () => {
 
     expect(usersTableElement).toBeInTheDocument();
   });
+
   test("should render actors table only on actors link click", () => {
     renderWithProviders(
       <BrowserRouter>
@@ -98,6 +104,7 @@ describe("Test Dashboard Page", () => {
 
     expect(actorsTableElement).toBeInTheDocument();
   });
+
   test("should render movies and reviews table on movies link click", () => {
     renderWithProviders(
       <BrowserRouter>
