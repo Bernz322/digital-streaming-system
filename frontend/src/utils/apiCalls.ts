@@ -12,6 +12,8 @@ import {
 } from "./types";
 import { getCookie, setCookie } from "./helpers";
 
+export const baseAPIUrl = "http://localhost:3000";
+
 /**
  * API Request wrapper which returns data directly from response (res.data)
  * @param {string} path
@@ -24,7 +26,7 @@ const apiRequest = async <T>(
 ): Promise<T> => {
   const token = getCookie("accessToken");
   const request = {
-    url: `http://localhost:3000${path}`,
+    url: `${baseAPIUrl}${path}`,
     ...config,
   };
 
