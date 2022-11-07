@@ -28,7 +28,7 @@ import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcryptjs';
 import _ from 'lodash';
 import {User} from '../models';
-import {UserRepository as MyUserRepo} from '../repositories';
+import {ReviewsRepository, UserRepository as MyUserRepo} from '../repositories';
 import {
   UserLoginSchema,
   CustomResponse,
@@ -57,6 +57,8 @@ export class UserController {
     public user: UserProfile,
     @repository(UserRepository)
     protected userRepository: UserRepository,
+    @repository(ReviewsRepository)
+    public reviewsRepository: ReviewsRepository,
 
     @repository(MyUserRepo)
     public myUserRepo: MyUserRepo,
@@ -371,6 +373,7 @@ export class UserController {
 
       await this.userRepository.deleteById(id);
       await this.userRepository.userCredentials(id).delete();
+      await this.reviewsRepository.deleteAll({userId: id});
       return {
         status: 'success',
         data: id,
