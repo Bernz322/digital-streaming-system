@@ -65,7 +65,7 @@
     ]
   },
   "jest": {
-    "collectCoverageFrom":[
+    "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/App.tsx",
       "!src/index.tsx",
@@ -76,9 +76,9 @@
       "!src/components/index.ts",
       "!src/mocks/*",
       "!src/pages/index.ts",
-      "!src/utils/apiCalls.ts",
-      "!src/utils/test-utils.ts",
-      "!src/utils/types.ts",
+      "!src/utils/*",
+      "!src/features/**/*",
+      "!src/hooks/*",
       "!src/styles/*"
     ],
     "coverageThreshold": {
@@ -91,6 +91,7 @@
     }
   },
   "devDependencies": {
-    "msw": "^0.47.4"
+    "msw": "^0.47.4",
+    "resize-observer-polyfill": "^1.5.1"
   }
 }

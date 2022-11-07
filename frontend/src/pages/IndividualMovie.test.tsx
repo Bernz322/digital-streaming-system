@@ -25,7 +25,9 @@ describe("Test Individual Movie Page", () => {
       </BrowserRouter>
     );
 
-    const loadingElement = await screen.findByRole("heading", { level: 1 });
+    const loadingElement = await screen.findByRole("heading", {
+      name: "Please wait.",
+    });
 
     expect(loadingElement).toHaveTextContent("Please wait");
     expect(loadingElement).toBeInTheDocument();

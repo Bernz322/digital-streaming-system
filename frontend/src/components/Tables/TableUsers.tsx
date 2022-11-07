@@ -253,7 +253,7 @@ const TableUsers = () => {
         />
         <TextInput
           placeholder="Last Name"
-          label="Name"
+          label="Last Name"
           defaultValue={newUser?.lastName}
           onChange={(e) =>
             setNewUser({ ...newUser, lastName: e.currentTarget.value })

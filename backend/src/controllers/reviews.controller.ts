@@ -29,13 +29,12 @@ export class ReviewsController {
     content: {'application/json': {schema: CustomResponseSchema}},
   })
   @authenticate('jwt')
-  @authorize({allowedRoles: ['user']})
   async create(
     @inject(SecurityBindings.USER)
     currentLoggedUser: UserProfile,
     @requestBody({
       description:
-        'Add new review to a movie. All fields are required. (Requires token and user only role authorization).',
+        'Add new review to a movie. All fields are required. (Requires token).',
       content: {
         'application/json': {
           schema: getModelSchemaRef(Reviews, {
@@ -55,6 +54,9 @@ export class ReviewsController {
         throw new Error('Movie ID to review is required.');
       if (reviews.rating > 5 || reviews.rating < 0)
         throw new Error('Rating can only be between 0 - 5.');
+
+      if (currentLoggedUser.role === 'admin')
+        throw new Error('As an admin, you cannot add reviews.');
 
       const userMovieReviewChecker = await this.reviewsRepository.find({
         where: {
