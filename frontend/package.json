@@ -27,6 +27,7 @@
     "dayjs": "^1.11.6",
     "embla-carousel-react": "^7.0.4",
     "font-awesome": "^4.7.0",
+    "jest-sonar-reporter": "^2.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
     "react-data-table-component": "^7.5.3",
@@ -44,7 +45,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!axios)/\"",
     "eject": "react-scripts eject",
-    "coverage": "npm test -- --coverage --watchAll"
+    "coverage": "npm test -- --coverage --watchAll",
+    "test-coverage": "react-scripts test --coverageDirectory test-coverage --transformIgnorePatterns \"node_modules/(?!axios)/\" --coverage --watchAll=false --testResultsProcessor jest-sonar-reporter"
   },
   "eslintConfig": {
     "extends": [
@@ -69,7 +71,6 @@
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/App.tsx",
       "!src/index.tsx",
-      "!src/index.tsx",
       "!src/react-app-env.d.ts",
       "!src/reportWebVitals.ts",
       "!src/@types/declaration.d.ts",
@@ -89,6 +90,11 @@
         "statements": -10
       }
     }
+  },
+  "jestSonar":{
+    "reportPath":"test-coverage/sonar",
+    "reportFile":"sonar-report.xml",
+    "indent":4
   },
   "devDependencies": {
     "msw": "^0.47.4",

@@ -343,6 +343,7 @@ const TableMovies = () => {
         data={filteredItems}
         pagination
         dense
+        progressPending={isLoading}
         sortIcon={<IconArrowDown />}
         theme="dark"
         customStyles={tableCustomStyles}

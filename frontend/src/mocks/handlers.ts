@@ -143,6 +143,16 @@ export const handlers = [
       ctx.delay(150)
     );
   }),
+  rest.delete(`${baseAPIUrl}/users/:id`, (req, res, ctx) => {
+    return res(
+      ctx.json({
+        status: "success",
+        data: "6367094d5c935e220c912f54",
+        message: "User deleted successfully.",
+      }),
+      ctx.delay(150)
+    );
+  }),
 
   rest.post(`${baseAPIUrl}/users/login`, (req, res, ctx) => {
     return res(
