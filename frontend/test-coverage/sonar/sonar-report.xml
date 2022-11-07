@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\components\Hero\Hero.test.tsx">
+        <testCase name="Render all elements should render app name" duration="314"/>
+        <testCase name="Render all elements should all hero section elements" duration="128"/>
+    </file>
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\components\ReviewCard\ReviewCard.test.tsx">
+        <testCase name="Test Review Card Component should render reviewer full name" duration="302"/>
+        <testCase name="Test Review Card Component should render review description" duration="34"/>
+        <testCase name="Test Review Card Component should render review posted date" duration="79"/>
+    </file>
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\components\ActorCard\ActorCard.test.tsx">
+        <testCase name="Test Actor Card Component should render actor name" duration="81"/>
+        <testCase name="Test Actor Card Component should render actor image" duration="28"/>
+        <testCase name="Test Actor Card Component should move me to another route with complete actor details when clicked" duration="186"/>
+    </file>
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\components\MovieCard\MovieCard.test.tsx">
+        <testCase name="Test Movie Card Component should render movie image" duration="86"/>
+        <testCase name="Test Movie Card Component should render movie title" duration="161"/>
+        <testCase name="Test Movie Card Component should render movie year released" duration="21"/>
+        <testCase name="Test Movie Card Component should move me to another route with complete movie details when clicked" duration="140"/>
+    </file>
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\components\Navbar\Navbar.test.tsx">
+        <testCase name="Test Navbar Component should render app name" duration="236"/>
+        <testCase name="Test Navbar Component should render user only nav items" duration="54"/>
+        <testCase name="Test Navbar Component should render dashboard nav item and logout button" duration="43"/>
+        <testCase name="Test Navbar Component should hide dashboard nav item and render login button after clicking logout" duration="181"/>
+    </file>
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\components\MoviesSection\MoviesSection.test.tsx">
+        <testCase name="Test Movies Section Component should render movie card element inside container div" duration="727"/>
+        <testCase name="Test Movies Section Component should not render &quot;There are no movies available&quot; h1 tag" duration="229"/>
+        <testCase name="Test Movies Section Component should navigate me to &apos;/movies&apos; route when &apos;Movies Library&apos; is clicked" duration="48"/>
+        <testCase name="Test Movies Section Component should navigate me to &apos;/movies&apos; route when &apos;SEE ALL&apos; is clicked" duration="43"/>
+    </file>
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\pages\Home.test.tsx">
+        <testCase name="Test Home Page should render hero section" duration="480"/>
+        <testCase name="Test Home Page should render movies library container" duration="155"/>
+        <testCase name="Test Home Page should navigate me to &apos;/movies&apos; route when &apos;Movies Library&apos; is clicked" duration="90"/>
+        <testCase name="Test Home Page should navigate me to &apos;/movies&apos; route when &apos;SEE ALL&apos; is clicked" duration="44"/>
+    </file>
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\pages\IndividualActor.test.tsx">
+        <testCase name="Test Individual Actor Page should first render loading element" duration="266"/>
+        <testCase name="Test Individual Actor Page should render actor details" duration="633"/>
+        <testCase name="Test Individual Actor Page should render actor movies" duration="323"/>
+    </file>
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\pages\Page404.test.tsx">
+        <testCase name="Test 404 Page should render the page with 404" duration="483"/>
+        <testCase name="Test 404 Page should child descriptions" duration="195"/>
+        <testCase name="Test 404 Page should render to home page button" duration="98"/>
+        <testCase name="Test 404 Page should return me to &apos;/&apos; route when button is clicked" duration="212"/>
+    </file>
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\pages\Movies.test.tsx">
+        <testCase name="Test All Movies Page should render movie search input" duration="760"/>
+        <testCase name="Test All Movies Page should render movie search button" duration="125"/>
+        <testCase name="Test All Movies Page should render all mock movies" duration="316"/>
+        <testCase name="Test All Movies Page should not render &quot;There are no movies available&quot; h1 tag" duration="225"/>
+        <testCase name="Test All Movies Page should render &quot;There are no movies available&quot; h1 tag" duration="36"/>
+        <testCase name="Test All Movies Page should be able to type a text" duration="112"/>
+        <testCase name="Test All Movies Page should show empty field error message" duration="152"/>
+        <testCase name="Test All Movies Page should show searched movies card" duration="598"/>
+    </file>
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\pages\Actors.test.tsx">
+        <testCase name="Test All Actors Page should render actor search input" duration="769"/>
+        <testCase name="Test All Actors Page should render actor search button" duration="115"/>
+        <testCase name="Test All Actors Page should render all mock actors" duration="285"/>
+        <testCase name="Test All Actors Page should not render &quot;There are no actors available&quot; h1 tag" duration="208"/>
+        <testCase name="Test All Actors Page should render &quot;There are no actors available&quot; h1 tag" duration="37"/>
+        <testCase name="Test All Actors Page should be able to type a text" duration="93"/>
+        <testCase name="Test All Actors Page should show empty field error message" duration="161"/>
+        <testCase name="Test All Actors Page should show searched actors card" duration="548"/>
+    </file>
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\pages\Dashboard.test.tsx">
+        <testCase name="Test Dashboard Page should render sidebar elements" duration="2756"/>
+        <testCase name="Test Dashboard Page should render all 4 tables" duration="122"/>
+        <testCase name="Test Dashboard Page should render all tables on dashboard link click" duration="576"/>
+        <testCase name="Test Dashboard Page should render users table only on users link click" duration="427"/>
+        <testCase name="Test Dashboard Page should render actors table only on actors link click" duration="467"/>
+        <testCase name="Test Dashboard Page should render movies and reviews table on movies link click" duration="459"/>
+    </file>
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\pages\IndividualMovie.test.tsx">
+        <testCase name="Test Individual Movie Page should first render loading element" duration="1111"/>
+        <testCase name="Test Individual Movie Page should render movie details" duration="419"/>
+        <testCase name="Test Individual Movie Page should render actors/ casts cards" duration="442"/>
+        <testCase name="Test Individual Movie Page should render movie reviews" duration="277"/>
+        <testCase name="Test Individual Movie Page should disable submit review button and text area if not logged in" duration="421"/>
+        <testCase name="Test Individual Movie Page should not disable submit review button and text area if logged in" duration="404"/>
+        <testCase name="Test Individual Movie Page should show empty field error message" duration="609"/>
+        <testCase name="Test Individual Movie Page should render &apos;Your review was successfully received.&apos; alert after review submission&apos;" duration="1361"/>
+        <testCase name="Test Individual Movie Page should render &apos;You can only review once per movie.&apos; after review submission again" duration="1349"/>
+    </file>
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\pages\Auth.test.tsx">
+        <testCase name="Test Auth Page should render &apos;Field email is required.&apos; alert" duration="1520"/>
+        <testCase name="Test Auth Page should render &apos;Invalid email.&apos; alert" duration="445"/>
+        <testCase name="Test Auth Page should be able to type password" duration="231"/>
+        <testCase name="Test Auth Page should render &apos;Wrong Credentials&apos; alert after login" duration="928"/>
+        <testCase name="Test Auth Page should render register form after link click" duration="146"/>
+        <testCase name="Test Auth Page should render &apos;Field first name is required.&apos; alert" duration="581"/>
+        <testCase name="Test Auth Page should render &apos;Field last name is required.&apos; alert" duration="557"/>
+        <testCase name="Test Auth Page should render &apos;Email is already taken&apos; alert after register" duration="1479"/>
+        <testCase name="Test Auth Page should render &apos;Please wait for your account activation&apos; alert after success registration" duration="1520"/>
+    </file>
+    <file path="C:\Users\Jeffrey Bernadas\Documents\Web Development\Collabera Training\digital-streaming-system\frontend\src\components\Tables\TableUsers.test.tsx">
+        <testCase name="Test Table Users Component should render all mocked users data" duration="1492"/>
+        <testCase name="Test Table Users Component should render search input and &apos;Add User&apos; button" duration="132"/>
+        <testCase name="Test Table Users Component should render &apos;john@doe.com&apos; in table row after typing &apos;john&apos;" duration="481"/>
+        <testCase name="Test Table Users Component should render &apos;Add User&apos; Modal if &apos;Add User&apos; button is clicked" duration="480"/>
+        <testCase name="Test Table Users Component should alert &apos;Field first name is required.&apos; after add user button is clicked in modal" duration="1021"/>
+        <testCase name="Test Table Users Component should alert &apos;Invalid first name.&apos; after add user button is clicked in modal" duration="839"/>
+        <testCase name="Test Table Users Component should alert &apos;Field last name is required.&apos; after add user button is clicked in modal" duration="1133"/>
+        <testCase name="Test Table Users Component should alert &apos;Invalid last name.&apos; after add user button is clicked in modal" duration="1081"/>
+        <testCase name="Test Table Users Component should alert &apos;Field email is required.&apos; after add user button is clicked in modal" duration="1165"/>
+        <testCase name="Test Table Users Component should alert &apos;Invalid email.&apos; after add user button is clicked in modal" duration="1254"/>
+        <testCase name="Test Table Users Component should alert &apos;Field password is required.&apos; after add user button is clicked in modal" duration="1212"/>
+        <testCase name="Test Table Users Component should render &apos;Update user&apos; modal after &apos;John Doe&apos; row is clicked" duration="529"/>
+        <testCase name="Test Table Users Component should render John Doe data in the modal after his row is clicked" duration="1202"/>
+        <testCase name="Test Table Users Component should render delete user modal after &apos;John Doe&apos; row is clicked" duration="539"/>
+    </file>
+</testExecutions>

@@ -421,3 +421,14 @@ export const apiDeleteUserById = async (
   });
   return res;
 };
+
+/**
+ * Fetch all actors in actors collection
+ * @returns {APICustomResponse<{}>}
+ */
+export const apiFetchCurrentLoggedUser = async (): Promise<
+  APICustomResponse<{}>
+> => {
+  const res = await apiRequest<APICustomResponse<{}>>(`/users/me`);
+  return res.data as APICustomResponse<{}>;
+};

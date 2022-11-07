@@ -28,7 +28,7 @@ import { useTypedDispatch, useTypedSelector } from "../../hooks/rtk-hooks";
 import { isValidName, isValidUrl } from "../../utils/helpers";
 
 const TableActors = () => {
-  const { actors } = useTypedSelector((state) => state.actor);
+  const { actors, isLoading } = useTypedSelector((state) => state.actor);
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
   const { classes } = useStyles();
@@ -215,6 +215,7 @@ const TableActors = () => {
               size="xs"
               color="green"
               onClick={() => navigate(`/actor/${row.id}`)}
+              data-testid="rowViewActorBtn"
             >
               <IconEye size={14} strokeWidth={2} />
             </Button>
@@ -226,6 +227,7 @@ const TableActors = () => {
               size="xs"
               color="blue"
               onClick={() => handleActorUpdateActionClick(row)}
+              data-testid="rowUpdateActorBtn"
             >
               <IconEdit size={14} strokeWidth={2} />
             </Button>
@@ -237,6 +239,7 @@ const TableActors = () => {
               size="xs"
               color="red"
               onClick={() => handleActorDeleteActionClick(row.id)}
+              data-testid="rowDeleteActorBtn"
             >
               <IconTrash size={14} strokeWidth={2} />
             </Button>
@@ -269,6 +272,7 @@ const TableActors = () => {
         data={filteredItems}
         pagination
         dense
+        progressPending={isLoading}
         sortIcon={<IconArrowDown />}
         theme="dark"
         customStyles={tableCustomStyles}
@@ -374,7 +378,7 @@ const TableActors = () => {
         />
         <TextInput
           placeholder="Last Name"
-          label="Name"
+          label="Last Name"
           defaultValue={selectedActorData?.lastName}
           onChange={(e) =>
             setSelectedActorData({
