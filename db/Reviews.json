@@ -1,0 +1,379 @@
+[{
+  "_id": {
+    "$oid": "63670a9f5c935e220c912f60"
+  },
+  "description": "Just ordinary, nothing extra. Enola Holmes 2 is too concerned with chases, romance and flattering the target audience to even consider challenging anyone's puzzle-solving abilities. Like the first film, \"Enola Holmes 2\" hinges on how quickly we take to Enola's spirited heroine. She's still prone to both aces decision-making and a barrage of fourth wall-breaking jokes and jabs.",
+  "rating": 2,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "636707055c935e220c912f43"
+  },
+  "userId": {
+    "$oid": "6365d163e303fc6228363baa"
+  }
+},{
+  "_id": {
+    "$oid": "63670aeb5c935e220c912f61"
+  },
+  "description": "They made sherlock a little bit of a family man in this movie which isn't one of his strong suits. Except for that, I would recommend this movie to everyone",
+  "rating": 3,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "6367091b5c935e220c912f50"
+  },
+  "userId": {
+    "$oid": "6365d163e303fc6228363baa"
+  }
+},{
+  "_id": {
+    "$oid": "63670b495c935e220c912f62"
+  },
+  "description": "Best Non Stop Action. And I mean Action and Not corny dramas. Other film I recommend you to watch is The Raid.",
+  "rating": 5,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "6365ced2e303fc6228363ba3"
+  },
+  "userId": {
+    "$oid": "6365d163e303fc6228363baa"
+  }
+},{
+  "_id": {
+    "$oid": "63670bd45c935e220c912f63"
+  },
+  "description": "The rare sequel that is better than the original movie. 5/5",
+  "rating": 5,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "636708775c935e220c912f49"
+  },
+  "userId": {
+    "$oid": "6365d163e303fc6228363baa"
+  }
+},{
+  "_id": {
+    "$oid": "63670c115c935e220c912f64"
+  },
+  "description": "Hollow plot interspersed with the most boring fighting scenes ever. Dozens and dozens of inept villains, who are there just to be shoot. Gone are the fresh sequences of the first movie. Super-uninteresting main villain. Very poor climax. Twists, just for the sake of twists. It seems like there's nobody out there capable of writing a movie anymore.",
+  "rating": 4,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "636708b75c935e220c912f4d"
+  },
+  "userId": {
+    "$oid": "6365d163e303fc6228363baa"
+  }
+},{
+  "_id": {
+    "$oid": "63670c6c5c935e220c912f65"
+  },
+  "description": "Seriously fun movie to watch... and the thing people have been saying about, that Sherlock is demeaned in this movie to enheighten Enola, well it's simply not true.",
+  "rating": 5,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "6367091b5c935e220c912f50"
+  },
+  "userId": {
+    "$oid": "6367094d5c935e220c912f54"
+  }
+},{
+  "_id": {
+    "$oid": "63670c8b5c935e220c912f66"
+  },
+  "description": "JOHN WICK is a rare example of Hollywood getting things spot-on when it comes to creating the near-perfect action film. JOHN WICK is a relentless, pulse-pounding thriller that has plenty of similarity to the Liam Neeson classic TAKEN, albeit with a more simplistic (and also more emotionally intense) plot line.",
+  "rating": 5,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "6365ced2e303fc6228363ba3"
+  },
+  "userId": {
+    "$oid": "6367094d5c935e220c912f54"
+  }
+},{
+  "_id": {
+    "$oid": "63670ca35c935e220c912f67"
+  },
+  "description": "A film with more head-shots than words spoken, John Wick: Chapter 2 is just about the most violent film I've seen in quite some time. But it knows exactly what it wants to do, and succeeds immensely.",
+  "rating": 5,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "636708775c935e220c912f49"
+  },
+  "userId": {
+    "$oid": "6367094d5c935e220c912f54"
+  }
+},{
+  "_id": {
+    "$oid": "63670cb65c935e220c912f68"
+  },
+  "description": "Undeniably action packed, but my goodness is it pointless! The whole movie is Keanu reeves wandering around New York (then Casablanca, then New York again) while killing people. I enjoy a mindless action thriller, but this is positively brain dead.",
+  "rating": 3,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "636708b75c935e220c912f4d"
+  },
+  "userId": {
+    "$oid": "6367094d5c935e220c912f54"
+  }
+},{
+  "_id": {
+    "$oid": "63670ce75c935e220c912f69"
+  },
+  "description": "Very boring.",
+  "rating": 1,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "6367091b5c935e220c912f50"
+  },
+  "userId": {
+    "$oid": "636709635c935e220c912f56"
+  }
+},{
+  "_id": {
+    "$oid": "63670cf85c935e220c912f6a"
+  },
+  "description": "Same with the other one. Boring.",
+  "rating": 1,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "636707055c935e220c912f43"
+  },
+  "userId": {
+    "$oid": "636709635c935e220c912f56"
+  }
+},{
+  "_id": {
+    "$oid": "63670d0f5c935e220c912f6b"
+  },
+  "description": "Out of words. 5/5",
+  "rating": 5,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "636708775c935e220c912f49"
+  },
+  "userId": {
+    "$oid": "636709725c935e220c912f58"
+  }
+},{
+  "_id": {
+    "$oid": "63670d315c935e220c912f6c"
+  },
+  "description": "Gunshots everywhere. Not for kids.",
+  "rating": 4,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "6365ced2e303fc6228363ba3"
+  },
+  "userId": {
+    "$oid": "636709725c935e220c912f58"
+  }
+},{
+  "_id": {
+    "$oid": "63670d4d5c935e220c912f6d"
+  },
+  "description": "I hope this is the last one. It kinda fell off.",
+  "rating": 4,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "636708b75c935e220c912f4d"
+  },
+  "userId": {
+    "$oid": "636709725c935e220c912f58"
+  }
+},{
+  "_id": {
+    "$oid": "63670d5f5c935e220c912f6e"
+  },
+  "description": "I slept through the entire duration of the movie.",
+  "rating": 2,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "6367091b5c935e220c912f50"
+  },
+  "userId": {
+    "$oid": "636709725c935e220c912f58"
+  }
+},{
+  "_id": {
+    "$oid": "63670d6d5c935e220c912f6f"
+  },
+  "description": "5/5",
+  "rating": 5,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "6365ced2e303fc6228363ba3"
+  },
+  "userId": {
+    "$oid": "636709805c935e220c912f5a"
+  }
+},{
+  "_id": {
+    "$oid": "63670d765c935e220c912f70"
+  },
+  "description": "Uhhhh.....",
+  "rating": 1,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "6367091b5c935e220c912f50"
+  },
+  "userId": {
+    "$oid": "636709805c935e220c912f5a"
+  }
+},{
+  "_id": {
+    "$oid": "63670db75c935e220c912f71"
+  },
+  "description": "Henry is the saving grace.",
+  "rating": 2,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "636707055c935e220c912f43"
+  },
+  "userId": {
+    "$oid": "6367098f5c935e220c912f5c"
+  }
+},{
+  "_id": {
+    "$oid": "63670dd95c935e220c912f72"
+  },
+  "description": "Not a serious tyoe Holmes mystery movie, but fun and well acted.",
+  "rating": 3,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "6367091b5c935e220c912f50"
+  },
+  "userId": {
+    "$oid": "6367098f5c935e220c912f5c"
+  }
+},{
+  "_id": {
+    "$oid": "63670dea5c935e220c912f73"
+  },
+  "description": "This is great!",
+  "rating": 5,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": true,
+  "movieId": {
+    "$oid": "6365ced2e303fc6228363ba3"
+  },
+  "userId": {
+    "$oid": "6367098f5c935e220c912f5c"
+  }
+},{
+  "_id": {
+    "$oid": "6367e7205c935e220c912f78"
+  },
+  "description": "Nice.",
+  "rating": 4,
+  "datePosted": {
+    "$date": {
+      "$numberLong": "1667692678575"
+    }
+  },
+  "isApproved": false,
+  "movieId": {
+    "$oid": "636707055c935e220c912f43"
+  },
+  "userId": {
+    "$oid": "636709805c935e220c912f5a"
+  }
+}]
