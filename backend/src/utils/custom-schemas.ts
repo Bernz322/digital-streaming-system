@@ -61,5 +61,3 @@ export const PostMovieSchema: SchemaObject = {
     },
   },
 };
-
-// Reviews Controller Custom Schemas
