@@ -27,6 +27,7 @@
     "dayjs": "^1.11.6",
     "embla-carousel-react": "^7.0.4",
     "font-awesome": "^4.7.0",
+    "history": "^5.3.0",
     "jest-sonar-reporter": "^2.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
@@ -91,10 +92,10 @@
       }
     }
   },
-  "jestSonar":{
-    "reportPath":"test-coverage/sonar",
-    "reportFile":"sonar-report.xml",
-    "indent":4
+  "jestSonar": {
+    "reportPath": "test-coverage/sonar",
+    "reportFile": "sonar-report.xml",
+    "indent": 4
   },
   "devDependencies": {
     "msw": "^0.47.4",

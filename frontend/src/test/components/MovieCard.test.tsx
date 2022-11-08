@@ -1,6 +1,7 @@
-import { cleanup, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Router } from "react-router-dom";
+import { createMemoryHistory } from "history";
 import { MovieCard } from "../../components";
 import { mockMovie } from "../../utils/db.mocks";
 import { renderWithProviders } from "../../utils/test-utils";
@@ -40,11 +41,16 @@ describe("<MovieCard />", () => {
   });
 
   test("should navigate to individial movie page when clicked", () => {
-    renderApp();
+    const history = createMemoryHistory();
+    render(
+      <Router location={history.location} navigator={history}>
+        <MovieCard movie={mockMovie} />
+      </Router>
+    );
 
     const linkElement = screen.getByRole("link");
     userEvent.click(linkElement);
 
-    expect(window.location.pathname).toEqual(`/movie/${mockMovie.id}`);
+    expect(history.location.pathname).toEqual(`/movie/${mockMovie.id}`);
   });
 });

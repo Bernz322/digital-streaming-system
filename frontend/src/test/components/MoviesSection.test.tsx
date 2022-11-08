@@ -3,8 +3,9 @@ import {
   screen,
   waitForElementToBeRemoved,
 } from "@testing-library/react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Router } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
+import { createMemoryHistory } from "history";
 import { MoviesSection } from "../../components";
 import { renderWithProviders } from "../../utils/test-utils";
 
@@ -47,18 +48,27 @@ describe("<MoviesSection />", () => {
   });
 
   test("should navigate me to '/movies' route when 'Movies Library' is clicked", () => {
-    renderApp();
-
+    const history = createMemoryHistory();
+    renderWithProviders(
+      <Router location={history.location} navigator={history}>
+        <MoviesSection />
+      </Router>
+    );
     const element = screen.getByText("Movies Library");
     userEvent.click(element);
-    expect(window.location.pathname).toEqual("/movies");
+    expect(history.location.pathname).toEqual("/movies");
   });
 
   test("should navigate me to '/movies' route when 'SEE ALL' is clicked", () => {
-    renderApp();
+    const history = createMemoryHistory();
+    renderWithProviders(
+      <Router location={history.location} navigator={history}>
+        <MoviesSection />
+      </Router>
+    );
 
     const element = screen.getByText(/see all/i);
     userEvent.click(element);
-    expect(window.location.pathname).toEqual("/movies");
+    expect(history.location.pathname).toEqual("/movies");
   });
 });

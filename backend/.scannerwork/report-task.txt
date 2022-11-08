@@ -1,6 +1,6 @@
-projectKey=dss-backend
+projectKey=POC-backend
 serverUrl=http://localhost:9000
 serverVersion=9.7.0.61563
-dashboardUrl=http://localhost:9000/dashboard?id=dss-backend
-ceTaskId=AYRFzBhF4q91Z9j-uip4
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYRFzBhF4q91Z9j-uip4
+dashboardUrl=http://localhost:9000/dashboard?id=POC-backend
+ceTaskId=AYRWknpS1-pyWhb0kyjv
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYRWknpS1-pyWhb0kyjv
