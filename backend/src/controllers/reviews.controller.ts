@@ -69,10 +69,10 @@ export class ReviewsController {
         ...reviews,
         userId: currentLoggedUser.id,
       };
-      const review = await this.reviewsRepository.create(reviewToSave);
+      await this.reviewsRepository.create(reviewToSave);
       return {
         status: 'success',
-        data: review,
+        data: null,
         message: 'Movie review successfully added.',
       };
     } catch (error) {
@@ -165,7 +165,7 @@ export class ReviewsController {
       return {
         status: 'success',
         data: movieReviews,
-        message: 'Review updated successfully.',
+        message: 'Reviews fetched successfully.',
       };
     } catch (error) {
       return {

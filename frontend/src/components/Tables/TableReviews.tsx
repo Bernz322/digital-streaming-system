@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import {
   Button,
-  Group,
   Modal,
   Paper,
   SegmentedControl,
@@ -11,7 +10,7 @@ import {
 import { showNotification } from "@mantine/notifications";
 import { upperFirst } from "@mantine/hooks";
 import DataTable, { TableColumn } from "react-data-table-component";
-import { IconArrowDown, IconEdit, IconTrash, IconEye } from "@tabler/icons";
+import { IconArrowDown, IconEdit, IconEye } from "@tabler/icons";
 import dayjs from "dayjs";
 import { useTypedDispatch, useTypedSelector } from "../../hooks/rtk-hooks";
 import {
@@ -21,7 +20,6 @@ import {
 } from "../../utils/types";
 import { useStyles, tableCustomStyles } from "./TableStyles";
 import {
-  deleteMovieReviewById,
   updateMovieReviewById,
   fetchAllMovies,
 } from "../../features/movie/movieSlice";
@@ -34,7 +32,6 @@ const TableReviews = () => {
   // Modal Open/Close states
   const [viewReviewModal, setViewReviewModal] = useState<boolean>(false);
   const [editReviewModal, setEditReviewModal] = useState<boolean>(false);
-  const [deleteReviewModal, setDeleteReviewModal] = useState<boolean>(false);
 
   // Review states for viewing ,updating and deleting
   const [viewReviewData, setViewReviewData] = useState<IMovieReview>(
@@ -42,7 +39,6 @@ const TableReviews = () => {
   );
   const [selectedReviewData, setSelectedReviewData] =
     useState<IPatchReviewProps>({} as IPatchReviewProps);
-  const [reviewIdToDelete, setReviewIdToDelete] = useState<string>("");
 
   // View Review Action
   const handleViewReviewActionClick = useCallback((review: IMovieReview) => {
@@ -82,18 +78,6 @@ const TableReviews = () => {
       });
     }
   }, [dispatch, selectedReviewData.id, selectedReviewData.isApproved]);
-
-  // Open delete modal and set current row item id to reviewIdToDelete state
-  const handleReviewDeleteActionClick = useCallback((id: string) => {
-    setReviewIdToDelete(id);
-    setDeleteReviewModal(true);
-  }, []);
-  // Delete Review Action (DELETE request)
-  const handleReviewDelete = useCallback(async () => {
-    dispatch(deleteMovieReviewById(reviewIdToDelete));
-    await dispatch(fetchAllMovies());
-    setDeleteReviewModal(false);
-  }, [dispatch, reviewIdToDelete]);
 
   // Review Table Columns
   const reviewsColumns: TableColumn<IMovieReview>[] = [
@@ -142,17 +126,6 @@ const TableReviews = () => {
               onClick={() => handleReviewUpdateActionClick(row)}
             >
               <IconEdit size={14} strokeWidth={2} />
-            </Button>
-          </Tooltip>
-          <Tooltip label="Delete Review" withArrow radius="md">
-            <Button
-              radius="md"
-              ml="sm"
-              size="xs"
-              color="red"
-              onClick={() => handleReviewDeleteActionClick(row.id)}
-            >
-              <IconTrash size={14} strokeWidth={2} />
             </Button>
           </Tooltip>
         </>
@@ -256,36 +229,6 @@ const TableReviews = () => {
         >
           Update Review
         </Button>
-      </Modal>
-
-      {/* Delete Review Modal */}
-      <Modal
-        opened={deleteReviewModal}
-        onClose={() => setDeleteReviewModal(false)}
-        title="Are you sure to delete this movie review?"
-        centered
-      >
-        <Text align="center" color="yellow" size="sm">
-          This cannot be undone. Careful.
-        </Text>
-        <Group position="apart" mt="md">
-          <Button
-            radius="md"
-            className={classes.btn}
-            color="red"
-            onClick={() => handleReviewDelete()}
-          >
-            Yes
-          </Button>
-          <Button
-            radius="md"
-            className={classes.btn}
-            color="blue"
-            onClick={() => setDeleteReviewModal(false)}
-          >
-            No
-          </Button>
-        </Group>
       </Modal>
     </Paper>
   );

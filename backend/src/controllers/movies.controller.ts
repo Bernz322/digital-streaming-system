@@ -254,7 +254,9 @@ export class MoviesController {
       }
 
       await this.moviesRepository.updateById(id, movies);
-      const updatedMovie = await this.moviesRepository.findById(id);
+      const updatedMovie = await this.moviesRepository.findById(id, {
+        include: [{relation: 'movieReviews'}],
+      });
       return {
         status: 'success',
         data: updatedMovie,

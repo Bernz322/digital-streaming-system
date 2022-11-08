@@ -61,7 +61,7 @@ export const login = async (
       cookieName: "accessToken",
       value: res.data.token,
     });
-    localStorage.setItem("loggedUser", JSON.stringify(res.data.user));
+    localStorage.setItem("loggedUser", JSON.stringify(true));
   }
   return res;
 };
@@ -430,5 +430,5 @@ export const apiFetchCurrentLoggedUser = async (): Promise<
   APICustomResponse<{}>
 > => {
   const res = await apiRequest<APICustomResponse<{}>>(`/users/me`);
-  return res.data as APICustomResponse<{}>;
+  return res;
 };

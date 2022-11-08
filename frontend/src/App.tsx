@@ -15,10 +15,13 @@ import {
 } from "./pages";
 import "./styles/App.scss";
 import "font-awesome/css/font-awesome.css";
-import { useTypedSelector } from "./hooks/rtk-hooks";
+import { useTypedDispatch, useTypedSelector } from "./hooks/rtk-hooks";
+import { authCreds } from "./features/auth/authSlice";
+import { isLoggedIn } from "./utils/helpers";
 
 const App = () => {
   const { user, loggedIn } = useTypedSelector((state) => state.auth);
+  const dispatch = useTypedDispatch();
   /**
    * Ensures that everytime we switch to another route, we will always be on the top page
    * https://v5.reactrouter.com/web/guides/scroll-restoration
@@ -33,6 +36,10 @@ const App = () => {
 
     return null;
   };
+
+  useEffect(() => {
+    if (isLoggedIn()) dispatch(authCreds());
+  }, [dispatch]);
 
   return (
     <MantineProvider

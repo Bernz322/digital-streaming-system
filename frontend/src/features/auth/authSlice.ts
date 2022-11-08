@@ -5,30 +5,28 @@ import {
   createSlice,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import { login, register } from "../../utils/apiCalls";
-import { deleteCookie, isError, isLoggedIn } from "../../utils/helpers";
 import {
-  ILoginResponse,
-  IRegisterAPIProps,
-  APICustomResponse,
-  IUserLogin,
-} from "../../utils/types";
+  apiFetchCurrentLoggedUser,
+  login,
+  register,
+} from "../../utils/apiCalls";
+import { deleteCookie, isError, isLoggedIn } from "../../utils/helpers";
+import { IRegisterAPIProps, APICustomResponse, IUser } from "../../utils/types";
 import { actorReset } from "../actor/actorSlice";
 import { movieReset } from "../movie/movieSlice";
 import { userReset } from "../user/userSlice";
 
 export interface IAuthState {
   loggedIn: boolean;
-  user: IUserLogin;
+  user: IUser;
   isLoading: boolean;
 }
 
 const status = isLoggedIn();
-const storedUser = JSON.parse(localStorage.getItem("loggedUser") || "{}");
 
 const initialState: IAuthState = {
   loggedIn: status,
-  user: storedUser ? storedUser : ({} as IUserLogin),
+  user: {} as IUser,
   isLoading: false,
 };
 
@@ -39,6 +37,7 @@ export const authLogin = createAsyncThunk(
     try {
       const res = await login(data.email, data.password);
       if (res.status === "fail") throw new Error(res.message);
+      thunkAPI.dispatch(authCreds());
       return res;
     } catch (error: any) {
       const message = isError(
@@ -96,13 +95,31 @@ export const authLogout = createAsyncThunk(
   }
 );
 
+// Current User
+export const authCreds = createAsyncThunk(
+  "auth/userCreds",
+  async (_, thunkAPI) => {
+    try {
+      const res: APICustomResponse<{}> = await apiFetchCurrentLoggedUser();
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message = isError(
+        error,
+        "Fecthing your information failed. Please login again."
+      );
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
     authReset: (state: IAuthState) => {
       state.loggedIn = false;
-      state.user = {} as IUserLogin;
+      state.user = {} as IUser;
       state.isLoading = false;
     },
   },
@@ -112,14 +129,10 @@ const authSlice = createSlice({
         state.isLoading = true;
         state.loggedIn = false;
       })
-      .addCase(
-        authLogin.fulfilled,
-        (state: IAuthState, action: PayloadAction<ILoginResponse>) => {
-          state.loggedIn = true;
-          state.isLoading = false;
-          state.user = action.payload.data.user;
-        }
-      )
+      .addCase(authLogin.fulfilled, (state: IAuthState) => {
+        state.loggedIn = true;
+        state.isLoading = false;
+      })
       .addCase(authLogin.rejected, (state: IAuthState) => {
         state.isLoading = false;
         state.loggedIn = false;
@@ -136,7 +149,7 @@ const authSlice = createSlice({
       .addCase(authLogout.pending, (state: IAuthState) => {
         state.isLoading = true;
         state.loggedIn = false;
-        state.user = {} as IUserLogin;
+        state.user = {} as IUser;
       })
       .addCase(authLogout.fulfilled, (state: IAuthState) => {
         state.loggedIn = false;
@@ -145,6 +158,19 @@ const authSlice = createSlice({
       .addCase(authLogout.rejected, (state: IAuthState) => {
         state.isLoading = false;
         state.loggedIn = false;
+      })
+      .addCase(authCreds.pending, (state: IAuthState) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        authCreds.fulfilled,
+        (state: IAuthState, action: PayloadAction<APICustomResponse<{}>>) => {
+          state.isLoading = false;
+          state.user = action.payload.data as IUser;
+        }
+      )
+      .addCase(authCreds.rejected, (state: IAuthState) => {
+        state.isLoading = false;
       });
   },
 });
