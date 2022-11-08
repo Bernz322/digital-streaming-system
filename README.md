@@ -123,9 +123,9 @@ In this app, there are four controllers:
 
 Services are modular components that can be plugged into a LoopBack application in various locations to contribute additional capabilities and features to the application.
 
-This app has five services:
+This app has two services:
 
-1. `services/user.service` - responsible for verifying if user exists and the submitted credentials matches that of an existing user. It is also responsible for creating a profile to be used for the generation of the JWT.
+1. `services/user.service` - responsible for verifying if user exists and the submitted credentials matches that of an existing user. It is also responsible for creating a profile to be used for the generation of JWT.
 2. `services/jwt.service` - responsible for generating and verifying JSON Web Token with additional `role` field for authorization.
 
 ## Authentication
@@ -147,7 +147,7 @@ Endpoint authorization is done using the [@loopback/authorization](https://githu
 
 A customized authorization provider is binded to `authorizationProviders.my-authorizer-provider` to cater the roles of a user decoded from the JWT token.
 
-Thee app has two roles: `admin`, and `user`. All get request endpoints of movies and actors controllers has no authorization instilled to it as it is a public route.
+The app has two roles: `admin`, and `user`. All get request endpoints of movies and actors controllers has no authorization instilled to it as it is a public route.
 
 ## Tests
 
@@ -169,5 +169,5 @@ $ npm run coverage
 
 For the frontend, only the components and pages are unit tested with the coverage of more than 50%.
 ![frontend-sonarscan](./sonarFrontendPartial.PNG)
-The backend is not tested and was only scanned for code smells and vulnerabilities.
+The backend is not tested and was only scanned for code smells, bugs, security risks and vulnerabilities.
 ![backend-sonarscan](./sonarBackend.PNG)
