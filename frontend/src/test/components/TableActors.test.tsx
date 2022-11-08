@@ -407,4 +407,10 @@ describe("Test Table Actors Component", () => {
     const alertMessage = screen.getByText("Invalid first name.");
     expect(alertMessage).toBeInTheDocument();
   });
+
+  //   Test last name, age, image and actor urls
+  // test that the x button closes the modal
+  // test delete modal open
+  // test that both close buttons will work
+  // test with msw, delete keanu and test if actors length is 2
 });

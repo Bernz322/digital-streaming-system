@@ -13,7 +13,7 @@ import { IndividualMovie } from "../../pages";
 import { server } from "../../mocks/server";
 import { baseAPIUrl } from "../../utils/apiCalls";
 import { budgetFormatter } from "../../utils/helpers";
-import { IUserLogin } from "../../utils/types";
+import { IUser } from "../../utils/types";
 
 describe("Test Individual Movie Page", () => {
   afterEach(() => cleanup);
@@ -124,7 +124,7 @@ describe("Test Individual Movie Page", () => {
           auth: {
             isLoading: false,
             loggedIn: false,
-            user: {} as IUserLogin,
+            user: {} as IUser,
           },
         },
       }
@@ -149,10 +149,12 @@ describe("Test Individual Movie Page", () => {
             loggedIn: true,
             user: {
               id: "6365cbc3e303fc6228363b9d",
-              name: "admin root",
+              firstName: "admin",
+              lastName: "root",
               email: "admin@root.com",
               role: "admin",
               isActivated: true,
+              dateCreated: "03-11-2022",
             },
           },
         },
@@ -178,10 +180,12 @@ describe("Test Individual Movie Page", () => {
             loggedIn: true,
             user: {
               id: "6365cbc3e303fc6228363b9d",
-              name: "admin root",
+              firstName: "admin",
+              lastName: "root",
               email: "admin@root.com",
               role: "admin",
               isActivated: true,
+              dateCreated: "03-11-2022",
             },
           },
         },
@@ -211,10 +215,12 @@ describe("Test Individual Movie Page", () => {
             loggedIn: true,
             user: {
               id: "6365cbc3e303fc6228363b9d",
-              name: "admin root",
+              firstName: "admin",
+              lastName: "root",
               email: "admin@root.com",
               role: "admin",
               isActivated: true,
+              dateCreated: "03-11-2022",
             },
           },
         },
@@ -264,10 +270,12 @@ describe("Test Individual Movie Page", () => {
             loggedIn: true,
             user: {
               id: "6365cbc3e303fc6228363b9d",
-              name: "admin root",
+              firstName: "admin",
+              lastName: "root",
               email: "admin@root.com",
               role: "admin",
               isActivated: true,
+              dateCreated: "03-11-2022",
             },
           },
         },
