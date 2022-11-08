@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AppShell, Navbar } from "@mantine/core";
+import { AppShell, Container, Navbar } from "@mantine/core";
 import {
   IconLayoutDashboard,
   IconUser,
@@ -30,7 +30,11 @@ const Dashboard = () => {
       asideOffsetBreakpoint="sm"
       fixed
       navbar={
-        <Navbar hiddenBreakpoint="sm" className={classes.navBar}>
+        <Navbar
+          hiddenBreakpoint="sm"
+          className={classes.navBar}
+          width={{ sm: 200, lg: 300 }}
+        >
           <Navbar.Section grow mt="95px">
             {navItems.map((item) => (
               <a
@@ -56,7 +60,7 @@ const Dashboard = () => {
         </Navbar>
       }
     >
-      <main className="pageContainer">
+      <Container className={classes.container}>
         {(active === "Users" || active === "Dashboard") && <TableUsers />}
         {(active === "Actors" || active === "Dashboard") && <TableActors />}
         {(active === "Movies" || active === "Dashboard") && (
@@ -64,7 +68,7 @@ const Dashboard = () => {
             <TableMovies /> <TableReviews />
           </>
         )}
-      </main>
+      </Container>
     </AppShell>
   );
 };

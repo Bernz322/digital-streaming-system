@@ -6,8 +6,6 @@ export const useStyles = createStyles((theme) => ({
     backgroundColor: "#424242",
     padding: 25,
     marginTop: 25,
-    minWidth: 1200,
-    maxWidth: 1200,
   },
   root: {
     position: "relative",
@@ -51,7 +49,6 @@ export const tableCustomStyles = {
   rows: {
     style: {
       padding: "5px 0",
-      maxWidth: 1150,
     },
   },
 };

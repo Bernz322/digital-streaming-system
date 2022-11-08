@@ -4,6 +4,7 @@ export const useDashboardPageStyles = createStyles((theme) => ({
   main: {
     background: "#121212",
     padding: 0,
+    paddingTop: 70,
   },
   link: {
     ...theme.fn.focusStyles(),
@@ -45,5 +46,8 @@ export const useDashboardPageStyles = createStyles((theme) => ({
     width: 300,
     zIndex: 5,
     backgroundColor: "#121212",
+  },
+  container: {
+    minWidth: "100%",
   },
 }));
