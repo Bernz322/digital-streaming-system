@@ -168,6 +168,6 @@ $ npm run coverage
 ### Sonarqube Scanner Results
 
 For the frontend, only the components and pages are unit tested with the coverage of more than 50%.
-![frontend-sonarscan](./sonar-frontend-partial.png)
+![frontend-sonarscan](./sonarFrontendPartial.png)
 The backend is not tested and was only scanned for code smells and vulnerabilities.
-![frontend-sonarscan](./sonar-backend.png)
+![backend-sonarscan](./sonarBackend.png)
