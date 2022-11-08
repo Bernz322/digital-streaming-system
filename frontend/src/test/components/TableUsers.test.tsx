@@ -15,7 +15,7 @@ interface IForm {
   fName?: string;
   lName?: string;
   email?: string;
-  password?: string;
+  passValue?: string;
 }
 
 const openAddUserModal = async () => {
@@ -42,7 +42,7 @@ const openUpdateUserModal = async () => {
   });
 };
 
-const typeIntoForm = ({ fName, lName, email, password }: IForm) => {
+const typeIntoForm = ({ fName, lName, email, passValue }: IForm) => {
   const fNameElement = screen.getByPlaceholderText("First Name");
   const lNameElement = screen.getByPlaceholderText("Last Name");
   const emailElement = screen.getByPlaceholderText("juandelacruz@gmail.com");
@@ -57,20 +57,25 @@ const typeIntoForm = ({ fName, lName, email, password }: IForm) => {
   if (email) {
     userEvent.type(emailElement, email);
   }
-  if (password) {
-    userEvent.type(passwordElement, password);
+  if (passValue) {
+    userEvent.type(passwordElement, passValue);
   }
 };
 
-describe("Test Table Users Component", () => {
+describe("<TableUsers />", () => {
+  const renderApp = () => {
+    return renderWithProviders(
+      <BrowserRouter>
+        <NotificationsProvider>
+          <TableUsers />
+        </NotificationsProvider>
+      </BrowserRouter>
+    );
+  };
   afterEach(cleanup);
 
   test("should render all mocked users data", async () => {
-    const { store } = renderWithProviders(
-      <BrowserRouter>
-        <TableUsers />
-      </BrowserRouter>
-    );
+    const { store } = renderApp();
 
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
 
@@ -82,11 +87,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should render search input and 'Add User' button", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <TableUsers />
-      </BrowserRouter>
-    );
+    renderApp();
 
     const addUserBtnElement = screen.getByRole("button", { name: "Add User" });
     const searchUserInputElement =
@@ -96,11 +97,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should render 'john@doe.com' in table row after typing 'john'", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <TableUsers />
-      </BrowserRouter>
-    );
+    renderApp();
 
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
 
@@ -115,11 +112,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should render 'Add User' Modal if 'Add User' button is clicked", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <TableUsers />
-      </BrowserRouter>
-    );
+    renderApp();
 
     const addUserBtnElement = screen.getByRole("button", { name: "Add User" });
     expect(addUserBtnElement).toBeInTheDocument();
@@ -133,13 +126,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should alert 'Field first name is required.' after add user button is clicked in modal", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <NotificationsProvider>
-          <TableUsers />
-        </NotificationsProvider>
-      </BrowserRouter>
-    );
+    renderApp();
 
     openAddUserModal();
 
@@ -159,13 +146,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should alert 'Field last name is required.' after add user button is clicked in modal", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <NotificationsProvider>
-          <TableUsers />
-        </NotificationsProvider>
-      </BrowserRouter>
-    );
+    renderApp();
 
     openAddUserModal();
 
@@ -186,13 +167,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should alert 'Field email is required.' after add user button is clicked in modal", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <NotificationsProvider>
-          <TableUsers />
-        </NotificationsProvider>
-      </BrowserRouter>
-    );
+    renderApp();
 
     openAddUserModal();
 
@@ -213,13 +188,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should alert 'Field password is required.' after add user button is clicked in modal", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <NotificationsProvider>
-          <TableUsers />
-        </NotificationsProvider>
-      </BrowserRouter>
-    );
+    renderApp();
 
     openAddUserModal();
 
@@ -231,7 +200,7 @@ describe("Test Table Users Component", () => {
       fName: "Valid FName",
       lName: "Valid LName",
       email: "valid@email.com",
-      password: " ",
+      passValue: " ",
     });
     userEvent.click(addUserModalBtnElement);
 
@@ -245,11 +214,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should close 'Add user' modal on 'X' button click", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <TableUsers />
-      </BrowserRouter>
-    );
+    renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
 
     // Open Modal
@@ -270,22 +235,14 @@ describe("Test Table Users Component", () => {
   });
 
   test("should render 'Update user' modal after 'John Doe' row is clicked", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <TableUsers />
-      </BrowserRouter>
-    );
+    renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
 
     openUpdateUserModal();
   });
 
   test("should render John Doe data in the modal after his update btn is clicked", async () => {
-    const { store } = renderWithProviders(
-      <BrowserRouter>
-        <TableUsers />
-      </BrowserRouter>
-    );
+    const { store } = renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
 
     const mockedUsers = store.getState().user.users; // [0]->Admin / [1]->John
@@ -317,13 +274,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should alert 'Invalid first name'", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <NotificationsProvider>
-          <TableUsers />
-        </NotificationsProvider>
-      </BrowserRouter>
-    );
+    renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
 
     // Open modal
@@ -361,13 +312,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should alert 'Invalid last name'", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <NotificationsProvider>
-          <TableUsers />
-        </NotificationsProvider>
-      </BrowserRouter>
-    );
+    renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
 
     // Open modal
@@ -404,13 +349,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should alert 'Field email is required", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <NotificationsProvider>
-          <TableUsers />
-        </NotificationsProvider>
-      </BrowserRouter>
-    );
+    renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
 
     // Open modal
@@ -450,11 +389,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should close 'Update user' modal on 'X' button click", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <TableUsers />
-      </BrowserRouter>
-    );
+    renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
 
     const updateUserBtnElement = screen.getAllByTestId("rowUpdateUserBtn");
@@ -475,11 +410,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should render delete user modal after 'John Doe' row is clicked", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <TableUsers />
-      </BrowserRouter>
-    );
+    renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
 
     const deleteUserBtnElement = screen.getAllByTestId("rowDeleteUserBtn");
@@ -498,11 +429,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should close delete user modal on 'X' button click", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <TableUsers />
-      </BrowserRouter>
-    );
+    renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
 
     // Open delete user modal
@@ -525,11 +452,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should close delete user modal on 'No' button click", async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <TableUsers />
-      </BrowserRouter>
-    );
+    renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
 
     const deleteUserBtnElement = screen.getAllByTestId("rowDeleteUserBtn");
@@ -550,11 +473,7 @@ describe("Test Table Users Component", () => {
   });
 
   test("should delete user 'John' on 'Yes' button click", async () => {
-    const { store } = renderWithProviders(
-      <BrowserRouter>
-        <TableUsers />
-      </BrowserRouter>
-    );
+    const { store } = renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
 
     // Open Modal

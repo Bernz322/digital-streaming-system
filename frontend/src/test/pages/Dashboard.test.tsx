@@ -1,19 +1,22 @@
+/* eslint-disable testing-library/no-render-in-setup */
 import { cleanup, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "../../utils/test-utils";
 import { Dashboard } from "../../pages";
 
-describe("Test Dashboard Page", () => {
-  afterEach(cleanup);
-
-  test("should render sidebar elements", () => {
-    renderWithProviders(
+describe("<Dashboard />", () => {
+  const renderApp = () => {
+    return renderWithProviders(
       <BrowserRouter>
         <Dashboard />
       </BrowserRouter>
     );
+  };
+  beforeEach(() => renderApp());
+  afterEach(cleanup);
 
+  test("should render sidebar elements", () => {
     const dashboardLinkElement = screen.getByRole("link", {
       name: "Dashboard",
     });
@@ -34,12 +37,6 @@ describe("Test Dashboard Page", () => {
   });
 
   test("should render all 4 tables", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Dashboard />
-      </BrowserRouter>
-    );
-
     const usersTableElement = screen.getByText("Users List");
     const actorsTableElement = screen.getByText("Actors List");
     const moviesTableElement = screen.getByText("Movies List");
@@ -52,11 +49,6 @@ describe("Test Dashboard Page", () => {
   });
 
   test("should render all tables on dashboard link click", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Dashboard />
-      </BrowserRouter>
-    );
     const dashboardLinkElement = screen.getByRole("link", {
       name: "Dashboard",
     });
@@ -74,11 +66,6 @@ describe("Test Dashboard Page", () => {
   });
 
   test("should render users table only on users link click", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Dashboard />
-      </BrowserRouter>
-    );
     const usersLinkElement = screen.getByRole("link", {
       name: "Users",
     });
@@ -90,11 +77,6 @@ describe("Test Dashboard Page", () => {
   });
 
   test("should render actors table only on actors link click", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Dashboard />
-      </BrowserRouter>
-    );
     const actorsLinkElement = screen.getByRole("link", {
       name: "Actors",
     });
@@ -106,11 +88,6 @@ describe("Test Dashboard Page", () => {
   });
 
   test("should render movies and reviews table on movies link click", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Dashboard />
-      </BrowserRouter>
-    );
     const moviesLinkElement = screen.getByRole("link", {
       name: "Movies",
     });

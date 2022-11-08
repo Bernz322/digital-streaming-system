@@ -5,49 +5,42 @@ import { MovieCard } from "../../components";
 import { mockMovie } from "../../utils/db.mocks";
 import { renderWithProviders } from "../../utils/test-utils";
 
-describe("Test Movie Card Component", () => {
-  afterEach(cleanup);
-
-  test("should render movie image", () => {
-    renderWithProviders(
+describe("<MovieCard />", () => {
+  const renderApp = () => {
+    return renderWithProviders(
       <BrowserRouter>
         <MovieCard movie={mockMovie} />
       </BrowserRouter>
     );
+  };
+  afterEach(cleanup);
+
+  test("should render mocked movie image", () => {
+    renderApp();
 
     const imageElement: HTMLImageElement = screen.getByAltText("movie");
     expect(imageElement.src).toEqual(mockMovie.image);
     expect(imageElement).toBeInTheDocument();
   });
 
-  test("should render movie title", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <MovieCard movie={mockMovie} />
-      </BrowserRouter>
-    );
+  test("should render mocked movie title", () => {
+    renderApp();
 
-    const titleElement = screen.getByRole("heading", { level: 4 });
-    expect(titleElement).toHaveTextContent(mockMovie.title);
+    expect(screen.getByRole("heading", { level: 4 })).toHaveTextContent(
+      mockMovie.title
+    );
   });
 
-  test("should render movie year released", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <MovieCard movie={mockMovie} />
-      </BrowserRouter>
-    );
+  test("should render mocked movie year released", () => {
+    renderApp();
 
-    const yearElement = screen.getByTestId("movieYearReleased");
-    expect(yearElement.textContent).toEqual(mockMovie.yearReleased.toString());
+    expect(screen.getByTestId("movieYearReleased").textContent).toEqual(
+      mockMovie.yearReleased.toString()
+    );
   });
 
-  test("should move me to another route with complete movie details when clicked", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <MovieCard movie={mockMovie} />
-      </BrowserRouter>
-    );
+  test("should navigate to individial movie page when clicked", () => {
+    renderApp();
 
     const linkElement = screen.getByRole("link");
     userEvent.click(linkElement);

@@ -1,65 +1,50 @@
+/* eslint-disable testing-library/no-render-in-setup */
 import { cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import { Home } from "../../pages";
 import { renderWithProviders } from "../../utils/test-utils";
 
-describe("Test Home Page", () => {
-  afterEach(cleanup);
-
-  test("should render hero section", () => {
-    renderWithProviders(
+describe("<Home />", () => {
+  const renderApp = () => {
+    return renderWithProviders(
       <BrowserRouter>
         <Home />
       </BrowserRouter>
     );
+  };
+  beforeEach(() => renderApp());
+  afterEach(cleanup);
 
-    const headingElement = screen.getAllByRole("heading", { level: 1 });
-    const subHeadingElement = screen.getAllByRole("heading", { level: 5 });
-    const pHeadingElement = screen.getByText(/Recognized?/i);
+  test("should render hero section elements", () => {
+    const headingElement = screen.getByRole("heading", { name: /ratebox/i });
+    const subHeadingElement = screen.getByRole("heading", { name: /HOME/i });
+    const pHeadingElement = screen.getByText(/Recognized/i);
     const logoImgElement = screen.getByAltText("logo");
 
-    expect(headingElement[0]).toBeInTheDocument();
-    expect(subHeadingElement[0]).toBeInTheDocument();
-    expect(pHeadingElement).toBeInTheDocument();
-    expect(logoImgElement).toBeInTheDocument();
+    expect(headingElement).toBeInTheDocument(); // ratebox
+    expect(subHeadingElement).toBeInTheDocument(); // THE HOME ...
+    expect(pHeadingElement).toBeInTheDocument(); // Recognized
+    expect(logoImgElement).toBeInTheDocument(); // Logo Image
   });
 
   test("should render movies library container", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Home />
-      </BrowserRouter>
-    );
+    const libraryElement = screen.getByRole("link", { name: "Movies Library" });
+    const seeAllElement = screen.getByRole("link", { name: "See all" });
 
-    const headingElement = screen.getAllByRole("heading", { level: 1 });
-    const seeAllElement = screen.getByRole("heading", { level: 2 });
-
-    expect(headingElement[0]).toBeInTheDocument();
+    expect(libraryElement).toBeInTheDocument();
     expect(seeAllElement).toBeInTheDocument();
   });
 
-  test("should navigate me to '/movies' route when 'Movies Library' is clicked", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Home />
-      </BrowserRouter>
-    );
-
-    const element = screen.getByText("Movies Library");
-    userEvent.click(element);
+  test("should navigate to '/movies' route when 'Movies Library' is clicked", () => {
+    const libraryElement = screen.getByRole("link", { name: "Movies Library" });
+    userEvent.click(libraryElement);
     expect(window.location.pathname).toEqual("/movies");
   });
 
-  test("should navigate me to '/movies' route when 'SEE ALL' is clicked", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Home />
-      </BrowserRouter>
-    );
-
-    const element = screen.getByText(/see all/i);
-    userEvent.click(element);
+  test("should navigate to '/movies' route when 'SEE ALL' is clicked", () => {
+    const seeAllElement = screen.getByRole("link", { name: "See all" });
+    userEvent.click(seeAllElement);
     expect(window.location.pathname).toEqual("/movies");
   });
 });

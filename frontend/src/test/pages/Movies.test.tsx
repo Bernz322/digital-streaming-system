@@ -10,37 +10,32 @@ import { renderWithProviders } from "../../utils/test-utils";
 import { mockMovies, mockSearchedMovies } from "../../utils/db.mocks";
 import { IMovie } from "../../utils/types";
 
-describe("Test All Movies Page", () => {
-  afterEach(cleanup);
-
-  test("should render movie search input", () => {
-    renderWithProviders(
+describe("<Movies />", () => {
+  const renderApp = () => {
+    return renderWithProviders(
       <BrowserRouter>
         <Movies />
       </BrowserRouter>
     );
+  };
+  afterEach(cleanup);
+
+  test("should render search input", () => {
+    renderApp();
 
     const searchInputElement = screen.getByRole("textbox");
     expect(searchInputElement).toBeInTheDocument();
   });
 
-  test("should render movie search button", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Movies />
-      </BrowserRouter>
-    );
+  test("should render search button", () => {
+    renderApp();
 
     const searchBtnElement = screen.getByRole("button");
     expect(searchBtnElement).toBeInTheDocument();
   });
 
   test("should render all mock movies", async () => {
-    const { store } = renderWithProviders(
-      <BrowserRouter>
-        <Movies />
-      </BrowserRouter>
-    );
+    const { store } = renderApp();
 
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
 
@@ -51,18 +46,15 @@ describe("Test All Movies Page", () => {
     expect(store.getState().movie.movies).toEqual(mockMovies);
   });
 
-  test('should not render "There are no movies available" h1 tag', async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Movies />
-      </BrowserRouter>
-    );
+  test('should not render "There are no movies available"', async () => {
+    renderApp();
+
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
     const noMovieElement = screen.getAllByRole("heading", { level: 1 });
     expect(noMovieElement.length).toEqual(1);
   });
 
-  test('should render "There are no movies available" h1 tag', async () => {
+  test('should render "There are no movies available"', async () => {
     renderWithProviders(
       <BrowserRouter>
         <Movies />
@@ -83,11 +75,8 @@ describe("Test All Movies Page", () => {
   });
 
   test("should be able to type a text", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Movies />
-      </BrowserRouter>
-    );
+    renderApp();
+
     const toSearchValue = "John Wick";
     const searchInputElement: HTMLInputElement = screen.getByRole("textbox");
     userEvent.type(searchInputElement, toSearchValue);
@@ -95,11 +84,7 @@ describe("Test All Movies Page", () => {
   });
 
   test("should show empty field error message", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Movies />
-      </BrowserRouter>
-    );
+    renderApp();
 
     const searchInputElement: HTMLInputElement = screen.getByRole("textbox");
     const searchBtnElement = screen.getByRole("button");
@@ -109,13 +94,10 @@ describe("Test All Movies Page", () => {
   });
 
   test("should show searched movies card", async () => {
-    const { store } = renderWithProviders(
-      <BrowserRouter>
-        <Movies />
-      </BrowserRouter>
-    );
-    // Render all movies first
+    const { store } = renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
+
+    // Render all movies first
     expect(screen.getAllByRole("img", { name: "movie" }).length).toBe(
       mockMovies.length
     );
@@ -129,8 +111,9 @@ describe("Test All Movies Page", () => {
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
     expect(screen.queryByText("Please wait.")).not.toBeInTheDocument();
 
+    // Render all searched movies. Based on mock, all three john wick movies will be rendered.
     const searchedMovies = await screen.findAllByTestId("movieCard");
-    expect(searchedMovies.length).toBe(mockSearchedMovies.length);
+    expect(searchedMovies.length).toBe(3);
     expect(store.getState().movie.movies.length).toEqual(
       mockSearchedMovies.length
     );
