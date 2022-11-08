@@ -11,6 +11,18 @@ export const mockMovies: IMovie[] = [
       "https://img.yts.mx/assets/images/movies/john_wick_2014/medium-cover.jpg",
     cost: 4500000,
     yearReleased: 2014,
+    movieReviews: [
+      {
+        datePosted: "2022-11-05T23:57:58.575Z",
+        description:
+          "Best Non Stop Action. And I mean Action and Not corny dramas. Other film I recommend you to watch is The Raid.",
+        id: "63670b495c935e220c912f62",
+        isApproved: true,
+        movieId: "6365ced2e303fc6228363ba3",
+        rating: 5,
+        userId: "6365d163e303fc6228363baa",
+      },
+    ],
   },
   {
     id: "636708775c935e220c912f49",

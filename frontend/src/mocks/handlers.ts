@@ -77,6 +77,16 @@ export const handlers = [
       ctx.delay(150)
     );
   }),
+  rest.delete(`${baseAPIUrl}/movies/:id`, (req, res, ctx) => {
+    return res(
+      ctx.json({
+        status: "success",
+        data: "6365ced2e303fc6228363ba3",
+        message: "Movie deleted successfully.",
+      }),
+      ctx.delay(150)
+    );
+  }),
 
   rest.get(`${baseAPIUrl}/search/actors/:name`, (req, res, ctx) => {
     const { name } = req.params;
