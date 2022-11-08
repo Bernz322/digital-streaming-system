@@ -409,6 +409,38 @@ describe("<TableUsers />", () => {
     expect(updateUserModalElement).not.toBeInTheDocument();
   });
 
+  test("should change John's account status and role on radio btn click inside update modal", async () => {
+    renderApp();
+    await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
+
+    const updateUserBtnElement = screen.getAllByTestId("rowUpdateUserBtn");
+    await waitFor(() => {
+      expect(updateUserBtnElement[1]).toBeInTheDocument();
+    });
+    userEvent.click(updateUserBtnElement[1]);
+
+    // User John data
+    const updateUserModalElement = await screen.findByRole("dialog");
+    await waitFor(() => {
+      expect(updateUserModalElement).toBeInTheDocument();
+    });
+
+    const deactivateRadioBtnElement: HTMLInputElement = screen.getByRole(
+      "radio",
+      {
+        name: "Deactivate",
+      }
+    );
+    const adminRadioBtnElement: HTMLInputElement = screen.getByRole("radio", {
+      name: "Admin",
+    });
+    userEvent.click(deactivateRadioBtnElement);
+    userEvent.click(adminRadioBtnElement);
+
+    expect(deactivateRadioBtnElement.value).toBe("false");
+    expect(adminRadioBtnElement.value).toBe("admin");
+  });
+
   test("should render delete user modal after 'John Doe' row is clicked", async () => {
     renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));

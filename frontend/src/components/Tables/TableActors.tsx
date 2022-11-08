@@ -73,8 +73,6 @@ const TableActors = () => {
       // Validate input fields
       isValidName(newActor.firstName, "first");
       isValidName(newActor.lastName, "last");
-      if (newActor.gender !== "male" && newActor.gender !== "female")
-        throw new Error("Gender should only be either male or female");
       if (newActor.age < 1 || !newActor.age)
         throw new Error("Actor age cannot be less than a year.");
       isValidUrl(newActor.image, "actor image");
@@ -113,11 +111,6 @@ const TableActors = () => {
       // Validate input fields
       isValidName(selectedActorData.firstName, "first");
       isValidName(selectedActorData.lastName, "last");
-      if (
-        selectedActorData.gender !== "male" &&
-        selectedActorData.gender !== "female"
-      )
-        throw new Error("Gender should only be either male or female");
       if (selectedActorData.age < 1 || !selectedActorData.age)
         throw new Error("Actor age cannot be less than a year.");
       isValidUrl(selectedActorData.image, "actor image");
