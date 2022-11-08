@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/no-render-in-setup */
 import { cleanup, screen } from "@testing-library/react";
 import dayjs from "dayjs";
 import { BrowserRouter } from "react-router-dom";
@@ -20,38 +21,32 @@ const movieReview: IMovieReview = {
     email: "user@reviewer.com",
   },
 };
-describe("Test Review Card Component", () => {
+
+describe("<ReviewCard />", () => {
+  const renderApp = () => {
+    return renderWithProviders(
+      <BrowserRouter>
+        <ReviewCard review={movieReview} />
+      </BrowserRouter>
+    );
+  };
+
+  beforeEach(() => renderApp());
   afterEach(cleanup);
 
   test("should render reviewer full name", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <ReviewCard review={movieReview} />
-      </BrowserRouter>
-    );
     const reviewerPropName = `${movieReview.userReviewer?.firstName} ${movieReview.userReviewer?.lastName}`;
 
     const nameElement = screen.getByRole("heading", { level: 4 });
-    expect(nameElement).toHaveTextContent(reviewerPropName);
+    expect(nameElement).toHaveTextContent(reviewerPropName); // User Reviewer
   });
 
   test("should render review description", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <ReviewCard review={movieReview} />
-      </BrowserRouter>
-    );
-
     const descElement = screen.getByTestId("reviewCardDescription");
-    expect(descElement).toHaveTextContent(movieReview.description);
+    expect(descElement).toHaveTextContent(movieReview.description); // Good movie!
   });
 
   test("should render review posted date", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <ReviewCard review={movieReview} />
-      </BrowserRouter>
-    );
     const dateElement = screen.getByRole("heading", { level: 3 });
     expect(dateElement).toHaveTextContent(
       `Reviewed on: ${dayjs(movieReview.datePosted).format("DD-MM-YYYY")}`

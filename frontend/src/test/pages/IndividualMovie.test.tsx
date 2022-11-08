@@ -14,17 +14,20 @@ import { server } from "../../mocks/server";
 import { baseAPIUrl } from "../../utils/apiCalls";
 import { budgetFormatter } from "../../utils/helpers";
 import { IUser } from "../../utils/types";
+import { mockUsers } from "../../utils/db.mocks";
 
-describe("Test Individual Movie Page", () => {
-  afterEach(() => cleanup);
-
-  test("should first render loading element", async () => {
-    renderWithProviders(
+describe("<IndividualMovie/>", () => {
+  const renderApp = () => {
+    return renderWithProviders(
       <BrowserRouter>
         <IndividualMovie />
       </BrowserRouter>
     );
+  };
+  afterEach(() => cleanup);
 
+  test("should first render loading element", async () => {
+    renderApp();
     const loadingElement = await screen.findByRole("heading", {
       name: "Please wait.",
     });
@@ -34,20 +37,16 @@ describe("Test Individual Movie Page", () => {
   });
 
   test("should render movie details", async () => {
-    const { store } = renderWithProviders(
-      <BrowserRouter>
-        <IndividualMovie />
-      </BrowserRouter>
-    );
+    const { store } = renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
 
     // Navigating IndividualMovie Page will populate selectedMovie state in movieSlice
-    const movieFromSelector = store.getState().movie.selectedMovie;
-    const formattedCost = budgetFormatter(movieFromSelector.cost);
-    const movieRating = movieFromSelector.rating;
+    const mockedMovie = store.getState().movie.selectedMovie; // John Wick movie
+    const formattedCost = budgetFormatter(mockedMovie.cost);
+    const movieRating = mockedMovie.rating;
 
     const imageElement: HTMLImageElement = screen.getByAltText(
-      movieFromSelector.title
+      mockedMovie.title
     );
     const titleElement = screen.getByRole("heading", { level: 1 });
     const descElement = screen.getByTestId("testMovieDesc");
@@ -60,12 +59,12 @@ describe("Test Individual Movie Page", () => {
     expect(costElement).toBeInTheDocument();
     expect(yearReleasedElement).toBeInTheDocument();
 
-    expect(imageElement.src).toEqual(movieFromSelector.image);
-    expect(titleElement.textContent).toEqual(movieFromSelector.title);
-    expect(descElement.textContent).toEqual(movieFromSelector.description);
+    expect(imageElement.src).toEqual(mockedMovie.image);
+    expect(titleElement.textContent).toEqual(mockedMovie.title);
+    expect(descElement.textContent).toEqual(mockedMovie.description);
     expect(costElement.textContent).toContain(formattedCost);
     expect(yearReleasedElement.textContent).toContain(
-      movieFromSelector.yearReleased.toString()
+      mockedMovie.yearReleased.toString()
     );
     expect(screen.getAllByTestId("testMovieRating")[0].textContent).toContain(
       movieRating?.toString()
@@ -73,37 +72,24 @@ describe("Test Individual Movie Page", () => {
   });
 
   test("should render actors/ casts cards", async () => {
-    const { store } = renderWithProviders(
-      <BrowserRouter>
-        <IndividualMovie />
-      </BrowserRouter>
-    );
+    const { store } = renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
 
-    const selectedMovieSelector = store.getState().movie.selectedMovie;
-    const movieCastsLength = selectedMovieSelector.movieCasters?.length;
-    const movieReviewsLength = selectedMovieSelector.movieReviews?.length;
+    const mockedMovie = store.getState().movie.selectedMovie;
+    const movieCastsLength = mockedMovie.movieCasters?.length; // Actors (2)
 
     expect(screen.getAllByRole("img", { name: "actor" }).length).toBe(
       movieCastsLength
-    );
-    expect(store.getState().movie.selectedMovie.movieReviews?.length).toEqual(
-      movieReviewsLength
-    );
+    ); // <MovieCard />
     expect(screen.getByText(/keanu reeves/i)).toBeInTheDocument();
   });
 
   test("should render movie reviews", async () => {
-    const { store } = renderWithProviders(
-      <BrowserRouter>
-        <IndividualMovie />
-      </BrowserRouter>
-    );
-
+    const { store } = renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
 
     const selectedMovieSelector = store.getState().movie.selectedMovie;
-    const movieReviewsLength = selectedMovieSelector.movieReviews?.length;
+    const movieReviewsLength = selectedMovieSelector.movieReviews?.length; // Movie Reviews (1)
 
     expect(screen.getAllByTestId("reviewCardDescription").length).toBe(
       movieReviewsLength
@@ -130,8 +116,12 @@ describe("Test Individual Movie Page", () => {
       }
     );
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
-    const textAreaElement = screen.getByTestId("reviewTextArea");
-    const btnElement = screen.getAllByRole("button")[2];
+    const textAreaElement = screen.getByRole("textbox", {
+      name: "Give your review to this movie.",
+    });
+    const btnElement = screen.getByRole("button", {
+      name: "Please login to submit review",
+    });
 
     expect(textAreaElement).toBeDisabled();
     expect(btnElement).toBeDisabled();
@@ -147,22 +137,18 @@ describe("Test Individual Movie Page", () => {
           auth: {
             isLoading: false,
             loggedIn: true,
-            user: {
-              id: "6365cbc3e303fc6228363b9d",
-              firstName: "admin",
-              lastName: "root",
-              email: "admin@root.com",
-              role: "admin",
-              isActivated: true,
-              dateCreated: "03-11-2022",
-            },
+            user: mockUsers[0],
           },
         },
       }
     );
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
-    const textAreaElement = screen.getByTestId("reviewTextArea");
-    const btnElement = screen.getAllByRole("button")[2];
+    const textAreaElement = screen.getByRole("textbox", {
+      name: "Give your review to this movie.",
+    });
+    const btnElement = screen.getByRole("button", {
+      name: "Submit Review",
+    });
 
     expect(textAreaElement).not.toBeDisabled();
     expect(btnElement).not.toBeDisabled();
@@ -178,23 +164,19 @@ describe("Test Individual Movie Page", () => {
           auth: {
             isLoading: false,
             loggedIn: true,
-            user: {
-              id: "6365cbc3e303fc6228363b9d",
-              firstName: "admin",
-              lastName: "root",
-              email: "admin@root.com",
-              role: "admin",
-              isActivated: true,
-              dateCreated: "03-11-2022",
-            },
+            user: mockUsers[0],
           },
         },
       }
     );
 
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
-    const textAreaElement = screen.getByTestId("reviewTextArea");
-    const btnElement = screen.getAllByRole("button")[2];
+    const textAreaElement = screen.getByRole("textbox", {
+      name: "Give your review to this movie.",
+    });
+    const btnElement = screen.getByRole("button", {
+      name: "Submit Review",
+    });
 
     userEvent.type(textAreaElement, " ");
     userEvent.click(btnElement);
@@ -213,23 +195,19 @@ describe("Test Individual Movie Page", () => {
           auth: {
             isLoading: false,
             loggedIn: true,
-            user: {
-              id: "6365cbc3e303fc6228363b9d",
-              firstName: "admin",
-              lastName: "root",
-              email: "admin@root.com",
-              role: "admin",
-              isActivated: true,
-              dateCreated: "03-11-2022",
-            },
+            user: mockUsers[1],
           },
         },
       }
     );
 
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
-    const textAreaElement = screen.getByTestId("reviewTextArea");
-    const btnElement = screen.getAllByRole("button")[2];
+    const textAreaElement = screen.getByRole("textbox", {
+      name: "Give your review to this movie.",
+    });
+    const btnElement = screen.getByRole("button", {
+      name: "Submit Review",
+    });
 
     userEvent.type(textAreaElement, "This is very good.");
     userEvent.click(btnElement);
@@ -268,22 +246,18 @@ describe("Test Individual Movie Page", () => {
           auth: {
             isLoading: false,
             loggedIn: true,
-            user: {
-              id: "6365cbc3e303fc6228363b9d",
-              firstName: "admin",
-              lastName: "root",
-              email: "admin@root.com",
-              role: "admin",
-              isActivated: true,
-              dateCreated: "03-11-2022",
-            },
+            user: mockUsers[0],
           },
         },
       }
     );
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
-    const textAreaElement = screen.getByTestId("reviewTextArea");
-    const btnElement = screen.getAllByRole("button")[2];
+    const textAreaElement = screen.getByRole("textbox", {
+      name: "Give your review to this movie.",
+    });
+    const btnElement = screen.getByRole("button", {
+      name: "Submit Review",
+    });
 
     userEvent.type(textAreaElement, "This is very good.");
     userEvent.click(btnElement);

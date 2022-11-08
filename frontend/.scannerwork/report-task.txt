@@ -1,6 +1,6 @@
-projectKey=sad
+projectKey=frontend
 serverUrl=http://localhost:9000
 serverVersion=9.7.0.61563
-dashboardUrl=http://localhost:9000/dashboard?id=sad
-ceTaskId=AYRS613h1-pyWhb0kyiY
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYRS613h1-pyWhb0kyiY
+dashboardUrl=http://localhost:9000/dashboard?id=frontend
+ceTaskId=AYRV7-6g1-pyWhb0kyjB
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYRV7-6g1-pyWhb0kyjB

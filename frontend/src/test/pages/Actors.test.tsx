@@ -10,38 +10,32 @@ import { renderWithProviders } from "../../utils/test-utils";
 import { mockActors, mockSearchedActor } from "../../utils/db.mocks";
 import { IActor } from "../../utils/types";
 
-describe("Test All Actors Page", () => {
-  afterEach(cleanup);
-
-  test("should render actor search input", () => {
-    renderWithProviders(
+describe("<Actors />", () => {
+  const renderApp = () => {
+    return renderWithProviders(
       <BrowserRouter>
         <Actors />
       </BrowserRouter>
     );
+  };
+  afterEach(cleanup);
+
+  test("should render actor search input", () => {
+    renderApp();
 
     const searchInputElement = screen.getByRole("textbox");
     expect(searchInputElement).toBeInTheDocument();
   });
 
   test("should render actor search button", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Actors />
-      </BrowserRouter>
-    );
+    renderApp();
 
     const searchBtnElement = screen.getByRole("button");
     expect(searchBtnElement).toBeInTheDocument();
   });
 
   test("should render all mock actors", async () => {
-    const { store } = renderWithProviders(
-      <BrowserRouter>
-        <Actors />
-      </BrowserRouter>
-    );
-
+    const { store } = renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
 
     expect(screen.getAllByRole("img", { name: "actor" }).length).toBe(
@@ -52,11 +46,8 @@ describe("Test All Actors Page", () => {
   });
 
   test('should not render "There are no actors available" h1 tag', async () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Actors />
-      </BrowserRouter>
-    );
+    renderApp();
+
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
     const noMovieElement = screen.getAllByRole("heading", { level: 1 });
     expect(noMovieElement.length).toEqual(1);
@@ -82,23 +73,16 @@ describe("Test All Actors Page", () => {
   });
 
   test("should be able to type a text", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Actors />
-      </BrowserRouter>
-    );
+    renderApp();
+
     const toSearchValue = "Keanu";
     const searchInputElement: HTMLInputElement = screen.getByRole("textbox");
     userEvent.type(searchInputElement, toSearchValue);
     expect(searchInputElement.value).toBe(toSearchValue);
   });
 
-  test("should show empty field error message", () => {
-    renderWithProviders(
-      <BrowserRouter>
-        <Actors />
-      </BrowserRouter>
-    );
+  test("should show empty field alert message", () => {
+    renderApp();
 
     const searchInputElement: HTMLInputElement = screen.getByRole("textbox");
     const searchBtnElement = screen.getByRole("button");
@@ -108,11 +92,7 @@ describe("Test All Actors Page", () => {
   });
 
   test("should show searched actors card", async () => {
-    const { store } = renderWithProviders(
-      <BrowserRouter>
-        <Actors />
-      </BrowserRouter>
-    );
+    const { store } = renderApp();
     // Fetch and render all actors first
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
 
@@ -128,9 +108,8 @@ describe("Test All Actors Page", () => {
 
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
 
-    expect(screen.getAllByRole("img", { name: "actor" }).length).toBe(
-      mockSearchedActor.length
-    );
+    // Render all actor cards from mock data. In this case, only one Actor (Keanu)
+    expect(screen.getAllByRole("img", { name: "actor" }).length).toBe(1);
     expect(store.getState().actor.actors.length).toEqual(
       mockSearchedActor.length
     );

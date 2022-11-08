@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/no-render-in-setup */
 import {
   cleanup,
   screen,
@@ -7,16 +8,18 @@ import { BrowserRouter } from "react-router-dom";
 import { renderWithProviders } from "../../utils/test-utils";
 import { IndividualActor } from "../../pages";
 
-describe("Test Individual Actor Page", () => {
-  afterEach(() => cleanup);
-
-  test("should first render loading element", async () => {
-    renderWithProviders(
+describe("<IndividualActor />", () => {
+  const renderApp = () => {
+    return renderWithProviders(
       <BrowserRouter>
         <IndividualActor />
       </BrowserRouter>
     );
+  };
+  afterEach(() => cleanup);
 
+  test("should render loading element", async () => {
+    renderApp();
     const loadingElement = await screen.findByRole("heading", { level: 1 });
 
     expect(loadingElement).toHaveTextContent("Please wait");
@@ -24,11 +27,7 @@ describe("Test Individual Actor Page", () => {
   });
 
   test("should render actor details", async () => {
-    const { store } = renderWithProviders(
-      <BrowserRouter>
-        <IndividualActor />
-      </BrowserRouter>
-    );
+    const { store } = renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
 
     // Navigating IndividualActor Page will populate selectedActor state in actorSlice
@@ -52,11 +51,7 @@ describe("Test Individual Actor Page", () => {
   });
 
   test("should render actor movies", async () => {
-    const { store } = renderWithProviders(
-      <BrowserRouter>
-        <IndividualActor />
-      </BrowserRouter>
-    );
+    const { store } = renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
 
     const actorFromSelector = store.getState().actor.selectedActor;
