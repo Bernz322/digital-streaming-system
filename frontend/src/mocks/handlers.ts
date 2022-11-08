@@ -132,6 +132,16 @@ export const handlers = [
       ctx.delay(150)
     );
   }),
+  rest.delete(`${baseAPIUrl}/actors/:id`, (req, res, ctx) => {
+    return res(
+      ctx.json({
+        status: "success",
+        data: "6365ce7ee303fc6228363ba0",
+        message: "Actor deleted successfully.",
+      }),
+      ctx.delay(150)
+    );
+  }),
 
   rest.get(`${baseAPIUrl}/users`, (req, res, ctx) => {
     return res(
