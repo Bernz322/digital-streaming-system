@@ -277,6 +277,7 @@ const TableMovies = () => {
               size="xs"
               color="green"
               onClick={() => navigate(`/movie/${row.id}`)}
+              data-testid="rowViewMovieBtn"
             >
               <IconEye size={14} strokeWidth={2} />
             </Button>
@@ -300,6 +301,7 @@ const TableMovies = () => {
               size="xs"
               color="blue"
               onClick={() => handleMovieUpdateActionClick(row)}
+              data-testid="rowUpdateMovieBtn"
             >
               <IconEdit size={14} strokeWidth={2} />
             </Button>
@@ -311,6 +313,7 @@ const TableMovies = () => {
               size="xs"
               color="red"
               onClick={() => handleMovieDeleteActionClick(row.id)}
+              data-testid="rowDeleteMovieBtn"
             >
               <IconTrash size={14} strokeWidth={2} />
             </Button>
@@ -426,7 +429,7 @@ const TableMovies = () => {
           color="yellow"
           onClick={() => setAddActorModal(true)}
         >
-          Add Actor
+          Add New Actor
         </Button>
         <Button
           className={classes.btn}

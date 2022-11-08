@@ -283,7 +283,7 @@ describe("<TableActors />", () => {
     expect(addActorModalElement).not.toBeInTheDocument();
   });
 
-  test("should render 'Update Actor' Modal if 'Add Actor' button is clicked", async () => {
+  test("should render 'Update Actor' Modal if row actor button is clicked", async () => {
     renderApp();
 
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
