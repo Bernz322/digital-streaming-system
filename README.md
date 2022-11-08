@@ -87,23 +87,9 @@ The app will have no data initially. The first user who will register will be tr
 
 A separate directory named 'db' in the root folder contains JSON files of several collections that the app uses. Import them to mongodb with a database named 'digital-streaming-system'.
 
-## Tests
-
-The frontend app has Unit test with backend API mocks using Mock Service Worker integrated to it. The backend however is not tested.
-
-To execute the test, both frontend and backend must run simultaneously. On another terminal, run:
-
-```sh
-$ npm test
-```
-
-To see the test coverage, run:
-
-```sh
-$ npm run coverage
-```
-
 ## Models
+
+![ERD](./ERD.png)
 
 This app has the following models:
 
@@ -162,3 +148,26 @@ Endpoint authorization is done using the [@loopback/authorization](https://githu
 A customized authorization provider is binded to `authorizationProviders.my-authorizer-provider` to cater the roles of a user decoded from the JWT token.
 
 Thee app has two roles: `admin`, and `user`. All get request endpoints of movies and actors controllers has no authorization instilled to it as it is a public route.
+
+## Tests
+
+The frontend app has Unit test with backend API mocks using Mock Service Worker integrated to it. The backend however is not tested.
+
+To execute the test, both frontend and backend must run simultaneously. On another terminal, run:
+
+```sh
+$ npm test
+```
+
+To see the test coverage, run:
+
+```sh
+$ npm run coverage
+```
+
+### Sonarqube Scanner Results
+
+For the frontend, only the components and pages are unit tested with the coverage of more than 50%.
+![frontend-sonarscan](./sonar-frontend-partial.png)
+The backend is not tested and was only scanned for code smells and vulnerabilities.
+![frontend-sonarscan](./sonar-backend.png)
