@@ -51,4 +51,9 @@ export const tableCustomStyles = {
       padding: "5px 0",
     },
   },
+  table: {
+    style: {
+      minHeight: "400px",
+    },
+  },
 };

@@ -82,8 +82,11 @@ const TableReviews = () => {
   // Review Table Columns
   const reviewsColumns: TableColumn<IMovieReview>[] = [
     {
-      name: "Comment",
-      selector: (row) => upperFirst(row.description),
+      name: "Reviewer",
+      selector: (row) =>
+        `${upperFirst(row.userReviewer?.firstName as string)} ${upperFirst(
+          row.userReviewer?.lastName as string
+        )}`,
       sortable: true,
     },
     {
