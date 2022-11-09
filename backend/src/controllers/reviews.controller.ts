@@ -121,7 +121,20 @@ export class ReviewsController {
         throw new Error('isApproved should only be a boolean type.');
 
       await this.reviewsRepository.updateById(id, reviews);
-      const updatedMovie = await this.reviewsRepository.findById(id);
+      const updatedMovie = await this.reviewsRepository.findById(id, {
+        include: [
+          {
+            relation: 'userReviewer',
+            scope: {
+              fields: {
+                role: false,
+                isActivated: false,
+                dateCreated: false,
+              },
+            },
+          },
+        ],
+      });
       return {
         status: 'success',
         data: updatedMovie,
@@ -157,6 +170,7 @@ export class ReviewsController {
                 role: false,
                 isActivated: false,
                 dateCreated: false,
+                email: false,
               },
             },
           },
