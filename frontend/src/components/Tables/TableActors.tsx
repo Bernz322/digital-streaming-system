@@ -17,7 +17,6 @@ import { showNotification } from "@mantine/notifications";
 import { upperFirst } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import {
-  addActor,
   deleteActorById,
   fetchAllActors,
   updateActorById,
@@ -26,6 +25,7 @@ import { IActor, IDispatchResponse, IPostActor } from "../../utils/types";
 import { tableCustomStyles, useStyles } from "./TableStyles";
 import { useTypedDispatch, useTypedSelector } from "../../hooks/rtk-hooks";
 import { isValidName, isValidUrl } from "../../utils/helpers";
+import AddActorModal from "../AddActorModal.tsx/AddActorModal";
 
 const TableActors = () => {
   const { actors, isLoading } = useTypedSelector((state) => state.actor);
@@ -41,15 +41,6 @@ const TableActors = () => {
   const [updateActorModal, setUpdateActorModal] = useState<boolean>(false);
   const [deleteActorModal, setDeleteActorModal] = useState<boolean>(false);
 
-  // Actor states for adding, updating, deleting
-  const [newActor, setNewActor] = useState<IPostActor>({
-    firstName: "",
-    lastName: "",
-    gender: "male",
-    age: 0,
-    image: "",
-    link: "",
-  });
   const [selectedActorData, setSelectedActorData] = useState<IActor>(
     {} as IActor
   );
@@ -66,39 +57,6 @@ const TableActors = () => {
       item.firstName.toLowerCase().includes(filterByName.toLowerCase()) ||
       item.lastName.toLowerCase().includes(filterByName.toLowerCase())
   );
-
-  // Add Actor Action (POST request)
-  const handleAddActor = useCallback(async () => {
-    try {
-      // Validate input fields
-      isValidName(newActor.firstName, "first");
-      isValidName(newActor.lastName, "last");
-      if (newActor.age < 1 || !newActor.age)
-        throw new Error("Actor age cannot be less than a year.");
-      isValidUrl(newActor.image, "actor image");
-      isValidUrl(newActor.link as string, "actor link");
-
-      const res: IDispatchResponse = await dispatch(addActor(newActor));
-      if (!res.error) {
-        setAddActorModal(false);
-        setNewActor({
-          firstName: "",
-          lastName: "",
-          gender: "male",
-          age: 0,
-          image: "",
-          link: "",
-        });
-      }
-    } catch (error: any) {
-      showNotification({
-        title: "Adding actor failed. See message below for more info.",
-        message: error.message,
-        autoClose: 3000,
-        color: "yellow",
-      });
-    }
-  }, [dispatch, newActor]);
 
   // Open update modal and set current row item data to selectedActorData state
   const handleActorUpdateActionClick = useCallback((actorRowData: IActor) => {
@@ -272,83 +230,10 @@ const TableActors = () => {
       />
 
       {/* Add Actor Modals */}
-      <Modal
-        opened={addActorModal}
-        onClose={() => setAddActorModal(false)}
-        title="Add Actor"
-        centered
-      >
-        <TextInput
-          placeholder="First Name"
-          label="First Name"
-          defaultValue={newActor?.firstName}
-          onChange={(e) =>
-            setNewActor({ ...newActor, firstName: e.currentTarget.value })
-          }
-          withAsterisk
-        />
-        <TextInput
-          placeholder="Last Name"
-          label="Last Name"
-          defaultValue={newActor?.lastName}
-          onChange={(e) =>
-            setNewActor({ ...newActor, lastName: e.currentTarget.value })
-          }
-          withAsterisk
-        />
-        <NumberInput
-          placeholder="Actor age"
-          label="Actor age"
-          defaultValue={newActor?.age}
-          onChange={(value) =>
-            setNewActor({ ...newActor, age: value as number })
-          }
-          hideControls
-          withAsterisk
-        />
-        <TextInput
-          placeholder="Actor link (e.g. IMDB or Wikipedia)"
-          label="Actor Link"
-          defaultValue={newActor?.link}
-          onChange={(e) =>
-            setNewActor({ ...newActor, link: e.currentTarget.value })
-          }
-        />
-        <TextInput
-          placeholder="Actor Image URL"
-          label="Actor Image"
-          defaultValue={newActor?.image}
-          onChange={(e) =>
-            setNewActor({ ...newActor, image: e.currentTarget.value })
-          }
-          withAsterisk
-        />
-
-        <SegmentedControl
-          defaultValue={newActor?.gender}
-          mt="15px"
-          onChange={(value) =>
-            setNewActor({
-              ...newActor,
-              gender: value as "male" | "female",
-            })
-          }
-          data={[
-            { label: "Gender", value: "gender", disabled: true },
-            { label: "Male", value: "male" },
-            { label: "Female", value: "female" },
-          ]}
-        />
-
-        <Button
-          className={classes.btn}
-          size="xs"
-          mt="lg"
-          onClick={handleAddActor}
-        >
-          Add Actor
-        </Button>
-      </Modal>
+      <AddActorModal
+        addActorModal={addActorModal}
+        setAddActorModal={setAddActorModal}
+      />
 
       {/* Edit Actor Modal */}
       <Modal
