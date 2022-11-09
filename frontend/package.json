@@ -69,19 +69,7 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/App.tsx",
-      "!src/index.tsx",
-      "!src/react-app-env.d.ts",
-      "!src/reportWebVitals.ts",
-      "!src/@types/declaration.d.ts",
-      "!src/components/index.ts",
-      "!src/mocks/*",
-      "!src/pages/index.ts",
-      "!src/utils/*",
-      "!src/features/**/*",
-      "!src/hooks/*",
-      "!src/styles/*"
+      "src/**/*.{js,jsx,ts,tsx}"
     ],
     "coverageThreshold": {
       "global": {
