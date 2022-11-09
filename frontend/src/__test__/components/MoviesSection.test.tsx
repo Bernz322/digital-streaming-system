@@ -23,10 +23,8 @@ describe("<MoviesSection />", () => {
     const { store } = renderApp();
     // Wait for loading message to get removed
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
-
     const movieCardContainerElement = screen.getByTestId("movieCardContainer"); // Section container
     const movieCard = screen.getAllByTestId("movieCard"); // <MovieCard />
-
     // Container should have at least 1 <MovieCard />
     expect(movieCardContainerElement).toContainElement(movieCard[0]);
     // Mocked movies has 5 objects, hence there should also be 5 movie cards
@@ -37,10 +35,8 @@ describe("<MoviesSection />", () => {
 
   test('should not render "There are no movies available."', async () => {
     renderApp();
-
     // Mocked movies length is 5.
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
-
     const headingElement = screen.getAllByRole("heading", { level: 1 });
     // h1 are "Movies Library" and the empty data notice
     // Since we have movies, it should only have one h1

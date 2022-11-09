@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/no-render-in-setup */
 import {
   cleanup,
   screen,
@@ -76,11 +77,8 @@ describe("<TableUsers />", () => {
 
   test("should render all mocked users data", async () => {
     const { store } = renderApp();
-
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
-
     const tableRows = screen.getAllByRole("row");
-
     // Extra one is from the table head row
     expect(tableRows.length - 1).toEqual(mockUsers.length);
     expect(store.getState().user.users.length).toEqual(mockUsers.length);
@@ -88,7 +86,6 @@ describe("<TableUsers />", () => {
 
   test("should render search input and 'Add User' button", async () => {
     renderApp();
-
     const addUserBtnElement = screen.getByRole("button", { name: "Add User" });
     const searchUserInputElement =
       screen.getByPlaceholderText("Search user name");
@@ -96,25 +93,22 @@ describe("<TableUsers />", () => {
     expect(searchUserInputElement).toBeInTheDocument();
   });
 
-  test("should render 'john@doe.com' in table row after typing 'john'", async () => {
+  test("should render 'john@doe.com' in table row after searching 'john'", async () => {
     renderApp();
-
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
-
     const searchUserInputElement =
       screen.getByPlaceholderText("Search user name");
     userEvent.type(searchUserInputElement, "john");
-
     await waitFor(() => expect(searchUserInputElement).toHaveValue("john"));
     const tableRows = screen.getAllByRole("row");
-
     expect(tableRows[1]).toHaveTextContent(/john@doe.com/i);
   });
 
   test("should render 'Add User' Modal if 'Add User' button is clicked", async () => {
     renderApp();
-
-    const addUserBtnElement = screen.getByRole("button", { name: "Add User" });
+    const addUserBtnElement = screen.getByRole("button", {
+      name: "Add User",
+    });
     expect(addUserBtnElement).toBeInTheDocument();
     userEvent.click(addUserBtnElement);
 
@@ -125,92 +119,72 @@ describe("<TableUsers />", () => {
     expect(addUserModalElement).toHaveTextContent("Add User");
   });
 
-  test("should alert 'Field first name is required.' after add user button is clicked in modal", async () => {
-    renderApp();
-
-    openAddUserModal();
-
-    const addUserModalBtnElement = screen.getByRole("button", {
-      name: "Add User",
-    });
-    typeIntoForm({ fName: " " });
-    userEvent.click(addUserModalBtnElement);
-
-    const alertElement = await screen.findByText(/Adding user failed./);
-    await waitFor(() => {
-      expect(alertElement).toBeInTheDocument();
+  describe("Add User Modal input field validations", () => {
+    beforeEach(() => {
+      renderApp();
+      openAddUserModal();
     });
 
-    const alertMessage = screen.getByText("Field first name is required.");
-    expect(alertMessage).toBeInTheDocument();
-  });
-
-  test("should alert 'Field last name is required.' after add user button is clicked in modal", async () => {
-    renderApp();
-
-    openAddUserModal();
-
-    const addUserModalBtnElement = screen.getByRole("button", {
-      name: "Add User",
+    test("should render 'Field first name is required.' alert if Add btn is clicked", async () => {
+      const addUserModalBtnElement = screen.getByRole("button", {
+        name: "Add User",
+      });
+      typeIntoForm({ fName: " " });
+      userEvent.click(addUserModalBtnElement);
+      const alertElement = await screen.findByText(/Adding user failed./);
+      await waitFor(() => {
+        expect(alertElement).toBeInTheDocument();
+      });
+      const alertMessage = screen.getByText("Field first name is required.");
+      expect(alertMessage).toBeInTheDocument();
     });
 
-    typeIntoForm({ fName: "Valid Name", lName: " " });
-    userEvent.click(addUserModalBtnElement);
-
-    const alertElement = await screen.findByText(/Adding user failed./);
-    await waitFor(() => {
-      expect(alertElement).toBeInTheDocument();
+    test("should render 'Field last name is required.' alert if Add btn is clicked", async () => {
+      const addUserModalBtnElement = screen.getByRole("button", {
+        name: "Add User",
+      });
+      typeIntoForm({ fName: "Valid Name", lName: " " });
+      userEvent.click(addUserModalBtnElement);
+      const alertElement = await screen.findByText(/Adding user failed./);
+      await waitFor(() => {
+        expect(alertElement).toBeInTheDocument();
+      });
+      const alertMessage = screen.getByText("Field last name is required.");
+      expect(alertMessage).toBeInTheDocument();
     });
 
-    const alertMessage = screen.getByText("Field last name is required.");
-    expect(alertMessage).toBeInTheDocument();
-  });
-
-  test("should alert 'Field email is required.' after add user button is clicked in modal", async () => {
-    renderApp();
-
-    openAddUserModal();
-
-    const addUserModalBtnElement = screen.getByRole("button", {
-      name: "Add User",
+    test("should render 'Field email is required.' alert if Add btn is clicked", async () => {
+      const addUserModalBtnElement = screen.getByRole("button", {
+        name: "Add User",
+      });
+      typeIntoForm({ fName: "Valid FName", lName: "Valid LName", email: " " });
+      userEvent.click(addUserModalBtnElement);
+      const alertElement = await screen.findByText(/Adding user failed./);
+      await waitFor(() => {
+        expect(alertElement).toBeInTheDocument();
+      });
+      const alertMessage = screen.getByText("Field email is required.");
+      expect(alertMessage).toBeInTheDocument();
     });
 
-    typeIntoForm({ fName: "Valid FName", lName: "Valid LName", email: " " });
-    userEvent.click(addUserModalBtnElement);
-
-    const alertElement = await screen.findByText(/Adding user failed./);
-    await waitFor(() => {
-      expect(alertElement).toBeInTheDocument();
+    test("should render 'Field password is required.' alert if Add btn is clicked", async () => {
+      const addUserModalBtnElement = screen.getByRole("button", {
+        name: "Add User",
+      });
+      typeIntoForm({
+        fName: "Valid FName",
+        lName: "Valid LName",
+        email: "valid@email.com",
+        passValue: " ",
+      });
+      userEvent.click(addUserModalBtnElement);
+      const alertElement = await screen.findByText(/Adding user failed./);
+      await waitFor(() => {
+        expect(alertElement).toBeInTheDocument();
+      });
+      const alertMessage = screen.getByText("Field password is required.");
+      expect(alertMessage).toBeInTheDocument();
     });
-
-    const alertMessage = screen.getByText("Field email is required.");
-    expect(alertMessage).toBeInTheDocument();
-  });
-
-  test("should alert 'Field password is required.' after add user button is clicked in modal", async () => {
-    renderApp();
-
-    openAddUserModal();
-
-    const addUserModalBtnElement = screen.getByRole("button", {
-      name: "Add User",
-    });
-
-    typeIntoForm({
-      fName: "Valid FName",
-      lName: "Valid LName",
-      email: "valid@email.com",
-      passValue: " ",
-    });
-    userEvent.click(addUserModalBtnElement);
-
-    const alertElement = await screen.findByText(/Adding user failed./);
-    await waitFor(() => {
-      expect(alertElement).toBeInTheDocument();
-    });
-
-    const alertMessage = screen.getByText("Field password is required.");
-    expect(alertMessage).toBeInTheDocument();
   });
 
   test("should close 'Add user' modal on 'X' button click", async () => {
@@ -218,7 +192,9 @@ describe("<TableUsers />", () => {
     await waitForElementToBeRemoved(() => screen.queryByText("Loading..."));
 
     // Open Modal
-    const addUserBtnElement = screen.getByRole("button", { name: "Add User" });
+    const addUserBtnElement = screen.getByRole("button", {
+      name: "Add User",
+    });
     expect(addUserBtnElement).toBeInTheDocument();
     userEvent.click(addUserBtnElement);
 

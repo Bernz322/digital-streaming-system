@@ -1,4 +1,5 @@
 import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {Movies} from '.';
 import {User} from './user.model';
 
 @model()
@@ -35,10 +36,7 @@ export class Reviews extends Entity {
   })
   isApproved: boolean;
 
-  @property({
-    type: 'string',
-    required: true,
-  })
+  @belongsTo(() => Movies, {name: 'movieReviews'})
   movieId: string;
 
   @belongsTo(() => User, {name: 'userReviewer'})

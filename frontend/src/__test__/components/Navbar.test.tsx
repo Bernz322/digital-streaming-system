@@ -22,7 +22,6 @@ describe("<Navbar />", () => {
 
   test("should render default nav items", () => {
     renderApp();
-
     expect(screen.getByRole("heading", { name: "Home" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Movies" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Actors" })).toBeInTheDocument();
@@ -43,7 +42,6 @@ describe("<Navbar />", () => {
         },
       }
     );
-
     expect(
       screen.getByRole("heading", {
         name: "Dashboard",
@@ -67,7 +65,6 @@ describe("<Navbar />", () => {
         },
       }
     );
-
     const dashboardNavElement = screen.getByRole("heading", {
       name: "Dashboard",
     });
@@ -79,7 +76,7 @@ describe("<Navbar />", () => {
     expect(logoutBtnElement.textContent).toEqual("Login");
   });
 
-  test("shouldn not render dashboard nav link if user is not admin", async () => {
+  test("should not render dashboard nav link if user is not admin", async () => {
     renderWithProviders(
       <BrowserRouter>
         <Navbar />
@@ -94,7 +91,6 @@ describe("<Navbar />", () => {
         },
       }
     );
-
     const navLinkElements = screen.getAllByRole("heading", { level: 3 });
     // Default nav items only render 3 items
     expect(navLinkElements.length).toBe(3);

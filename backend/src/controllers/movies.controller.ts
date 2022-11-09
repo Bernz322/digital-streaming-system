@@ -104,7 +104,14 @@ export class MoviesController {
     try {
       const movies = await this.moviesRepository.find({
         ...filter,
-        include: [{relation: 'movieReviews'}],
+        include: [
+          {
+            relation: 'movieReviews',
+            scope: {
+              where: {isApproved: true},
+            },
+          },
+        ],
       });
 
       return {
@@ -138,6 +145,7 @@ export class MoviesController {
           {
             relation: 'movieReviews',
             scope: {
+              where: {isApproved: true},
               include: [
                 {
                   relation: 'userReviewer',
@@ -195,7 +203,15 @@ export class MoviesController {
       const filterObject = {
         where: {or: searchParams},
         order: ['title ASC'],
-        include: ['movieReviews'],
+        include: [
+          {
+            relation: 'movieReviews',
+            scope: {
+              where: {isApproved: true},
+              fields: ['isApproved', 'rating'],
+            },
+          },
+        ],
       };
 
       const moviesList = await this.moviesRepository.find(filterObject);
