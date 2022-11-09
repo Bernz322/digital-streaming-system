@@ -20,21 +20,21 @@ describe("<Actors />", () => {
   };
   afterEach(cleanup);
 
-  test("should render actor search input", () => {
+  test("should render search input", () => {
     renderApp();
 
     const searchInputElement = screen.getByRole("textbox");
     expect(searchInputElement).toBeInTheDocument();
   });
 
-  test("should render actor search button", () => {
+  test("should render search button", () => {
     renderApp();
 
     const searchBtnElement = screen.getByRole("button");
     expect(searchBtnElement).toBeInTheDocument();
   });
 
-  test("should render all mock actors", async () => {
+  test("should render all mocked actors", async () => {
     const { store } = renderApp();
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
 
@@ -45,7 +45,7 @@ describe("<Actors />", () => {
     expect(store.getState().actor.actors).toEqual(mockActors);
   });
 
-  test('should not render "There are no actors available" h1 tag', async () => {
+  test('should not render "There are no actors available"', async () => {
     renderApp();
 
     await waitForElementToBeRemoved(() => screen.queryByText("Please wait."));
@@ -53,7 +53,7 @@ describe("<Actors />", () => {
     expect(noMovieElement.length).toEqual(1);
   });
 
-  test('should render "There are no actors available" h1 tag', async () => {
+  test('should render "There are no actors available"', async () => {
     renderWithProviders(
       <BrowserRouter>
         <Actors />

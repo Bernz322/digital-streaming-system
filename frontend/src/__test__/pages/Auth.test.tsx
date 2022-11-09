@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/no-render-in-setup */
 import { cleanup, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
@@ -78,45 +79,42 @@ describe("<Auth />", () => {
   };
   afterEach(() => cleanup);
 
-  test("should render 'Field email is required.' alert after login", async () => {
-    renderApp();
+  describe("Login form field validations", () => {
+    beforeEach(() => renderApp());
+    test("should alert 'Field email is required.'", async () => {
+      const loginButtonElement = screen.getByText("Login");
+      typeIntoLoginForm({ email: " " });
+      userEvent.click(loginButtonElement);
 
-    const loginButtonElement = screen.getByText("Login");
-    typeIntoLoginForm({ email: " " });
-    userEvent.click(loginButtonElement);
-
-    const alertMessage = await screen.findByRole("alert");
-    await waitFor(() => {
+      const alertMessage = await screen.findByRole("alert");
+      await waitFor(() => {
+        expect(alertMessage).toBeInTheDocument();
+      });
       expect(alertMessage).toBeInTheDocument();
+      expect(alertMessage).toHaveTextContent(/Field email is required/i);
     });
-    expect(alertMessage).toBeInTheDocument();
-    expect(alertMessage).toHaveTextContent(/Field email is required/i);
-  });
 
-  test("should render 'Invalid email.' alert after login", async () => {
-    renderApp();
+    test("should alert 'Invalid email.'", async () => {
+      const loginButtonElement = screen.getByText("Login");
+      typeIntoLoginForm({ email: "invalidemail" });
+      userEvent.click(loginButtonElement);
 
-    const loginButtonElement = screen.getByText("Login");
-    typeIntoLoginForm({ email: "invalidemail" });
-    userEvent.click(loginButtonElement);
-
-    const alertMessage = await screen.findByRole("alert");
-    await waitFor(() => {
+      const alertMessage = await screen.findByRole("alert");
+      await waitFor(() => {
+        expect(alertMessage).toBeInTheDocument();
+      });
       expect(alertMessage).toBeInTheDocument();
+      expect(alertMessage).toHaveTextContent(/Invalid email/i);
     });
-    expect(alertMessage).toBeInTheDocument();
-    expect(alertMessage).toHaveTextContent(/Invalid email/i);
-  });
 
-  test("should be able to type password", async () => {
-    renderApp();
+    test("should be able to type password", async () => {
+      const passwordInputElement: HTMLInputElement =
+        screen.getByPlaceholderText("Your password");
 
-    const passwordInputElement: HTMLInputElement =
-      screen.getByPlaceholderText("Your password");
+      userEvent.type(passwordInputElement, "mySecretPassword");
 
-    userEvent.type(passwordInputElement, "mySecretPassword");
-
-    expect(passwordInputElement.value).toBe("mySecretPassword");
+      expect(passwordInputElement.value).toBe("mySecretPassword");
+    });
   });
 
   test("should render 'Wrong Credentials' alert after login", async () => {
@@ -151,50 +149,42 @@ describe("<Auth />", () => {
     expect(alertMessage).toHaveTextContent(/Wrong credentials/i);
   });
 
-  test("should render register form after link click", () => {
-    renderApp();
-
-    switchForms();
-    expect(screen.getByText(/register/i)).toBeInTheDocument();
-  });
-
-  test("should render 'Field first name is required.' alert", async () => {
-    renderApp();
-
-    // Switch forms (Login -> Register)
-    switchForms();
-
-    // Render register form
-    const registerButtonElement = screen.getAllByRole("button")[1];
-    typeIntoRegisterForm({ fName: " " });
-    userEvent.click(registerButtonElement);
-
-    const alertMessage = await screen.findByRole("alert");
-    await waitFor(() => {
-      expect(alertMessage).toBeInTheDocument();
+  describe("Register form field validations", () => {
+    beforeEach(() => {
+      renderApp();
+      switchForms();
     });
-    expect(alertMessage).toBeInTheDocument();
-    expect(alertMessage).toHaveTextContent(/first name is required/i);
-  });
 
-  test("should render 'Field last name is required.' alert", async () => {
-    renderApp();
-
-    // Switch forms (Login -> Register)
-    switchForms();
-
-    // Render register form
-    const registerButtonElement = screen.getAllByRole("button")[1];
-
-    typeIntoRegisterForm({ fName: "Valid", lName: " " });
-    userEvent.click(registerButtonElement);
-
-    const alertMessage = await screen.findByRole("alert");
-    await waitFor(() => {
-      expect(alertMessage).toBeInTheDocument();
+    test("should render register form after link click", () => {
+      expect(screen.getByText(/register/i)).toBeInTheDocument();
     });
-    expect(alertMessage).toBeInTheDocument();
-    expect(alertMessage).toHaveTextContent(/last name is required/i);
+
+    test("should alert 'Field first name is required.' alert", async () => {
+      const registerButtonElement = screen.getAllByRole("button")[1];
+      typeIntoRegisterForm({ fName: " " });
+      userEvent.click(registerButtonElement);
+
+      const alertMessage = await screen.findByRole("alert");
+      await waitFor(() => {
+        expect(alertMessage).toBeInTheDocument();
+      });
+      expect(alertMessage).toBeInTheDocument();
+      expect(alertMessage).toHaveTextContent(/first name is required/i);
+    });
+
+    test("should alert 'Field last name is required.' alert", async () => {
+      const registerButtonElement = screen.getAllByRole("button")[1];
+
+      typeIntoRegisterForm({ fName: "Valid", lName: " " });
+      userEvent.click(registerButtonElement);
+
+      const alertMessage = await screen.findByRole("alert");
+      await waitFor(() => {
+        expect(alertMessage).toBeInTheDocument();
+      });
+      expect(alertMessage).toBeInTheDocument();
+      expect(alertMessage).toHaveTextContent(/last name is required/i);
+    });
   });
 
   test("should render 'Email is already taken' alert after register", async () => {

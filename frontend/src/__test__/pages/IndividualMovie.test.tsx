@@ -100,7 +100,7 @@ describe("<IndividualMovie/>", () => {
     expect(screen.getByText(/jeffrey/i)).toBeInTheDocument();
   });
 
-  test("should disable submit review button and text area if not logged in", async () => {
+  test("should disable submit review button and text area if the user is not logged in", async () => {
     renderWithProviders(
       <BrowserRouter>
         <IndividualMovie />
@@ -127,7 +127,7 @@ describe("<IndividualMovie/>", () => {
     expect(btnElement).toBeDisabled();
   });
 
-  test("should not disable submit review button and text area if logged in", async () => {
+  test("should not disable submit review button and text area if the user is logged in", async () => {
     renderWithProviders(
       <BrowserRouter>
         <IndividualMovie />
