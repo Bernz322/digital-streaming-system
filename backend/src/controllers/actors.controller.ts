@@ -223,7 +223,6 @@ export class ActorsController {
         isValidUrl(actors.image, 'actor image');
       }
       if (actors.hasOwnProperty('link')) {
-        isNotNull(actors.link, 'link');
         isValidUrl(actors.link, 'actor link');
       }
 
