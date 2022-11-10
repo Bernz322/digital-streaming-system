@@ -87,7 +87,6 @@ export const authLogout = createAsyncThunk(
       path: "/",
       domain: "localhost",
     });
-    localStorage.removeItem("loggedUser");
     dispatch(authReset());
     dispatch(actorReset());
     dispatch(movieReset());

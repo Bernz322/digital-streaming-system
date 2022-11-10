@@ -132,9 +132,7 @@ export const deleteCookie = ({
  * @returns {boolean}
  */
 export const isLoggedIn = (): boolean => {
-  return Boolean(
-    localStorage.getItem("loggedUser") && getCookie("accessToken")
-  );
+  return Boolean(getCookie("accessToken"));
 };
 
 /**
