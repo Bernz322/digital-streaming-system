@@ -2,5 +2,5 @@ projectKey=POC-backend
 serverUrl=http://localhost:9000
 serverVersion=9.7.0.61563
 dashboardUrl=http://localhost:9000/dashboard?id=POC-backend
-ceTaskId=AYRWknpS1-pyWhb0kyjv
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYRWknpS1-pyWhb0kyjv
+ceTaskId=AYRh0N4GPl7r-GKRKMOk
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYRh0N4GPl7r-GKRKMOk

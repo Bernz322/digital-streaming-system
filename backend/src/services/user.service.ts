@@ -36,7 +36,7 @@ export class CustomUserService implements UserService<User, Credentials> {
   }
 
   convertToUserProfile(user: User): UserProfile {
-    let fullName = `${user.firstName} ${user.lastName}`;
+    const fullName = `${user.firstName} ${user.lastName}`;
     return {
       [securityId]: user.id,
       id: user.id,

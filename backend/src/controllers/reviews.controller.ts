@@ -156,9 +156,7 @@ export class ReviewsController {
   })
   @authenticate('jwt')
   @authorize({allowedRoles: ['admin']})
-  async getById(
-    @param.path.string('id') id: string,
-  ): Promise<CustomResponse<{}>> {
+  async find(@param.path.string('id') id: string): Promise<CustomResponse<{}>> {
     try {
       const movieReviews = await this.reviewsRepository.find({
         where: {movieId: id},

@@ -9,7 +9,7 @@ import isemail from 'isemail';
 export const isValidName = (name: string, field: string): boolean => {
   if (name?.trim() === '' || !name)
     throw new Error(`Field ${field} name is required.`);
-  let nameRegex: RegExp = /^[a-zA-Z-' ]+$/;
+  const nameRegex = /^[a-zA-Z-' ]+$/;
   if (name?.trim().match(nameRegex) == null) {
     throw new Error(`Invalid name in field ${field}`);
   }

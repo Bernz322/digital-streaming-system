@@ -12,7 +12,7 @@ import {
 } from "./types";
 import { getCookie, setCookie } from "./helpers";
 
-export const baseAPIUrl = "http://localhost:3000";
+export const baseAPIUrl = process.env.API;
 
 /**
  * API Request wrapper which returns data directly from response (res.data)
@@ -61,7 +61,6 @@ export const login = async (
       cookieName: "accessToken",
       value: res.data.token,
     });
-    localStorage.setItem("loggedUser", JSON.stringify(true));
   }
   return res;
 };

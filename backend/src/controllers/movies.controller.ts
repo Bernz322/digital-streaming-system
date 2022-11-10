@@ -255,16 +255,16 @@ export class MoviesController {
   ): Promise<CustomResponse<{}>> {
     try {
       // Validate input fields
-      if (movies.hasOwnProperty('description')) {
+      if (Object.prototype.hasOwnProperty.call(movies, 'description')) {
         isNotNull(movies.description, 'movie description');
       }
 
-      if (movies.hasOwnProperty('cost')) {
+      if (Object.prototype.hasOwnProperty.call(movies, 'cost')) {
         if (movies.cost < 0 || !movies.cost)
           throw new Error('Movie budget cost cannot be less than 0.');
       }
 
-      if (movies.hasOwnProperty('image')) {
+      if (Object.prototype.hasOwnProperty.call(movies, 'image')) {
         isNotNull(movies.image, 'image');
         isValidUrl(movies.image, 'movie image');
       }
