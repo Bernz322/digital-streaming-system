@@ -309,17 +309,17 @@ export class UserController {
         throw new Error('You cannot edit the root admin.');
 
       // Validate input fields
-      if (user.hasOwnProperty('firstName')) {
+      if (Object.prototype.hasOwnProperty.call(user, 'firstName')) {
         isNotNull(user.firstName, 'firstName');
         isValidName(user.firstName, 'firstName');
       }
 
-      if (user.hasOwnProperty('lastName')) {
+      if (Object.prototype.hasOwnProperty.call(user, 'lastName')) {
         isNotNull(user.lastName, 'lastName');
         isValidName(user.lastName, 'lastName');
       }
 
-      if (user.hasOwnProperty('email')) {
+      if (Object.prototype.hasOwnProperty.call(user, 'email')) {
         isNotNull(user.email, 'email');
         validateEmail(user.email);
         const emailExists = await this.myUserRepo.findOne({
