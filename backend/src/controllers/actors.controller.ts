@@ -87,8 +87,8 @@ export class ActorsController {
       const actors = await this.actorsRepository.find({
         include: ['moviesCasted'],
       });
-      const toReturn = actors.map(actor => {
-        return {...actor, moviesCasted: actor?.moviesCasted?.length};
+      const toReturn = actors?.map(actor => {
+        return {...actor, moviesCasted: actor?.moviesCasted?.length || 0};
       });
       return {
         status: 'success',
@@ -202,27 +202,27 @@ export class ActorsController {
   ): Promise<CustomResponse<{}>> {
     try {
       // Validate input fields
-      if (actors.hasOwnProperty('firstName')) {
+      if (Object.prototype.hasOwnProperty.call(actors, 'firstName')) {
         isNotNull(actors.firstName, 'firstName');
         isValidName(actors.firstName, 'firstName');
       }
-      if (actors.hasOwnProperty('lastName')) {
+      if (Object.prototype.hasOwnProperty.call(actors, 'lastName')) {
         isNotNull(actors.lastName, 'lastName');
         isValidName(actors.lastName, 'lastName');
       }
-      if (actors.hasOwnProperty('gender')) {
+      if (Object.prototype.hasOwnProperty.call(actors, 'gender')) {
         if (actors.gender !== 'male' && actors.gender !== 'female')
           throw new Error('Gender should only be either male or female');
       }
-      if (actors.hasOwnProperty('age')) {
+      if (Object.prototype.hasOwnProperty.call(actors, 'age')) {
         if (actors.age < 1 || !actors.age)
           throw new Error('Actor age cannot be less than a year.');
       }
-      if (actors.hasOwnProperty('image')) {
+      if (Object.prototype.hasOwnProperty.call(actors, 'image')) {
         isNotNull(actors.image, 'image');
         isValidUrl(actors.image, 'actor image');
       }
-      if (actors.hasOwnProperty('link')) {
+      if (Object.prototype.hasOwnProperty.call(actors, 'link')) {
         isValidUrl(actors.link, 'actor link');
       }
 

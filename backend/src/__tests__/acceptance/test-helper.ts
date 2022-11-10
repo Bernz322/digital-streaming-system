@@ -1,21 +1,13 @@
-import {BackendApplication} from '../..';
 import {
   createRestAppClient,
   givenHttpServerConfig,
   Client,
 } from '@loopback/testlab';
+import {BackendApplication} from '../..';
 
 export async function setupApplication(): Promise<AppWithClient> {
-  const restConfig = givenHttpServerConfig({
-    // Customize the server configuration here.
-    // Empty values (undefined, '') will be ignored by the helper.
-    //
-    // host: process.env.HOST,
-    // port: +process.env.PORT,
-  });
-
   const app = new BackendApplication({
-    rest: restConfig,
+    rest: givenHttpServerConfig(),
   });
 
   await app.boot();
