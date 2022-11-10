@@ -119,11 +119,11 @@ describe("<TableActors />", () => {
       name: "Actor Image",
     });
 
-    expect(fNameElement.value).toBe(keanu.firstName);
-    expect(lNameElement.value).toBe(keanu.lastName);
-    expect(ageElement.value).toBe(keanu.age.toString());
-    expect(linkElement.value).toBe(keanu.link);
-    expect(imageURLElement.value).toBe(keanu.image);
+    expect(fNameElement).toHaveValue(keanu.firstName);
+    expect(lNameElement).toHaveValue(keanu.lastName);
+    expect(ageElement).toHaveValue(keanu.age.toString());
+    expect(linkElement).toHaveValue(keanu.link);
+    expect(imageURLElement).toHaveValue(keanu.image);
   });
 
   test("should alert 'Invalid first name.' after update actor button is clicked in modal", async () => {
