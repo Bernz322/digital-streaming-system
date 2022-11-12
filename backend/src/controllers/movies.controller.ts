@@ -198,8 +198,7 @@ export class MoviesController {
     @param.path.string('searchKey') searchKey: string,
   ): Promise<CustomResponse<{}>> {
     try {
-      const searchParam = searchKey || '';
-      const searchParams = [{title: {like: searchParam, options: 'i'}}];
+      const searchParams = [{title: {like: searchKey, options: 'i'}}];
       const filterObject = {
         where: {or: searchParams},
         order: ['title ASC'],

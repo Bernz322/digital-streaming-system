@@ -7,7 +7,6 @@ import {
 } from "@reduxjs/toolkit";
 import {
   apiDeleteMovieById,
-  apiDeleteReviewById,
   apiFetchAllMovies,
   apiFetchLimitMovies,
   apiFetchMovieById,
@@ -250,23 +249,6 @@ export const updateMovieReviewById = createAsyncThunk(
   }
 );
 
-export const deleteMovieReviewById = createAsyncThunk(
-  "reviews/deleteMovieReviewById",
-  async (id: string, thunkAPI) => {
-    try {
-      const res: APICustomResponse<{}> = await apiDeleteReviewById(id);
-      if (res.status === "fail") throw new Error(res.message);
-      return res;
-    } catch (error: any) {
-      const message = isError(
-        error,
-        "Deleting review failed. See message below for more info."
-      );
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
 const movieSlice = createSlice({
   name: "movie",
   initialState,
@@ -275,6 +257,9 @@ const movieSlice = createSlice({
       state.isLoading = false;
       state.movies = [] as IMovie[];
       state.selectedMovie = {} as IMovie;
+      state.selectedMovieReviews = [] as IMovieReview[];
+    },
+    reviewReset: (state: IMovieState) => {
       state.selectedMovieReviews = [] as IMovieReview[];
     },
   },
@@ -419,26 +404,9 @@ const movieSlice = createSlice({
       )
       .addCase(updateMovieReviewById.rejected, (state: IMovieState) => {
         state.isLoading = false;
-      })
-      .addCase(deleteMovieReviewById.pending, (state: IMovieState) => {
-        state.isLoading = true;
-      })
-      .addCase(
-        deleteMovieReviewById.fulfilled,
-        (state: IMovieState, action: PayloadAction<APICustomResponse<{}>>) => {
-          state.isLoading = false;
-          state.selectedMovieReviews = state.selectedMovieReviews.filter(
-            (review) => {
-              return review.id !== action.payload.data;
-            }
-          );
-        }
-      )
-      .addCase(deleteMovieReviewById.rejected, (state: IMovieState) => {
-        state.isLoading = false;
       });
   },
 });
 
-export const { movieReset } = movieSlice.actions;
+export const { movieReset, reviewReset } = movieSlice.actions;
 export default movieSlice.reducer;

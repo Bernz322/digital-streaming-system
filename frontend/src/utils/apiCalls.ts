@@ -12,7 +12,7 @@ import {
 } from "./types";
 import { getCookie, setCookie } from "./helpers";
 
-export const baseAPIUrl = process.env.API;
+export const baseAPIUrl = process.env.REACT_APP_API_ENDPOINT;
 
 /**
  * API Request wrapper which returns data directly from response (res.data)
@@ -355,23 +355,6 @@ export const apiUpdateReviewById = async (
       "Content-Type": "application/json",
     },
     data: isApproved,
-  });
-  return res;
-};
-
-/**
- * Delete review by given review id
- * @param {string} reviewId
- * @returns {APICustomResponse<{}>}
- */
-export const apiDeleteReviewById = async (
-  reviewId: string
-): Promise<APICustomResponse<{}>> => {
-  const res = await apiRequest<APICustomResponse<{}>>(`/reviews/${reviewId}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
   return res;
 };

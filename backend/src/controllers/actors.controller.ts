@@ -148,10 +148,9 @@ export class ActorsController {
     @param.path.string('searchKey') searchKey: string,
   ): Promise<CustomResponse<{}>> {
     try {
-      const searchParam = searchKey || '';
       const searchParams = [
-        {firstName: {like: searchParam, options: 'i'}},
-        {lastName: {like: searchParam, options: 'i'}},
+        {firstName: {like: searchKey, options: 'i'}},
+        {lastName: {like: searchKey, options: 'i'}},
       ];
       const filterObject = {
         where: {or: searchParams},
@@ -160,7 +159,7 @@ export class ActorsController {
       };
       const actorsList = await this.actorsRepository.find(filterObject);
       const toReturn = actorsList.map(actor => {
-        return {...actor, moviesCasted: actor?.moviesCasted?.length};
+        return {...actor, moviesCasted: actor?.moviesCasted?.length || 0};
       });
       return {
         status: 'success',

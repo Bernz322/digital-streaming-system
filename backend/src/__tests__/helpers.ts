@@ -1,6 +1,6 @@
 import {givenHttpServerConfig} from '@loopback/testlab';
 import {BackendApplication} from '..';
-import {User} from '../models';
+import {Actors, User} from '../models';
 import {UserRepository} from '../repositories';
 import {CustomResponse} from '../utils';
 
@@ -25,7 +25,6 @@ export async function givenUserRepositories(app: BackendApplication) {
   return {userRepo};
 }
 
-// Acceptance Test Helpers
 export function rootAdminBody(user?: Partial<User>) {
   const passValue = 'iAmAdmin';
   const data = Object.assign(
@@ -92,11 +91,36 @@ export function newUserResponse(user?: Partial<User>) {
   return new User(data);
 }
 
-// Unit Test Helpers
-export const rejectedRqst: CustomResponse<{}> = {
-  status: 'fail',
-  data: null,
-  message: 'Error',
+export function newActorBody(actor?: Partial<Actors>) {
+  const data = Object.assign(actor as Partial<Actors>);
+  return new Actors(data);
+}
+
+export function newActorResponse(actor?: Partial<Actors>) {
+  const data = Object.assign(actor as Partial<Actors>);
+  const expectedResponse = {
+    status: 'success',
+    data: new Actors(data),
+    message: 'Successfully added a new actor.',
+  };
+  return expectedResponse;
+}
+
+export function failedRes(message: string): CustomResponse<{}> {
+  return {
+    status: 'fail',
+    data: null,
+    message: message || 'Error',
+  };
+}
+
+export const mockActor = {
+  firstName: 'Joel',
+  lastName: 'Edgerton',
+  gender: 'male',
+  age: 48,
+  image: 'https://flxt.tmsimg.com/assets/171833_v9_bd.jpg',
+  link: 'https://www.imdb.com/name/nm0249291/',
 };
 
 export const fetchUsers: CustomResponse<{}> = {
@@ -151,6 +175,61 @@ export const fetchActors: CustomResponse<{}> = {
     },
   ],
   message: 'Successfully fetched all actors in the database.',
+};
+
+export const fetchActorById: CustomResponse<{}> = {
+  status: 'success',
+  data: {
+    age: 35,
+    firstName: 'Keanu',
+    gender: 'male',
+    id: '6365cd4ee303fc6228363b9f',
+    image:
+      'https://images.mubicdn.net/images/cast_member/2899/cache-2935-1581314680/image-w856.jpg?size=240x',
+    lastName: 'Reeves',
+    link: 'https://mubi.com/cast/keanu-reeves',
+    moviesCasted: [
+      {
+        cost: 4500000,
+        description:
+          "With the untimely death of his beloved wife still bitter in his mouth, John Wick, the expert former assassin, receives one final gift from her--a precious keepsake to help John find a new meaning in life now that she is gone. But when the arrogant Russian mob prince, Iosef Tarasov, and his men pay Wick a rather unwelcome visit to rob him of his prized 1969 Mustang and his wife's present, the legendary hitman will be forced to unearth his meticulously concealed identity. Blind with revenge, John will immediately unleash a carefully orchestrated maelstrom of destruction against the sophisticated kingpin, Viggo Tarasov, and his family, who are fully aware of his lethal capacity. Now, only blood can quench the boogeyman's thirst for retribution.",
+        id: '6365ced2e303fc6228363ba3',
+        image:
+          'https://img.yts.mx/assets/images/movies/john_wick_2014/medium-cover.jpg',
+        title: 'John Wick',
+        yearReleased: 2014,
+      },
+      {
+        cost: 40000000,
+        description:
+          "Bound by an inescapable blood debt to the Italian crime lord, Santino D'Antonio, and with his precious 1969 Mustang still stolen, John Wick--the taciturn and pitiless assassin who thirsts for seclusion--is forced to visit Italy to honour his promise. But, soon, the Bogeyman will find himself dragged into an impossible task in the heart of Rome's secret criminal society, as every killer in the business dreams of cornering the legendary Wick who now has an enormous price on his head. Drenched in blood and mercilessly hunted down, John Wick can surely forget a peaceful retirement as no one can make it out in one piece.",
+        id: '636708775c935e220c912f49',
+        image:
+          'https://img.yts.mx/assets/images/movies/john_wick_chapter_2_2017/medium-cover.jpg',
+        title: 'John Wick: Chapter 2',
+        yearReleased: 2017,
+      },
+    ],
+  },
+  message: 'Successfully fetched actor data.',
+};
+
+export const searchActorByName: CustomResponse<{}> = {
+  status: 'success',
+  data: [
+    {
+      age: 35,
+      firstName: 'Keanu',
+      gender: 'male',
+      id: '6365cd4ee303fc6228363b9f',
+      image:
+        'https://images.mubicdn.net/images/cast_member/2899/cache-2935-1581314680/image-w856.jpg?size=240x',
+      lastName: 'Reeves',
+      link: 'https://mubi.com/cast/keanu-reeves',
+      moviesCasted: 0,
+    },
+  ],
+  message: 'Successfully fetched actor data.',
 };
 
 export const fetchMovies: CustomResponse<{}> = {

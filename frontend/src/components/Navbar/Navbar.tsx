@@ -43,7 +43,7 @@ const Navbar = () => {
             );
           })}
           {user.role === "admin" && (
-            <Link className="navLinks" to="/dashboard">
+            <Link className="navLinks" to="/cm">
               <h3>Dashboard</h3>
             </Link>
           )}

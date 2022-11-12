@@ -43,7 +43,7 @@ const App = () => {
           <Route path="/actors" element={<Actors />} />
           <Route path="/actor/:id" element={<IndividualActor />} />
           {loggedIn && user.role === "admin" && (
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/cm/*" element={<Dashboard />} />
           )}
           <Route path="*" element={<Page404 />} />
         </Routes>

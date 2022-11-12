@@ -53,6 +53,8 @@ const Auth = () => {
         isValidName(formValues.lastName, "last");
         isValidEmail(formValues.email);
         isNotEmpty(formValues.password, "password");
+        if (formValues.password.length < 8)
+          throw new Error("Password must be of length 8");
 
         const userData: IRegisterAPIProps = {
           firstName: formValues.firstName.trim(),

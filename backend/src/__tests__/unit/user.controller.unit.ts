@@ -10,7 +10,7 @@ import {
   UserRepository as MyUserRepo,
 } from '../../repositories';
 import {User} from '../../models';
-import {fetchUsers, rejectedRqst} from '../helpers';
+import {fetchUsers, failedRes} from '../helpers';
 import {MyUserService, UserRepository} from '@loopback/authentication-jwt';
 import {UserProfile} from '@loopback/security';
 import {JWTService} from '../../services';
@@ -28,16 +28,16 @@ describe('UserController', () => {
   before(resetRepositories);
 
   describe('User Controller find', () => {
-    it('should multiple users', async () => {
+    it('should return multiple users', async () => {
       const find = myUserRepository.stubs.find;
       find.resolves(fetchUsers.data as User[]);
       expect(await controller.find()).to.eql(fetchUsers);
       sinon.assert.called(find);
     });
-    it('should failed response if rejected', async () => {
+    it('should return failed response if rejected', async () => {
       const find = myUserRepository.stubs.find;
       find.rejects();
-      expect(await controller.find()).to.eql(rejectedRqst);
+      expect(await controller.find()).to.eql(failedRes('Error'));
       sinon.assert.called(find);
     });
   });

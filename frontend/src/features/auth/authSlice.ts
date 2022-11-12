@@ -12,8 +12,6 @@ import {
 } from "../../utils/apiCalls";
 import { deleteCookie, isError, isLoggedIn } from "../../utils/helpers";
 import { IRegisterAPIProps, APICustomResponse, IUser } from "../../utils/types";
-import { actorReset } from "../actor/actorSlice";
-import { movieReset } from "../movie/movieSlice";
 import { userReset } from "../user/userSlice";
 
 export interface IAuthState {
@@ -88,8 +86,6 @@ export const authLogout = createAsyncThunk(
       domain: "localhost",
     });
     dispatch(authReset());
-    dispatch(actorReset());
-    dispatch(movieReset());
     dispatch(userReset());
   }
 );
