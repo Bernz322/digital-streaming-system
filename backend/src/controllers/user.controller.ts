@@ -90,6 +90,8 @@ export class UserController {
       isValidName(user.firstName, 'firstName');
       isValidName(user.lastName, 'lastName');
       isNotEmpty(user.password, 'password');
+      if (user.password.length < 8)
+        throw new Error('Password must be of length 8');
 
       const emailExists = await this.userRepository.findOne({
         where: {email: user.email},

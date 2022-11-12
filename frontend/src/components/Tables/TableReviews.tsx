@@ -1,10 +1,12 @@
 import { useCallback, useState } from "react";
 import {
   Button,
+  Group,
   Modal,
   Paper,
   SegmentedControl,
   Text,
+  TextInput,
   Tooltip,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
@@ -22,12 +24,16 @@ import { useStyles, tableCustomStyles } from "./TableStyles";
 import {
   updateMovieReviewById,
   fetchAllMovies,
+  reviewReset,
 } from "../../features/movie/movieSlice";
 
 const TableReviews = () => {
   const { selectedMovieReviews } = useTypedSelector((state) => state.movie);
   const dispatch = useTypedDispatch();
   const { classes } = useStyles();
+
+  // Name search filter state
+  const [filterByName, setFilterByName] = useState<string>("");
 
   // Modal Open/Close states
   const [viewReviewModal, setViewReviewModal] = useState<boolean>(false);
@@ -78,6 +84,17 @@ const TableReviews = () => {
       });
     }
   }, [dispatch, selectedReviewData.id, selectedReviewData.isApproved]);
+
+  // Filter reviews state by searched name values inside table
+  const filteredItems: IMovieReview[] = selectedMovieReviews?.filter(
+    (item) =>
+      item.userReviewer?.firstName
+        .toLowerCase()
+        .includes(filterByName.toLowerCase()) ||
+      item.userReviewer?.lastName
+        .toLowerCase()
+        .includes(filterByName.toLowerCase())
+  );
 
   // Review Table Columns
   const reviewsColumns: TableColumn<IMovieReview>[] = [
@@ -139,10 +156,26 @@ const TableReviews = () => {
 
   return (
     <Paper className={classes.paper}>
+      <Group position="apart" className={classes.head}>
+        <TextInput
+          placeholder="Search reviewer name"
+          classNames={classes}
+          value={filterByName}
+          onChange={(event) => setFilterByName(event.currentTarget.value)}
+        />
+        <Button
+          radius="sm"
+          color="blue"
+          onClick={() => dispatch(reviewReset())}
+        >
+          Reset
+        </Button>
+      </Group>
+
       <DataTable
         title="Your selected movie reviews"
         columns={reviewsColumns}
-        data={selectedMovieReviews}
+        data={filteredItems}
         pagination
         dense
         sortIcon={<IconArrowDown />}

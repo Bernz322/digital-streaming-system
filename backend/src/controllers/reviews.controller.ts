@@ -7,7 +7,6 @@ import {
   param,
   getModelSchemaRef,
   patch,
-  del,
   get,
   requestBody,
   response,
@@ -184,33 +183,6 @@ export class ReviewsController {
         status: 'fail',
         data: null,
         message: error ? error.message : 'Updating review failed.',
-      };
-    }
-  }
-
-  @del('/reviews/{id}')
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['admin']})
-  @response(204, {
-    description:
-      'Returns deleted review id. (Requires token and admin role authorization)',
-    content: {'application/json': {schema: CustomResponseSchema}},
-  })
-  async deleteById(
-    @param.path.string('id') id: string,
-  ): Promise<CustomResponse<{}>> {
-    try {
-      await this.reviewsRepository.deleteById(id);
-      return {
-        status: 'success',
-        data: id,
-        message: 'Review deleted successfully.',
-      };
-    } catch (error) {
-      return {
-        status: 'fail',
-        data: null,
-        message: error ? error.message : 'Deleting review failed.',
       };
     }
   }

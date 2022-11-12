@@ -213,7 +213,7 @@ describe("<Auth />", () => {
       fName: "Email",
       lName: "Taken",
       email: "taken@doe.com",
-      passValue: "secret",
+      passValue: "secret123",
     });
 
     userEvent.click(registerButtonElement);
@@ -242,7 +242,7 @@ describe("<Auth />", () => {
       fName: "John",
       lName: "Doe",
       email: "john@doe.com",
-      passValue: "secret",
+      passValue: "secret123",
     });
 
     userEvent.click(registerButtonElement);

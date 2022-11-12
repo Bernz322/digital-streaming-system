@@ -72,6 +72,8 @@ const TableUsers = () => {
       isValidName(newUser.lastName, "last");
       isValidEmail(newUser.email);
       isNotEmpty(newUser.password, "password");
+      if (newUser.password.length < 8)
+        throw new Error("Password must be of length 8");
 
       const res: IDispatchResponse = await dispatch(addUser(newUser));
       if (!res.error) {

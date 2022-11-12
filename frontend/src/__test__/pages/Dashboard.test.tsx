@@ -1,9 +1,9 @@
-/* eslint-disable testing-library/no-render-in-setup */
-import { cleanup, screen } from "@testing-library/react";
-import { BrowserRouter } from "react-router-dom";
+import { cleanup, render, screen } from "@testing-library/react";
+import { BrowserRouter, Router } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "../../utils/test-utils";
 import { Dashboard } from "../../pages";
+import { createMemoryHistory } from "history";
 
 describe("<Dashboard />", () => {
   const renderApp = () => {
@@ -13,13 +13,10 @@ describe("<Dashboard />", () => {
       </BrowserRouter>
     );
   };
-  beforeEach(() => renderApp());
   afterEach(cleanup);
 
   test("should render sidebar elements", () => {
-    const dashboardLinkElement = screen.getByRole("link", {
-      name: "Dashboard",
-    });
+    renderApp();
     const usersLinkElement = screen.getByRole("link", {
       name: "Users",
     });
@@ -30,73 +27,60 @@ describe("<Dashboard />", () => {
       name: "Movies",
     });
 
-    expect(dashboardLinkElement).toBeInTheDocument();
     expect(usersLinkElement).toBeInTheDocument();
     expect(actorsLinkElement).toBeInTheDocument();
     expect(moviesLinkElement).toBeInTheDocument();
   });
 
-  test("should render all 4 tables", () => {
+  test("should render users table first", () => {
+    renderApp();
     const usersTableElement = screen.getByText("Users List");
-    const actorsTableElement = screen.getByText("Actors List");
-    const moviesTableElement = screen.getByText("Movies List");
-    const reviewsTableElement = screen.getByText("Your selected movie reviews");
 
     expect(usersTableElement).toBeInTheDocument();
-    expect(actorsTableElement).toBeInTheDocument();
-    expect(moviesTableElement).toBeInTheDocument();
-    expect(reviewsTableElement).toBeInTheDocument();
   });
 
-  test("should render all tables on dashboard link click", () => {
-    const dashboardLinkElement = screen.getByRole("link", {
-      name: "Dashboard",
-    });
-    const usersTableElement = screen.getByText("Users List");
-    const actorsTableElement = screen.getByText("Actors List");
-    const moviesTableElement = screen.getByText("Movies List");
-    const reviewsTableElement = screen.getByText("Your selected movie reviews");
-
-    userEvent.click(dashboardLinkElement);
-
-    expect(usersTableElement).toBeInTheDocument();
-    expect(actorsTableElement).toBeInTheDocument();
-    expect(moviesTableElement).toBeInTheDocument();
-    expect(reviewsTableElement).toBeInTheDocument();
-  });
-
-  test("should render users table only on users link click", () => {
+  test("should navigate to 'cm/users' on users link click", () => {
+    const history = createMemoryHistory();
+    render(
+      <Router location={history.location} navigator={history}>
+        <Dashboard />
+      </Router>
+    );
     const usersLinkElement = screen.getByRole("link", {
       name: "Users",
     });
-    const usersTableElement = screen.getByText("Users List");
-
     userEvent.click(usersLinkElement);
 
-    expect(usersTableElement).toBeInTheDocument();
+    expect(history.location.pathname).toEqual("/cm/users");
   });
 
-  test("should render actors table only on actors link click", () => {
+  test("should navigate to 'cm/actors' on actors link click", () => {
+    const history = createMemoryHistory();
+    render(
+      <Router location={history.location} navigator={history}>
+        <Dashboard />
+      </Router>
+    );
     const actorsLinkElement = screen.getByRole("link", {
       name: "Actors",
     });
-    const actorsTableElement = screen.getByText("Actors List");
 
     userEvent.click(actorsLinkElement);
-
-    expect(actorsTableElement).toBeInTheDocument();
+    expect(history.location.pathname).toEqual("/cm/actors");
   });
 
   test("should render movies and reviews table on movies link click", () => {
+    const history = createMemoryHistory();
+    render(
+      <Router location={history.location} navigator={history}>
+        <Dashboard />
+      </Router>
+    );
     const moviesLinkElement = screen.getByRole("link", {
       name: "Movies",
     });
-    const moviesTableElement = screen.getByText("Movies List");
-    const reviewsTableElement = screen.getByText("Your selected movie reviews");
 
     userEvent.click(moviesLinkElement);
-
-    expect(moviesTableElement).toBeInTheDocument();
-    expect(reviewsTableElement).toBeInTheDocument();
+    expect(history.location.pathname).toEqual("/cm/movies");
   });
 });

@@ -1,11 +1,5 @@
-import { useState } from "react";
 import { AppShell, Container, Navbar } from "@mantine/core";
-import {
-  IconLayoutDashboard,
-  IconUser,
-  IconMovie,
-  IconUsers,
-} from "@tabler/icons";
+import { IconUser, IconMovie, IconUsers } from "@tabler/icons";
 import {
   TableActors,
   TableMovies,
@@ -13,15 +7,14 @@ import {
   TableUsers,
 } from "../components";
 import { useDashboardPageStyles } from "../styles/DashboardPageStyles";
+import { Navigate, NavLink, Route, Routes } from "react-router-dom";
 
 const Dashboard = () => {
   const { classes, cx } = useDashboardPageStyles();
-  const [active, setActive] = useState("Dashboard");
   const navItems = [
-    { link: "", label: "Dashboard", icon: IconLayoutDashboard },
-    { link: "", label: "Users", icon: IconUser },
-    { link: "", label: "Actors", icon: IconUsers },
-    { link: "", label: "Movies", icon: IconMovie },
+    { link: "/cm/users", label: "Users", icon: IconUser },
+    { link: "/cm/actors", label: "Actors", icon: IconUsers },
+    { link: "/cm/movies", label: "Movies", icon: IconMovie },
   ];
   return (
     <AppShell
@@ -37,37 +30,47 @@ const Dashboard = () => {
         >
           <Navbar.Section grow mt="95px">
             {navItems.map((item) => (
-              <a
-                className={cx(classes.link, {
-                  [classes.linkActive]: item.label === active,
-                })}
-                href={item.link}
+              <NavLink
+                className={(navItem) =>
+                  cx(classes.link, {
+                    [classes.linkActive]:
+                      Boolean(item.label) === navItem.isActive,
+                  })
+                }
+                to={item.link}
                 key={item.label}
-                onClick={(event) => {
-                  event.preventDefault();
-                  setActive(item.label);
-                }}
               >
-                <item.icon
-                  className={cx(classes.linkIcon, {
-                    [classes.linkActive]: item.label === active,
-                  })}
-                />
-                <span>{item.label}</span>
-              </a>
+                {({ isActive }) => (
+                  <>
+                    <item.icon
+                      className={cx(classes.linkIcon, {
+                        [classes.linkActive]: Boolean(item.label) === isActive,
+                      })}
+                    />
+                    <span>{item.label}</span>
+                  </>
+                )}
+              </NavLink>
             ))}
           </Navbar.Section>
         </Navbar>
       }
     >
       <Container className={classes.container}>
-        {(active === "Users" || active === "Dashboard") && <TableUsers />}
-        {(active === "Actors" || active === "Dashboard") && <TableActors />}
-        {(active === "Movies" || active === "Dashboard") && (
-          <>
-            <TableMovies /> <TableReviews />
-          </>
-        )}
+        <Routes>
+          <Route index element={<Navigate to="users" />} />
+          <Route path="users" element={<TableUsers />} />
+          <Route
+            path="movies"
+            element={
+              <>
+                <TableMovies />
+                <TableReviews />
+              </>
+            }
+          />
+          <Route path="actors" element={<TableActors />} />
+        </Routes>
       </Container>
     </AppShell>
   );

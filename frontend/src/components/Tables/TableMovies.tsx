@@ -46,6 +46,7 @@ import {
   movieRating,
 } from "../../utils/helpers";
 import AddActorModal from "../AddActorModal.tsx/AddActorModal";
+import { fetchAllActors } from "../../features/actor/actorSlice";
 
 const TableMovies = () => {
   const { movies, isLoading } = useTypedSelector((state) => state.movie);
@@ -82,6 +83,7 @@ const TableMovies = () => {
   //Fetch all movies
   useEffect(() => {
     dispatch(fetchAllMovies());
+    dispatch(fetchAllActors());
   }, [dispatch]);
 
   /* Inside add movie modal, actors multiple select input has to have an array of objects containing value and label [{value, label}]. Hence, actorsList mapping is done*/

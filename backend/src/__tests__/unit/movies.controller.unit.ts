@@ -11,7 +11,7 @@ import {
   ReviewsRepository,
   MovieCastRepository,
 } from '../../repositories';
-import {fetchMovies, rejectedRqst} from '../helpers';
+import {fetchMovies, failedRes} from '../helpers';
 
 describe('MoviesController', () => {
   let moviesRepository: StubbedInstanceWithSinonAccessor<MoviesRepository>;
@@ -31,7 +31,7 @@ describe('MoviesController', () => {
     it('should return failed response if rejected', async () => {
       const find = moviesRepository.stubs.find;
       find.rejects();
-      expect(await controller.find()).to.eql(rejectedRqst);
+      expect(await controller.find()).to.eql(failedRes('Error'));
       sinon.assert.called(find);
     });
   });
