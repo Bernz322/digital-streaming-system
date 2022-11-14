@@ -51,8 +51,8 @@ export class ReviewsController {
         throw new Error('Description is required.');
       if (!reviews.movieId && reviews.movieId === '')
         throw new Error('Movie ID to review is required.');
-      if (reviews.rating > 5 || reviews.rating < 0)
-        throw new Error('Rating can only be between 0 - 5.');
+      if (reviews.rating > 5 || reviews.rating < 1)
+        throw new Error('Rating can only be between 1 - 5.');
 
       if (currentLoggedUser.role === 'admin')
         throw new Error('As an admin, you cannot add reviews.');
@@ -62,7 +62,7 @@ export class ReviewsController {
           and: [{userId: currentLoggedUser.id}, {movieId: reviews.movieId}],
         },
       });
-      if (userMovieReviewChecker.length > 0)
+      if (userMovieReviewChecker?.length > 0)
         throw new Error('You can only review once per movie.');
       const reviewToSave = {
         ...reviews,
@@ -115,10 +115,6 @@ export class ReviewsController {
     reviews: Reviews,
   ): Promise<CustomResponse<{}>> {
     try {
-      // Validate input field
-      if (typeof reviews.isApproved !== 'boolean')
-        throw new Error('isApproved should only be a boolean type.');
-
       await this.reviewsRepository.updateById(id, reviews);
       const updatedMovie = await this.reviewsRepository.findById(id, {
         include: [
@@ -129,6 +125,7 @@ export class ReviewsController {
                 role: false,
                 isActivated: false,
                 dateCreated: false,
+                email: false,
               },
             },
           },

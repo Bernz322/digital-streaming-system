@@ -1,6 +1,7 @@
+import {securityId, UserProfile} from '@loopback/security';
 import {givenHttpServerConfig} from '@loopback/testlab';
 import {BackendApplication} from '..';
-import {Actors, User} from '../models';
+import {Actors, Reviews, User} from '../models';
 import {UserRepository} from '../repositories';
 import {CustomResponse} from '../utils';
 
@@ -106,6 +107,20 @@ export function newActorResponse(actor?: Partial<Actors>) {
   return expectedResponse;
 }
 
+export function newReviewBody(review?: Partial<Reviews>) {
+  const data = Object.assign(review as Partial<Reviews>);
+  return new Reviews(data);
+}
+
+export function newReviewResponse() {
+  const expectedResponse = {
+    status: 'success',
+    data: null,
+    message: 'Movie review successfully added.',
+  };
+  return expectedResponse;
+}
+
 export function failedRes(message: string): CustomResponse<{}> {
   return {
     status: 'fail',
@@ -114,6 +129,25 @@ export function failedRes(message: string): CustomResponse<{}> {
   };
 }
 
+export const mockUsers: UserProfile[] = [
+  {
+    [securityId]: '6365cbc3e303fc6228363b9d',
+    id: ' 6365cbc3e303fc6228363b9d',
+    name: 'admin root',
+    email: 'admin@root.com',
+    role: 'admin',
+    isActivated: true,
+  },
+  {
+    [securityId]: '6367094d5c935e220c912f54',
+    id: ' 6367094d5c935e220c912f54',
+    name: 'John Doe',
+    email: 'john@doe.com',
+    role: 'user',
+    isActivated: true,
+  },
+];
+
 export const mockActor = {
   firstName: 'Joel',
   lastName: 'Edgerton',
@@ -121,6 +155,28 @@ export const mockActor = {
   age: 48,
   image: 'https://flxt.tmsimg.com/assets/171833_v9_bd.jpg',
   link: 'https://www.imdb.com/name/nm0249291/',
+};
+
+export const mockReview = {
+  movieId: '6365ced2e303fc6228363ba3',
+  description:
+    'Best Non Stop Action. And I mean Action and Not corny dramas. Other film I recommend you to watch is The Raid.',
+  rating: 5,
+};
+
+export const fetchUserById: CustomResponse<{}> = {
+  status: 'success',
+  data: {
+    dateCreated: '2022-11-05T02:27:26.229Z',
+    email: 'admin@root.com',
+    firstName: 'admin',
+    id: '6365cbc3e303fc6228363b9d',
+    isActivated: true,
+    lastName: 'root',
+    role: 'admin',
+  },
+
+  message: 'User data fetched successfully.',
 };
 
 export const fetchUsers: CustomResponse<{}> = {

@@ -10,7 +10,7 @@ import {
   UserRepository as MyUserRepo,
 } from '../../repositories';
 import {User} from '../../models';
-import {fetchUsers, failedRes} from '../helpers';
+import {fetchUsers, failedRes, fetchUserById, mockUsers} from '../helpers';
 import {MyUserService, UserRepository} from '@loopback/authentication-jwt';
 import {UserProfile} from '@loopback/security';
 import {JWTService} from '../../services';
@@ -27,6 +27,18 @@ describe('UserController', () => {
 
   before(resetRepositories);
 
+  describe('User Controller whoAmI', () => {
+    it('should return failed response if rejected', async () => {
+      const findById = myUserRepository.stubs.findById;
+
+      findById.rejects();
+
+      expect(await controller.whoAmI(mockUsers[0])).to.eql(
+        failedRes('Unknown user.'),
+      );
+    });
+  });
+
   describe('User Controller find', () => {
     it('should return multiple users', async () => {
       const find = myUserRepository.stubs.find;
@@ -39,6 +51,26 @@ describe('UserController', () => {
       find.rejects();
       expect(await controller.find()).to.eql(failedRes('Error'));
       sinon.assert.called(find);
+    });
+  });
+
+  describe('User Controller findById', () => {
+    it('should return User data by ID', async () => {
+      const findById = myUserRepository.stubs.findById;
+      const userId = '6365cbc3e303fc6228363b9d';
+      findById.resolves(fetchUserById.data as User);
+      expect(await controller.findById(userId)).to.eql(fetchUserById);
+      sinon.assert.called(findById);
+    });
+    it('should return failed response if rejected', async () => {
+      const findById = myUserRepository.stubs.findById;
+      const userId = 'invalidId';
+      const expectedMessage = 'Fetching user data failed.';
+      findById.rejects({message: expectedMessage});
+      expect(await controller.findById(userId)).to.eql(
+        failedRes(expectedMessage),
+      );
+      sinon.assert.called(findById);
     });
   });
 
