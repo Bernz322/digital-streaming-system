@@ -177,13 +177,13 @@ export class MoviesController {
           ...movies,
           rating: parseFloat((sum / reviewCount || 0).toFixed(2)),
         },
-        message: 'Successfully fetched all movies.',
+        message: 'Successfully fetched movie data.',
       };
     } catch (error) {
       return {
         status: 'fail',
         data: null,
-        message: error ? error.message : 'Fetching all movies failed.',
+        message: error ? error.message : 'Fetching movie failed.',
       };
     }
   }
@@ -223,7 +223,7 @@ export class MoviesController {
       return {
         status: 'fail',
         data: null,
-        message: 'Fetching actor data failed.',
+        message: 'Fetching movies failed.',
       };
     }
   }
