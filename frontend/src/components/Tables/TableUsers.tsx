@@ -101,7 +101,7 @@ const TableUsers = () => {
       isValidName(selectedUserData.firstName, "first");
       isValidName(selectedUserData.lastName, "last");
       isValidEmail(selectedUserData.email);
-      const isTrueSet = selectedUserData.isActivated === "true";
+      const isTrueSet = selectedUserData.isActivated.toString() === "true";
       const updateUserData: IPatchUserAPIProps = {
         id: selectedUserData.id,
         firstName: selectedUserData?.firstName?.trim(),
@@ -337,7 +337,7 @@ const TableUsers = () => {
         />
 
         <SegmentedControl
-          defaultValue={selectedUserData?.isActivated?.toString()}
+          value={selectedUserData?.isActivated?.toString()}
           mt="15px"
           onChange={(value) =>
             setSelectedUserData({
