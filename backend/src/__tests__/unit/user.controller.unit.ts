@@ -74,6 +74,15 @@ describe('UserController', () => {
     });
   });
 
+  describe('User Controller deleteById', () => {
+    it('should return failed response if rejected', async () => {
+      const deleteById = userRepository.stubs.deleteById;
+      const userId = 'invalidId';
+      deleteById.rejects();
+      expect(await controller.deleteById(userId)).to.eql(failedRes('Error'));
+    });
+  });
+
   function resetRepositories() {
     userRepository = createStubInstance(UserRepository);
     reviewsRepository = createStubInstance(ReviewsRepository);

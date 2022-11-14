@@ -257,7 +257,7 @@ describe('Actors Controller', () => {
     });
   });
 
-  describe('Actors Controller delete', () => {
+  describe('Actors Controller deleteById', () => {
     it('should successfully delete actor', async () => {
       const deleteById = actorRepository.stubs.deleteById;
       const actorId = '636da2be886fb224fc3b2fd1';

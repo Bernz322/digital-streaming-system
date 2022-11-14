@@ -1,9 +1,9 @@
 import {securityId, UserProfile} from '@loopback/security';
 import {givenHttpServerConfig} from '@loopback/testlab';
 import {BackendApplication} from '..';
-import {Actors, Reviews, User} from '../models';
+import {Actors, Movies, Reviews, User} from '../models';
 import {UserRepository} from '../repositories';
-import {CustomResponse} from '../utils';
+import {CustomResponse, PostMovieRequest} from '../utils';
 
 export async function givenRunningApplicationWithCustomConfiguration() {
   const app = new BackendApplication({
@@ -107,6 +107,21 @@ export function newActorResponse(actor?: Partial<Actors>) {
   return expectedResponse;
 }
 
+export function newMoviePostBody(movie?: Partial<PostMovieRequest>) {
+  const data = Object.assign(movie as Partial<PostMovieRequest>);
+  return data;
+}
+
+export function newMovieResponse(movie?: Partial<Movies>) {
+  const data = Object.assign(movie as Partial<Movies>);
+  const expectedResponse = {
+    status: 'success',
+    data: new Movies(data),
+    message: 'Movie successfully created.',
+  };
+  return expectedResponse;
+}
+
 export function newReviewBody(review?: Partial<Reviews>) {
   const data = Object.assign(review as Partial<Reviews>);
   return new Reviews(data);
@@ -155,6 +170,17 @@ export const mockActor = {
   age: 48,
   image: 'https://flxt.tmsimg.com/assets/171833_v9_bd.jpg',
   link: 'https://www.imdb.com/name/nm0249291/',
+};
+
+export const mockMovie = {
+  title: 'John Wick',
+  description:
+    'With the untimely death of his beloved wife still bitter in his mouth, John Wick, the expert former assassin, receives one final gift from her--a precious keepsake to help John find a new meaning in life now that she is gone.',
+  cost: 4500000,
+  yearReleased: 2014,
+  image:
+    'https://img.yts.mx/assets/images/movies/john_wick_2014/medium-cover.jpg',
+  actors: ['actor1', 'actor2'],
 };
 
 export const mockReview = {
@@ -335,6 +361,99 @@ export const fetchMovies: CustomResponse<{}> = {
     },
   ],
   message: 'Successfully fetched all movies.',
+};
+
+export const fetchMovieById: CustomResponse<{}> = {
+  status: 'success',
+  message: 'Successfully fetched movie data.',
+  data: {
+    id: '6365ced2e303fc6228363ba3',
+    title: 'John Wick',
+    description:
+      "With the untimely death of his beloved wife still bitter in his mouth, John Wick, the expert former assassin, receives one final gift from her--a precious keepsake to help John find a new meaning in life now that she is gone. But when the arrogant Russian mob prince, Iosef Tarasov, and his men pay Wick a rather unwelcome visit to rob him of his prized 1969 Mustang and his wife's present, the legendary hitman will be forced to unearth his meticulously concealed identity. Blind with revenge, John will immediately unleash a carefully orchestrated maelstrom of destruction against the sophisticated kingpin, Viggo Tarasov, and his family, who are fully aware of his lethal capacity. Now, only blood can quench the boogeyman's thirst for retribution.",
+    image:
+      'https://img.yts.mx/assets/images/movies/john_wick_2014/medium-cover.jpg',
+    cost: 4500000,
+    yearReleased: 2014,
+    rating: 5,
+    movieCasters: [
+      {
+        age: 35,
+        firstName: 'Keanu',
+        gender: 'male',
+        id: '6365cd4ee303fc6228363b9f',
+        image:
+          'https://images.mubicdn.net/images/cast_member/2899/cache-2935-1581314680/image-w856.jpg?size=240x',
+        lastName: 'Reeves',
+        link: 'https://mubi.com/cast/keanu-reeves',
+      },
+      {
+        age: 51,
+        firstName: 'Bridget',
+        gender: 'female',
+        id: '6365ce7ee303fc6228363ba0',
+        image:
+          'https://t1.gstatic.com/licensed-image?q=tbn:ANd9GcQBW-QGOzpSgW5wPbL7mya6t_2Kj2wKJTgHsixsj_OQsif1Cf_myVaffqLEXuND2_UaJsRO_4GuAPzwlkQ',
+        lastName: 'Moynahan',
+        link: '',
+      },
+    ],
+    movieReviews: [
+      {
+        datePosted: '2022-11-05T23:57:58.575Z',
+        description:
+          'Best Non Stop Action. And I mean Action and Not corny dramas. Other film I recommend you to watch is The Raid.',
+        id: '63670b495c935e220c912f62',
+        isApproved: true,
+        movieId: '6365ced2e303fc6228363ba3',
+        rating: 5,
+        userId: '6365d163e303fc6228363baa',
+        userReviewer: {
+          email: 'jeffrey@yahoo.com',
+          firstName: 'Jeffrey',
+          id: '6365d163e303fc6228363baa',
+          lastName: 'Bernadas',
+        },
+      },
+    ],
+  },
+};
+
+export const searchMovieByName: CustomResponse<{}> = {
+  status: 'success',
+  data: [
+    {
+      id: '6365ced2e303fc6228363ba3',
+      title: 'John Wick',
+      description:
+        'With the untimely death of his beloved wife still bitter in his mouth, John Wick, the expert former assassin, receives one final gift from her--a precious keepsake to help John find a new meaning in life now that she is gone.',
+      image:
+        'https://img.yts.mx/assets/images/movies/john_wick_2014/medium-cover.jpg',
+      cost: 4500000,
+      yearReleased: 2014,
+    },
+    {
+      id: '636708775c935e220c912f49',
+      title: 'John Wick: Chapter 2',
+      description:
+        "Bound by an inescapable blood debt to the Italian crime lord, Santino D'Antonio, and with his precious 1969 Mustang still stolen, John Wick--the taciturn and pitiless assassin who thirsts for seclusion--is forced to visit Italy to honour his promise.",
+      image:
+        'https://img.yts.mx/assets/images/movies/john_wick_chapter_2_2017/medium-cover.jpg',
+      cost: 40000000,
+      yearReleased: 2017,
+    },
+    {
+      id: '636708b75c935e220c912f4d',
+      title: 'John Wick: Chapter 3 - Parabellum',
+      description:
+        'In this third installment of the adrenaline-fueled action franchise, skilled assassin John Wick (Keanu Reeves) returns with a $14 million price tag on his head and an army of bounty-hunting killers on his trail.',
+      image:
+        'https://img.yts.mx/assets/images/movies/john_wick_chapter_3_parabellum_2019/medium-cover.jpg',
+      cost: 75000000,
+      yearReleased: 2019,
+    },
+  ],
+  message: 'Successfully fetched movies.',
 };
 
 export const fetchMovieReviews: CustomResponse<{}> = {
