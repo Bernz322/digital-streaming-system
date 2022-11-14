@@ -63,7 +63,7 @@ const TableReviews = () => {
   // Update Review Action (PATCH request)
   const handleReviewUpdate = useCallback(async () => {
     try {
-      const isTrueSet = selectedReviewData.isApproved === "true";
+      const isTrueSet = selectedReviewData.isApproved.toString() === "true";
       const updateReviewData: IPatchReviewProps = {
         id: selectedReviewData.id,
         isApproved: isTrueSet,
@@ -243,7 +243,7 @@ const TableReviews = () => {
         centered
       >
         <SegmentedControl
-          defaultValue={selectedReviewData?.isApproved?.toString()}
+          value={selectedReviewData?.isApproved?.toString()}
           mt="15px"
           onChange={(value) =>
             setSelectedReviewData({
