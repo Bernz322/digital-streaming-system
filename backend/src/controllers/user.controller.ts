@@ -174,7 +174,6 @@ export class UserController {
         status: 'success',
         data: {
           token,
-          user: userProfile,
         },
         message: 'User logged in successfully',
       };

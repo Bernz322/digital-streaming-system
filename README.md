@@ -44,8 +44,7 @@
             <li>Perform CRUD operations on all table management.</li>
             <li>Activate/ Deactivate user.</li>
             <li>Approve/ Disapprove movie reviews done by users.</li>
-        </ul>   
-    <li>The list goes on....</li>    
+        </ul> 
 </ul>
 
 ## Requirements
@@ -106,7 +105,7 @@ This app has the following models:
 
 Similar to the `Movies` model, the `Actors` model is also marked as having many `Movies` through the `MovieCast` model using the `@hasMany(() => Movies, { through: {model: () => MovieCast})` to denote that it has many to many connection with the `Movies` model.
 
-`Reviews` is marked as belonging to the `User` model by the use of the `@belongsTo` model decorator. Correspondingly, the `User` model is marked as having many `Reviews` using the `@hasMany` model decorator.
+`Reviews` is marked as belonging to the `User` and `Movies` models by the use of the `@belongsTo` model decorator. Correspondingly, the `User` and `Movies` models are marked as having many `Reviews` using the `@hasMany` model decorator.
 
 ## Controllers
 
@@ -139,7 +138,7 @@ Once the credentials are extracted, the logging-in implementation at the control
 1. `const user = await this.userService.verifyCredentials(credentials)` - verify the credentials.
 2. `const userProfile = this.userService.convertToUserProfile(user)` - generate user profile object.
 3. `const token = await this.jwtService.generateToken(userProfile)` - generate JWT based on the user profile object.
-4. `return token and user` - send JWT and minimal user data.
+4. `return token` - send JWT.
 
 ## Authorization
 
@@ -151,23 +150,34 @@ The app has two roles: `admin`, and `user`. All get request endpoints of movies 
 
 ## Tests
 
-The frontend app has Unit test with backend API mocks using Mock Service Worker integrated to it. The backend however is not tested.
+The frontend app has Unit test with backend API mocks using Mock Service Worker integrated to it. The backend controllers are unit tested with loopback testlab's stub implementation to the respective repositories to isolate and test controllers.
 
-To execute the test, both frontend and backend must run simultaneously. On another terminal, run:
+To execute the test, both frontend and backend must run simultaneously. Open another two terminals for frontend and backend respectively and run:
 
 ```sh
+$ cd frontend
 $ npm test
 ```
 
-To see the test coverage, run:
+```sh
+$ cd backend
+$ npm test
+```
+
+To see the test coverage, follow the above instructions and run:
 
 ```sh
+$ cd frontend
+$ npm run coverage
+```
+
+```sh
+$ cd backend
 $ npm run coverage
 ```
 
 ### Sonarqube Scanner Results
 
-For the frontend, only the components and pages are unit tested with the coverage of more than 50%.
+Both frontend and backend are connected to sonarqube for scanning of code smells, bugs, security risks, vulnerabilities as well as see the test coverage. Below are the results for frontend (former) and backend (latter).
 ![frontend-sonarscan](./sonarFrontendPartial.PNG)
-The backend is not tested and was only scanned for code smells, bugs, security risks and vulnerabilities.
 ![backend-sonarscan](./sonarBackend.PNG)
