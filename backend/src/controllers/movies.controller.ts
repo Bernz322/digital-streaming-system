@@ -207,7 +207,6 @@ export class MoviesController {
             relation: 'movieReviews',
             scope: {
               where: {isApproved: true},
-              fields: ['isApproved', 'rating'],
             },
           },
         ],
