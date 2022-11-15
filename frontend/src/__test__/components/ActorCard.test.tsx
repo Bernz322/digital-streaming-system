@@ -32,6 +32,13 @@ describe("<ActorCard/>", () => {
     expect(imageElement).toBeInTheDocument();
   });
 
+  test("should render actor movies casted count", () => {
+    renderApp();
+    const castedMoviesCount = screen.getByTestId("castMoviesCount");
+    expect(castedMoviesCount).toHaveTextContent("Casted 0 movie/s");
+    expect(castedMoviesCount).toBeInTheDocument();
+  });
+
   test("should navigate to individial actor page when clicked", () => {
     const history = createMemoryHistory();
     render(

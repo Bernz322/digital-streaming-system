@@ -12,6 +12,9 @@ import {
   mockUsers,
 } from "../utils/db.mocks";
 
+/**
+ * All MSW API Interceptors (handlers) which returns mocked values during testing
+ */
 export const handlers = [
   rest.get(`${baseAPIUrl}/search/movies/:title`, (req, res, ctx) => {
     const { title } = req.params;

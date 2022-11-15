@@ -2,7 +2,6 @@ export interface ILoginResponse {
   status: string;
   data: {
     token: string;
-    user: IUserLogin;
   };
   message: string;
 }

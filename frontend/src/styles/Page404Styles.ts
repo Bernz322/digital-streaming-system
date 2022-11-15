@@ -1,5 +1,11 @@
 import { createStyles } from "@mantine/core";
 
+/**
+ * The page 404 styles based on createStyles of MantineUI
+ * MantineUI supports theming (dark/ light) based on the MantineProvider 'theme' prop wrapper inside the App.tsx
+ * As the entire app is in dark theme, the theme prop is set to dark.
+ * @param {theme} theme - the theme of all mantine components to be used. (Dark)
+ */
 export const usePage404Styles = createStyles((theme) => ({
   root: {
     paddingTop: 80,
