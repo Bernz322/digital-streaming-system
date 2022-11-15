@@ -17,7 +17,7 @@ import {
   searchActorByName,
 } from '../helpers';
 
-describe('Actors Controller', () => {
+describe('Actors Controller Unit', () => {
   let actorRepository: StubbedInstanceWithSinonAccessor<ActorsRepository>;
   let movieCastRepository: StubbedInstanceWithSinonAccessor<MovieCastRepository>;
   let controller: ActorsController;

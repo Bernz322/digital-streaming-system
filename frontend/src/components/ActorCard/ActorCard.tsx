@@ -16,7 +16,9 @@ const ActorCard = ({ actor, isActorsPage }: ActorProps) => {
           {upperFirst(actor.firstName)} {upperFirst(actor.lastName)}
         </h4>
         {isActorsPage && (
-          <p>Casted {actor?.moviesCasted?.toString() || 0} movie/s</p>
+          <p data-testid="castMoviesCount">
+            Casted {actor?.moviesCasted?.toString() || 0} movie/s
+          </p>
         )}
       </Link>
     </div>

@@ -8,7 +8,7 @@ import { createStore } from "../features/store";
 import type { AppStore, RootState } from "../features/store";
 
 // This type interface extends the default options for render from RTL, as well
-// as allows the user to specify other things such as initialState, store.
+// as allows the user to specify other things such as initialState and store.
 interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
   preloadedState?: PreloadedState<RootState>;
   store?: AppStore;

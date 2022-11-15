@@ -92,7 +92,7 @@ export const authLogout = createAsyncThunk(
 
 // Current User
 export const authCreds = createAsyncThunk(
-  "auth/userCreds",
+  "auth/authCreds",
   async (_, thunkAPI) => {
     try {
       const res: APICustomResponse<{}> = await apiFetchCurrentLoggedUser();

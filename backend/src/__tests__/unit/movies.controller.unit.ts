@@ -21,7 +21,7 @@ import {
   searchMovieByName,
 } from '../helpers';
 
-describe('MoviesController', () => {
+describe('Movies Controller Unit', () => {
   let moviesRepository: StubbedInstanceWithSinonAccessor<MoviesRepository>;
   let reviewsRepository: StubbedInstanceWithSinonAccessor<ReviewsRepository>;
   let movieCastRepository: StubbedInstanceWithSinonAccessor<MovieCastRepository>;
