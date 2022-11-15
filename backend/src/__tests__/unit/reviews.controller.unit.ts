@@ -16,7 +16,7 @@ import {
   mockUsers,
 } from '../helpers';
 
-describe('Reviews Controller', () => {
+describe('Reviews Controller Unit', () => {
   let reviewsRepository: StubbedInstanceWithSinonAccessor<ReviewsRepository>;
   let controller: ReviewsController;
 

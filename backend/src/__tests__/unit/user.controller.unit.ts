@@ -15,7 +15,7 @@ import {MyUserService, UserRepository} from '@loopback/authentication-jwt';
 import {UserProfile} from '@loopback/security';
 import {JWTService} from '../../services';
 
-describe('UserController', () => {
+describe('User Controller Unit', () => {
   let userRepository: StubbedInstanceWithSinonAccessor<UserRepository>;
   let reviewsRepository: StubbedInstanceWithSinonAccessor<ReviewsRepository>;
   let jwtService: StubbedInstanceWithSinonAccessor<JWTService>;
