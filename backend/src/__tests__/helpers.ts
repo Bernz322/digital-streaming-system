@@ -1,5 +1,6 @@
 import {securityId, UserProfile} from '@loopback/security';
-import {givenHttpServerConfig} from '@loopback/testlab';
+import {Client, expect, givenHttpServerConfig} from '@loopback/testlab';
+import _ from 'lodash';
 import {BackendApplication} from '..';
 import {Actors, Movies, Reviews, User} from '../models';
 import {UserRepository} from '../repositories';
@@ -40,22 +41,65 @@ export function rootAdminBody(user?: Partial<User>) {
   return new User(data);
 }
 
-export function rootAdminUserResponse(user?: Partial<User>) {
+export function normalUserBody(user?: Partial<User>) {
+  const passValue = 'iAmAUser';
   const data = Object.assign(
     {
-      status: 'success',
-      data: {
-        firstName: 'admin',
-        lastName: 'root',
-        email: 'admin@root.com',
-        role: 'admin',
-        isActivated: true,
-      },
-      message: 'Root admin created successfully.',
+      firstName: 'user',
+      lastName: 'one',
+      email: 'user@one.com',
+      password: passValue,
     },
     user,
   );
   return new User(data);
+}
+
+// Acceptance testing helpers
+
+export async function loginTest(client: Client, userType: string) {
+  let userData = {};
+  if (userType === 'admin') {
+    userData = rootAdminBody();
+  } else if (userType === 'user') {
+    userData = normalUserBody();
+  }
+
+  const reqBody = _.omit(userData, ['firstName', 'lastName']);
+  const response = await client.post(`/users/login`).send(reqBody).expect(200);
+
+  const expected = {
+    message: 'User logged in successfully',
+  };
+
+  expect(response.body.message).to.containEql(expected.message);
+  return response.body.data.token;
+}
+
+export async function registerUser(client: Client, email: string) {
+  const userData = normalUserBody({email});
+
+  const response = await client
+    .post(`/users/register`)
+    .send(userData)
+    .expect(200);
+  return response.body;
+}
+
+export async function registerAdmin(client: Client) {
+  const rootAdmin = rootAdminBody();
+
+  const response = await client
+    .post(`/users/register`)
+    .send(rootAdmin)
+    .expect(200);
+
+  const expected = {
+    message: 'Root admin created successfully.',
+  };
+
+  expect(response.body.message).to.containEql(expected.message);
+  return response.body;
 }
 
 export function newUserBody(user?: Partial<User>) {
