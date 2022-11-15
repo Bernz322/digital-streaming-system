@@ -1,6 +1,6 @@
 projectKey=POC-BE
-serverUrl=http://localhost:9000
+serverUrl=http://192.168.1.4:9000
 serverVersion=9.7.0.61563
-dashboardUrl=http://localhost:9000/dashboard?id=POC-BE
-ceTaskId=AYR1B5iZWo3nbCTboMTp
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYR1B5iZWo3nbCTboMTp
+dashboardUrl=http://192.168.1.4:9000/dashboard?id=POC-BE
+ceTaskId=AYR5s-oDWo3nbCTboMTs
+ceTaskUrl=http://192.168.1.4:9000/api/ce/task?id=AYR5s-oDWo3nbCTboMTs

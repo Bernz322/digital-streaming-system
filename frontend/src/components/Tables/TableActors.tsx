@@ -286,7 +286,6 @@ const TableActors = () => {
               link: e.currentTarget.value,
             })
           }
-          withAsterisk
         />
         <TextInput
           placeholder="Actor Image URL"
