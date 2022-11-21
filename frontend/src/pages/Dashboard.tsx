@@ -1,5 +1,5 @@
 import { AppShell, Container, Navbar } from "@mantine/core";
-import { IconUser, IconMovie, IconUsers } from "@tabler/icons";
+import { IconUser, IconMovie, IconUsers, IconMessageDots } from "@tabler/icons";
 import {
   TableActors,
   TableMovies,
@@ -15,6 +15,7 @@ const Dashboard = () => {
     { link: "/cm/users", label: "Users", icon: IconUser },
     { link: "/cm/actors", label: "Actors", icon: IconUsers },
     { link: "/cm/movies", label: "Movies", icon: IconMovie },
+    { link: "/cm/reviews", label: "Reviews", icon: IconMessageDots },
   ];
   return (
     <AppShell
@@ -60,16 +61,9 @@ const Dashboard = () => {
         <Routes>
           <Route index element={<Navigate to="users" />} />
           <Route path="users" element={<TableUsers />} />
-          <Route
-            path="movies"
-            element={
-              <>
-                <TableMovies />
-                <TableReviews />
-              </>
-            }
-          />
           <Route path="actors" element={<TableActors />} />
+          <Route path="movies" element={<TableMovies />} />
+          <Route path="reviews" element={<TableReviews />} />
         </Routes>
       </Container>
     </AppShell>

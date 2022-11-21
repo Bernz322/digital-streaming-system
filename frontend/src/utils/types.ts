@@ -69,6 +69,9 @@ export interface IMovieReview {
   movieId: string;
   userId: string;
   userReviewer?: IMovieReviewer;
+  movieReviews?: {
+    title: string;
+  };
 }
 export interface IMovieReviewer {
   id: string;
