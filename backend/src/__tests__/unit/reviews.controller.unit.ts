@@ -95,17 +95,19 @@ describe('Reviews Controller Unit', () => {
 
   describe('Reviews Controller find', () => {
     it('should return reviews of a movie', async () => {
-      const movieId = '6365ced2e303fc6228363ba3';
       const find = reviewsRepository.stubs.find;
       find.resolves(fetchMovieReviews.data as Reviews[]);
-      expect(await controller.find(movieId)).to.eql(fetchMovieReviews);
+      expect(await controller.findAllApprovedReviews()).to.eql(
+        fetchMovieReviews,
+      );
       sinon.assert.called(find);
     });
     it('should return failed response if rejected', async () => {
-      const movieId = 'randomId';
       const find = reviewsRepository.stubs.find;
       find.rejects();
-      expect(await controller.find(movieId)).to.eql(failedRes('Error'));
+      expect(await controller.findAllApprovedReviews()).to.eql(
+        failedRes('Error'),
+      );
       sinon.assert.called(find);
     });
   });

@@ -516,6 +516,9 @@ export const fetchMovieReviews: CustomResponse<{}> = {
         firstName: 'Jane',
         lastName: 'Doe',
       },
+      movieReviews: {
+        title: 'Iron Man 3',
+      },
     },
     {
       id: '63670c8b5c935e220c912f66',
@@ -530,7 +533,10 @@ export const fetchMovieReviews: CustomResponse<{}> = {
         firstName: 'John',
         lastName: 'Doe',
       },
+      movieReviews: {
+        title: 'Morbius',
+      },
     },
   ],
-  message: 'Reviews fetched successfully.',
+  message: 'All approved reviews fetched successfully.',
 };
