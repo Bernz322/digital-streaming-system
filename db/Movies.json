@@ -1,46 +1,127 @@
 [{
   "_id": {
-    "$oid": "6365ced2e303fc6228363ba3"
+    "$oid": "63738ec246a9852fe8c20933"
   },
-  "title": "John Wick",
-  "description": "With the untimely death of his beloved wife still bitter in his mouth, John Wick, the expert former assassin, receives one final gift from her--a precious keepsake to help John find a new meaning in life now that she is gone. But when the arrogant Russian mob prince, Iosef Tarasov, and his men pay Wick a rather unwelcome visit to rob him of his prized 1969 Mustang and his wife's present, the legendary hitman will be forced to unearth his meticulously concealed identity. Blind with revenge, John will immediately unleash a carefully orchestrated maelstrom of destruction against the sophisticated kingpin, Viggo Tarasov, and his family, who are fully aware of his lethal capacity. Now, only blood can quench the boogeyman's thirst for retribution.",
-  "image": "https://img.yts.mx/assets/images/movies/john_wick_2014/medium-cover.jpg",
-  "cost": 4500000,
+  "title": "Iron Man",
+  "description": "After being held captive in an Afghan cave, billionaire engineer Tony Stark creates a unique weaponized suit of armor to fight evil.",
+  "image": "https://upload.wikimedia.org/wikipedia/en/0/02/Iron_Man_%282008_film%29_poster.jpg",
+  "cost": 140000000,
+  "yearReleased": 2008
+},{
+  "_id": {
+    "$oid": "63738fc646a9852fe8c2093c"
+  },
+  "title": "The Incredible Hulk",
+  "description": "Scientist Bruce Banner (Edward Norton) desperately seeks a cure for the gamma radiation that contaminated his cells and turned him into The Hulk. Cut off from his true love Betty Ross (Liv Tyler) and forced to hide from his nemesis, Gen. Thunderbolt Ross (William Hurt), Banner soon comes face-to-face with a new threat: a supremely powerful enemy known as The Abomination (Tim Roth).",
+  "image": "https://upload.wikimedia.org/wikipedia/en/f/f0/The_Incredible_Hulk_%28film%29_poster.jpg",
+  "cost": 150000000,
+  "yearReleased": 2008
+},{
+  "_id": {
+    "$oid": "6373904d46a9852fe8c20943"
+  },
+  "title": "Iron Man 2",
+  "description": "With the world now aware that he is Iron Man, billionaire inventor Tony Stark (Robert Downey Jr.) faces pressure from all sides to share his technology with the military. He is reluctant to divulge the secrets of his armored suit, fearing the information will fall into the wrong hands. With Pepper Potts (Gwyneth Paltrow) and \"Rhodey\" Rhodes (Don Cheadle) by his side, Tony must forge new alliances and confront a powerful new enemy.",
+  "image": "https://upload.wikimedia.org/wikipedia/en/e/ed/Iron_Man_2_poster.jpg",
+  "cost": 200000000,
+  "yearReleased": 2010
+},{
+  "_id": {
+    "$oid": "637390f546a9852fe8c2094c"
+  },
+  "title": "Thor",
+  "description": "As the son of Odin (Anthony Hopkins), king of the Norse gods, Thor (Chris Hemsworth) will soon inherit the throne of Asgard from his aging father. However, on the day that he is to be crowned, Thor reacts with brutality when the gods' enemies, the Frost Giants, enter the palace in violation of their treaty. As punishment, Odin banishes Thor to Earth. While Loki (Tom Hiddleston), Thor's brother, plots mischief in Asgard, Thor, now stripped of his powers, faces his greatest threat.",
+  "image": "https://upload.wikimedia.org/wikipedia/en/9/95/Thor_%28film%29_poster.jpg",
+  "cost": 150000000,
+  "yearReleased": 2011
+},{
+  "_id": {
+    "$oid": "637391ca46a9852fe8c20955"
+  },
+  "title": "Captain America: The First Avenger",
+  "description": "It is 1941 and the world is in the throes of war. Steve Rogers (Chris Evans) wants to do his part and join America's armed forces, but the military rejects him because of his small stature. Finally, Steve gets his chance when he is accepted into an experimental program that turns him into a supersoldier called Captain America. Joining forces with Bucky Barnes (Sebastian Stan) and Peggy Carter (Hayley Atwell), Captain America leads the fight against the Nazi-backed HYDRA organization.",
+  "image": "https://upload.wikimedia.org/wikipedia/en/3/37/Captain_America_The_First_Avenger_poster.jpg",
+  "cost": 216700000,
+  "yearReleased": 2011
+},{
+  "_id": {
+    "$oid": "6373928946a9852fe8c2095c"
+  },
+  "title": "Marvel's The Avengers",
+  "description": "When Thor's evil brother, Loki (Tom Hiddleston), gains access to the unlimited power of the energy cube called the Tesseract, Nick Fury (Samuel L. Jackson), director of S.H.I.E.L.D., initiates a superhero recruitment effort to defeat the unprecedented threat to Earth. Joining Fury's \"dream team\" are Iron Man (Robert Downey Jr.), Captain America (Chris Evans), the Hulk (Mark Ruffalo), Thor (Chris Hemsworth), the Black Widow (Scarlett Johansson) and Hawkeye (Jeremy Renner).",
+  "image": "https://upload.wikimedia.org/wikipedia/en/8/8a/The_Avengers_%282012_film%29_poster.jpg",
+  "cost": 220000000,
+  "yearReleased": 2012
+},{
+  "_id": {
+    "$oid": "6373936d46a9852fe8c20964"
+  },
+  "title": "Iron Man 3",
+  "description": "Plagued with worry and insomnia since saving New York from destruction, Tony Stark (Robert Downey Jr.), now, is more dependent on the suits that give him his Iron Man persona -- so much so that every aspect of his life is affected, including his relationship with Pepper (Gwyneth Paltrow). After a malevolent enemy known as the Mandarin (Ben Kingsley) reduces his personal world to rubble, Tony must rely solely on instinct and ingenuity to avenge his losses and protect the people he loves.",
+  "image": "https://upload.wikimedia.org/wikipedia/en/1/19/Iron_Man_3_poster.jpg",
+  "cost": 200000000,
+  "yearReleased": 2013
+},{
+  "_id": {
+    "$oid": "637393be46a9852fe8c20968"
+  },
+  "title": "Thor: The Dark World",
+  "description": "In ancient times, the gods of Asgard fought and won a war against an evil race known as the Dark Elves. The survivors were neutralized, and their ultimate weapon -- the Aether -- was buried in a secret location. Hundreds of years later, Jane Foster (Natalie Portman) finds the Aether and becomes its host, forcing Thor (Chris Hemsworth) to bring her to Asgard before Dark Elf Malekith (Christopher Eccleston) captures her and uses the weapon to destroy the Nine Realms -- including Earth.",
+  "image": "https://upload.wikimedia.org/wikipedia/en/7/7f/Thor_The_Dark_World_poster.jpg",
+  "cost": 170000000,
+  "yearReleased": 2013
+},{
+  "_id": {
+    "$oid": "6373940746a9852fe8c2096d"
+  },
+  "title": "Captain America: The Winter Soldier",
+  "description": "After the cataclysmic events in New York with his fellow Avengers, Steve Rogers, aka Captain America (Chris Evans), lives in the nation's capital as he tries to adjust to modern times. An attack on a S.H.I.E.L.D. colleague throws Rogers into a web of intrigue that places the whole world at risk. Joining forces with the Black Widow (Scarlett Johansson) and a new ally, the Falcon, Rogers struggles to expose an ever-widening conspiracy, but he and his team soon come up against an unexpected enemy.",
+  "image": "https://upload.wikimedia.org/wikipedia/en/9/9e/Captain_America_The_Winter_Soldier_poster.jpg",
+  "cost": 177000000,
   "yearReleased": 2014
 },{
   "_id": {
-    "$oid": "636707055c935e220c912f43"
+    "$oid": "6373949746a9852fe8c20971"
   },
-  "title": "Enola Holmes 2",
-  "description": "Now a detective-for-hire, Enola Holmes takes on her first official case to find a missing girl as the sparks of a dangerous conspiracy ignite a mystery that requires the help of friends - and Sherlock himself - to unravel",
-  "image": "https://img.yts.mx/assets/images/movies/enola_holmes_2_2022/medium-cover.jpg",
-  "cost": 25000000,
-  "yearReleased": 2022
+  "title": "Avengers: Age of Ultron",
+  "description": "When Tony Stark (Robert Downey Jr.) jump-starts a dormant peacekeeping program, things go terribly awry, forcing him, Thor (Chris Hemsworth), the Incredible Hulk (Mark Ruffalo) and the rest of the Avengers to reassemble. As the fate of Earth hangs in the balance, the team is put to the ultimate test as they battle Ultron, a technological terror hell-bent on human extinction. Along the way, they encounter two mysterious and powerful newcomers, Pietro and Wanda Maximoff.",
+  "image": "https://upload.wikimedia.org/wikipedia/en/f/ff/Avengers_Age_of_Ultron_poster.jpg",
+  "cost": 495200000,
+  "yearReleased": 2015
 },{
   "_id": {
-    "$oid": "636708775c935e220c912f49"
+    "$oid": "6373958c46a9852fe8c2097f"
+  },
+  "title": "John Wick",
+  "description": "Legendary assassin John Wick (Keanu Reeves) retired from his violent career after marrying the love of his life. Her sudden death leaves John in deep mourning. When sadistic mobster Iosef Tarasov (Alfie Allen) and his thugs steal John's prized car and kill the puppy that was a last gift from his wife, John unleashes the remorseless killing machine within and seeks vengeance. Meanwhile, Iosef's father (Michael Nyqvist) -- John's former colleague -- puts a huge bounty on John's head.",
+  "image": "https://upload.wikimedia.org/wikipedia/en/9/98/John_Wick_TeaserPoster.jpg",
+  "cost": 30000000,
+  "yearReleased": 2014
+},{
+  "_id": {
+    "$oid": "6373962246a9852fe8c20988"
   },
   "title": "John Wick: Chapter 2",
-  "description": "Bound by an inescapable blood debt to the Italian crime lord, Santino D'Antonio, and with his precious 1969 Mustang still stolen, John Wick--the taciturn and pitiless assassin who thirsts for seclusion--is forced to visit Italy to honour his promise. But, soon, the Bogeyman will find himself dragged into an impossible task in the heart of Rome's secret criminal society, as every killer in the business dreams of cornering the legendary Wick who now has an enormous price on his head. Drenched in blood and mercilessly hunted down, John Wick can surely forget a peaceful retirement as no one can make it out in one piece.",
-  "image": "https://img.yts.mx/assets/images/movies/john_wick_chapter_2_2017/medium-cover.jpg",
+  "description": "Retired super-assassin John Wick's plans to resume a quiet civilian life are cut short when Italian gangster Santino D'Antonio shows up on his doorstep with a gold marker, compelling him to repay past favors. Ordered by Winston, kingpin of secret assassin society The Continental, to respect the organization's ancient code, Wick reluctantly accepts the assignment to travel to Rome to take out D'Antonio's sister, the ruthless capo atop the Italian Camorra crime syndicate.",
+  "image": "https://upload.wikimedia.org/wikipedia/en/3/31/John_Wick_Chapter_Two.png",
   "cost": 40000000,
   "yearReleased": 2017
 },{
   "_id": {
-    "$oid": "636708b75c935e220c912f4d"
+    "$oid": "6373969d46a9852fe8c2098f"
   },
-  "title": "John Wick: Chapter 3 - Parabellum",
-  "description": "In this third installment of the adrenaline-fueled action franchise, skilled assassin John Wick (Keanu Reeves) returns with a $14 million price tag on his head and an army of bounty-hunting killers on his trail. After killing a member of the shadowy international assassin's guild, the High Table, John Wick is excommunicado, but the world's most ruthless hit men and women await his every turn.",
-  "image": "https://img.yts.mx/assets/images/movies/john_wick_chapter_3_parabellum_2019/medium-cover.jpg",
+  "title": "John Wick: Chapter 3 – Parabellum",
+  "description": "After gunning down a member of the High Table -- the shadowy international assassin's guild -- legendary hit man John Wick finds himself stripped of the organization's protective services. Now stuck with a $14 million bounty on his head, Wick must fight his way through the streets of New York as he becomes the target of the world's most ruthless killers.",
+  "image": "https://upload.wikimedia.org/wikipedia/en/9/94/John_Wick_Chapter_3_Parabellum.png",
   "cost": 75000000,
   "yearReleased": 2019
 },{
   "_id": {
-    "$oid": "6367091b5c935e220c912f50"
+    "$oid": "6373974a46a9852fe8c20998"
   },
-  "title": "Enola Holmes",
-  "description": "England, 1884 - a world on the brink of change. On the morning of her 16th birthday, Enola Holmes (Millie Bobby Brown) wakes to find that her mother (Helena Bonham Carter) has disappeared, leaving behind an odd assortment of gifts but no apparent clue as to where she's gone or why. After a free-spirited childhood, Enola suddenly finds herself under the care of her brothers Sherlock (Henry Cavill) and Mycroft (Sam Claflin), both set on sending her away to a finishing school for \"proper\" young ladies.",
-  "image": "https://img.yts.mx/assets/images/movies/enola_holmes_2020/medium-cover.jpg",
-  "cost": 30000000,
-  "yearReleased": 2020
+  "title": "Morbius",
+  "description": "One of the most compelling and conflicted characters in Sony Pictures Universe of Marvel Characters comes to the big screen as Oscar® winner Jared Leto transforms into the enigmatic antihero Michael Morbius. Dangerously ill with a rare blood disorder and determined to save others suffering his same fate, Dr. Morbius attempts a desperate gamble. While at first it seems to be a radical success, a darkness inside him is unleashed. Will good override evil -- or will Morbius succumb to his mysterious new urges?",
+  "image": "https://upload.wikimedia.org/wikipedia/en/2/2f/Morbius_%28film%29_poster.jpg",
+  "cost": 83000000,
+  "yearReleased": 2022
 }]
