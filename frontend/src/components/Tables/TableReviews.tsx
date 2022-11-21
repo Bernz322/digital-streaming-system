@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Button,
   Group,
@@ -92,8 +92,14 @@ const TableReviews = () => {
   }, [dispatch, selectedReviewData.id, selectedReviewData.isApproved]);
 
   // Filter reviews state by searched movie title values inside table
-  const filteredItems: IMovieReview[] = reviews?.filter((item) =>
-    item.movieReviews?.title.toLowerCase().includes(filterByName.toLowerCase())
+  const filteredItems: IMovieReview[] = useMemo(
+    () =>
+      reviews?.filter((item) =>
+        item.movieReviews?.title
+          .toLowerCase()
+          .includes(filterByName.toLowerCase())
+      ),
+    [reviews, filterByName]
   );
 
   // Review Table Columns

@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { IconArrowDown, IconEdit, IconTrash, IconEye } from "@tabler/icons";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { showNotification } from "@mantine/notifications";
 import { upperFirst } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
@@ -52,10 +52,14 @@ const TableActors = () => {
   }, [dispatch]);
 
   // Filter actors state by searched first or last name values inside table
-  const filteredItems: IActor[] = actors?.filter(
-    (item) =>
-      item.firstName.toLowerCase().includes(filterByName.toLowerCase()) ||
-      item.lastName.toLowerCase().includes(filterByName.toLowerCase())
+  const filteredItems: IActor[] = useMemo(
+    () =>
+      actors?.filter(
+        (item) =>
+          item.firstName.toLowerCase().includes(filterByName.toLowerCase()) ||
+          item.lastName.toLowerCase().includes(filterByName.toLowerCase())
+      ),
+    [actors, filterByName]
   );
 
   // Open update modal and set current row item data to selectedActorData state

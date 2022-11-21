@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Button,
   Group,
@@ -58,10 +58,14 @@ const TableUsers = () => {
   }, [dispatch]);
 
   // Filter users state by searched first or last name values inside table
-  const filteredItems: IUser[] = users?.filter(
-    (item) =>
-      item.firstName.toLowerCase().includes(filterByName.toLowerCase()) ||
-      item.lastName.toLowerCase().includes(filterByName.toLowerCase())
+  const filteredItems: IUser[] = useMemo(
+    () =>
+      users?.filter(
+        (item) =>
+          item.firstName.toLowerCase().includes(filterByName.toLowerCase()) ||
+          item.lastName.toLowerCase().includes(filterByName.toLowerCase())
+      ),
+    [users, filterByName]
   );
 
   // Add User Action (POST request)

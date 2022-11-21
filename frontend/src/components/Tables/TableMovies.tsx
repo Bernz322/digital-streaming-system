@@ -13,7 +13,7 @@ import {
 } from "@mantine/core";
 import { upperFirst } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
 import { IconArrowDown, IconEdit, IconTrash, IconEye } from "@tabler/icons";
@@ -85,8 +85,12 @@ const TableMovies = () => {
   });
 
   // Filter movies state by searched title value inside table
-  const filteredItems: IMovie[] = movies?.filter((item) =>
-    item.title.toLowerCase().includes(filterByTitle.toLowerCase())
+  const filteredItems: IMovie[] = useMemo(
+    () =>
+      movies?.filter((item) =>
+        item.title.toLowerCase().includes(filterByTitle.toLowerCase())
+      ),
+    [movies, filterByTitle]
   );
 
   // Add Movie Action (POST request)
