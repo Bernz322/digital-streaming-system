@@ -10,12 +10,14 @@ import {
   apiFetchAllMovies,
   apiFetchLimitMovies,
   apiFetchMovieById,
-  apiFetchMovieReviewsById,
+  apiFetchAllMovieReviews,
   apiFetchSearchedMovies,
   apiPostMovie,
   apiPostMovieReview,
   apiUpdateMovieById,
   apiUpdateReviewById,
+  apiFetchApprovedMovieReviews,
+  apiFetchUnapprovedMovieReviews,
 } from "../../utils/apiCalls";
 import { isError } from "../../utils/helpers";
 import {
@@ -32,14 +34,14 @@ export interface IMovieState {
   isLoading: boolean;
   movies: IMovie[];
   selectedMovie: IMovie;
-  selectedMovieReviews: IMovieReview[];
+  reviews: IMovieReview[];
 }
 
 const initialState: IMovieState = {
   isLoading: false,
   movies: [] as IMovie[],
   selectedMovie: {} as IMovie,
-  selectedMovieReviews: [],
+  reviews: [],
 };
 
 // Fetch movies (with limit)
@@ -209,18 +211,54 @@ export const postMovieReview = createAsyncThunk(
   }
 );
 
-// Fetch movie reviews by id
-export const fetchMovieReviewsById = createAsyncThunk(
-  "reviews/fetchMovieReviewsById",
-  async (movieId: string, thunkAPI) => {
+// Fetch all movie reviews
+export const fetchAllMovieReviews = createAsyncThunk(
+  "reviews/fetchAllMovieReviews",
+  async (_, thunkAPI) => {
     try {
-      const res = await apiFetchMovieReviewsById(movieId);
+      const res = await apiFetchAllMovieReviews();
       if (res.status === "fail") throw new Error(res.message);
       return res;
     } catch (error: any) {
       const message = isError(
         error,
-        "Fetching all movie reviews failed. See message below for more info."
+        "Fetching all reviews failed. See message below for more info."
+      );
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Fetch all approved movie reviews
+export const fetchApprovedMovieReviews = createAsyncThunk(
+  "reviews/fetchApprovedMovieReviews",
+  async (_, thunkAPI) => {
+    try {
+      const res = await apiFetchApprovedMovieReviews();
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message = isError(
+        error,
+        "Fetching all approved reviews failed. See message below for more info."
+      );
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Fetch all unapproved movie reviews
+export const fetchUnapprovedMovieReviews = createAsyncThunk(
+  "reviews/fetchUnapprovedMovieReviews",
+  async (_, thunkAPI) => {
+    try {
+      const res = await apiFetchUnapprovedMovieReviews();
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message = isError(
+        error,
+        "Fetching all unapproved reviews failed. See message below for more info."
       );
       return thunkAPI.rejectWithValue(message);
     }
@@ -257,10 +295,10 @@ const movieSlice = createSlice({
       state.isLoading = false;
       state.movies = [] as IMovie[];
       state.selectedMovie = {} as IMovie;
-      state.selectedMovieReviews = [] as IMovieReview[];
+      state.reviews = [] as IMovieReview[];
     },
     reviewReset: (state: IMovieState) => {
-      state.selectedMovieReviews = [] as IMovieReview[];
+      state.reviews = [] as IMovieReview[];
     },
   },
   extraReducers: (builder: ActionReducerMapBuilder<IMovieState>) => {
@@ -374,17 +412,43 @@ const movieSlice = createSlice({
       .addCase(deleteMovieById.rejected, (state: IMovieState) => {
         state.isLoading = false;
       })
-      .addCase(fetchMovieReviewsById.pending, (state: IMovieState) => {
+      .addCase(fetchAllMovieReviews.pending, (state: IMovieState) => {
         state.isLoading = true;
       })
       .addCase(
-        fetchMovieReviewsById.fulfilled,
+        fetchAllMovieReviews.fulfilled,
         (state: IMovieState, action: PayloadAction<APICustomResponse<{}>>) => {
           state.isLoading = false;
-          state.selectedMovieReviews = action.payload.data as IMovieReview[];
+          state.reviews = action.payload.data as IMovieReview[];
         }
       )
-      .addCase(fetchMovieReviewsById.rejected, (state: IMovieState) => {
+      .addCase(fetchAllMovieReviews.rejected, (state: IMovieState) => {
+        state.isLoading = false;
+      })
+      .addCase(fetchApprovedMovieReviews.pending, (state: IMovieState) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        fetchApprovedMovieReviews.fulfilled,
+        (state: IMovieState, action: PayloadAction<APICustomResponse<{}>>) => {
+          state.isLoading = false;
+          state.reviews = action.payload.data as IMovieReview[];
+        }
+      )
+      .addCase(fetchApprovedMovieReviews.rejected, (state: IMovieState) => {
+        state.isLoading = false;
+      })
+      .addCase(fetchUnapprovedMovieReviews.pending, (state: IMovieState) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        fetchUnapprovedMovieReviews.fulfilled,
+        (state: IMovieState, action: PayloadAction<APICustomResponse<{}>>) => {
+          state.isLoading = false;
+          state.reviews = action.payload.data as IMovieReview[];
+        }
+      )
+      .addCase(fetchUnapprovedMovieReviews.rejected, (state: IMovieState) => {
         state.isLoading = false;
       })
       .addCase(updateMovieReviewById.pending, (state: IMovieState) => {
@@ -395,11 +459,9 @@ const movieSlice = createSlice({
         (state: IMovieState, action: PayloadAction<APICustomResponse<{}>>) => {
           const data = action.payload.data as IMovieReview;
           state.isLoading = false;
-          state.selectedMovieReviews = state.selectedMovieReviews.map(
-            (review) => {
-              return review.id === data.id ? data : review;
-            }
-          );
+          state.reviews = state.reviews.map((review) => {
+            return review.id === data.id ? data : review;
+          });
         }
       )
       .addCase(updateMovieReviewById.rejected, (state: IMovieState) => {

@@ -304,16 +304,35 @@ export const apiDeleteActorById = async (
 };
 
 /**
- * Fetch all reviews of a movie
- * @param {string} movieId - the movie id
+ * Fetch all reviews
  * @returns {APICustomResponse<{}>} - a promise of the returned data from the API
  */
-export const apiFetchMovieReviewsById = async (
-  movieId: string
-): Promise<APICustomResponse<{}>> => {
-  const res = await apiRequest<APICustomResponse<{}>>(
-    `/reviews/movie/${movieId}`
-  );
+export const apiFetchAllMovieReviews = async (): Promise<
+  APICustomResponse<{}>
+> => {
+  const res = await apiRequest<APICustomResponse<{}>>(`/reviews`);
+  return res;
+};
+
+/**
+ * Fetch all approved reviews
+ * @returns {APICustomResponse<{}>} - a promise of the returned data from the API
+ */
+export const apiFetchApprovedMovieReviews = async (): Promise<
+  APICustomResponse<{}>
+> => {
+  const res = await apiRequest<APICustomResponse<{}>>(`/reviews/approved`);
+  return res;
+};
+
+/**
+ * Fetch all unapproved reviews
+ * @returns {APICustomResponse<{}>} - a promise of the returned data from the API
+ */
+export const apiFetchUnapprovedMovieReviews = async (): Promise<
+  APICustomResponse<{}>
+> => {
+  const res = await apiRequest<APICustomResponse<{}>>(`/reviews/unapproved`);
   return res;
 };
 

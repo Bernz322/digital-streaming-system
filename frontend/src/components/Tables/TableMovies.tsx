@@ -16,13 +16,7 @@ import { showNotification } from "@mantine/notifications";
 import { useCallback, useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
-import {
-  IconArrowDown,
-  IconEdit,
-  IconTrash,
-  IconEye,
-  IconMessageDots,
-} from "@tabler/icons";
+import { IconArrowDown, IconEdit, IconTrash, IconEye } from "@tabler/icons";
 import { useTypedDispatch, useTypedSelector } from "../../hooks/rtk-hooks";
 import {
   IDispatchResponse,
@@ -36,7 +30,6 @@ import {
   addMovie,
   deleteMovieById,
   fetchAllMovies,
-  fetchMovieReviewsById,
   updateMovieById,
 } from "../../features/movie/movieSlice";
 import {
@@ -230,18 +223,6 @@ const TableMovies = () => {
               data-testid="rowViewMovieBtn"
             >
               <IconEye size={14} strokeWidth={2} />
-            </Button>
-          </Tooltip>
-          <Tooltip label="Manage Reviews" withArrow radius="md">
-            <Button
-              radius="md"
-              ml={5}
-              size="xs"
-              color="green"
-              disabled={isLoading}
-              onClick={() => dispatch(fetchMovieReviewsById(row.id))}
-            >
-              <IconMessageDots size={14} strokeWidth={2} />
             </Button>
           </Tooltip>
           <Tooltip label="Edit Movie" withArrow radius="md">

@@ -1,10 +1,11 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Button,
   Group,
   Modal,
   Paper,
   SegmentedControl,
+  Space,
   Text,
   TextInput,
   Tooltip,
@@ -23,12 +24,13 @@ import {
 import { useStyles, tableCustomStyles } from "./TableStyles";
 import {
   updateMovieReviewById,
-  fetchAllMovies,
-  reviewReset,
+  fetchUnapprovedMovieReviews,
+  fetchApprovedMovieReviews,
+  fetchAllMovieReviews,
 } from "../../features/movie/movieSlice";
 
 const TableReviews = () => {
-  const { selectedMovieReviews } = useTypedSelector((state) => state.movie);
+  const { reviews } = useTypedSelector((state) => state.movie);
   const dispatch = useTypedDispatch();
   const { classes } = useStyles();
 
@@ -45,6 +47,11 @@ const TableReviews = () => {
   );
   const [selectedReviewData, setSelectedReviewData] =
     useState<IPatchReviewProps>({} as IPatchReviewProps);
+
+  //Fetch all unapproved reviews
+  useEffect(() => {
+    dispatch(fetchUnapprovedMovieReviews());
+  }, [dispatch]);
 
   // View Review Action
   const handleViewReviewActionClick = useCallback((review: IMovieReview) => {
@@ -71,7 +78,6 @@ const TableReviews = () => {
       const res: IDispatchResponse = await dispatch(
         updateMovieReviewById(updateReviewData)
       );
-      await dispatch(fetchAllMovies());
       if (!res.error) {
         setEditReviewModal(false);
       }
@@ -85,19 +91,18 @@ const TableReviews = () => {
     }
   }, [dispatch, selectedReviewData.id, selectedReviewData.isApproved]);
 
-  // Filter reviews state by searched name values inside table
-  const filteredItems: IMovieReview[] = selectedMovieReviews?.filter(
-    (item) =>
-      item.userReviewer?.firstName
-        .toLowerCase()
-        .includes(filterByName.toLowerCase()) ||
-      item.userReviewer?.lastName
-        .toLowerCase()
-        .includes(filterByName.toLowerCase())
+  // Filter reviews state by searched movie title values inside table
+  const filteredItems: IMovieReview[] = reviews?.filter((item) =>
+    item.movieReviews?.title.toLowerCase().includes(filterByName.toLowerCase())
   );
 
   // Review Table Columns
   const reviewsColumns: TableColumn<IMovieReview>[] = [
+    {
+      name: "Movie",
+      selector: (row) => upperFirst(row.movieReviews?.title as string),
+      sortable: true,
+    },
     {
       name: "Reviewer",
       selector: (row) =>
@@ -158,22 +163,41 @@ const TableReviews = () => {
     <Paper className={classes.paper}>
       <Group position="apart" className={classes.head}>
         <TextInput
-          placeholder="Search reviewer name"
+          placeholder="Search movie title"
           classNames={classes}
           value={filterByName}
           onChange={(event) => setFilterByName(event.currentTarget.value)}
         />
-        <Button
-          radius="sm"
-          color="blue"
-          onClick={() => dispatch(reviewReset())}
-        >
-          Reset
-        </Button>
+        <div>
+          <Button
+            radius="sm"
+            color="blue"
+            onClick={() => dispatch(fetchAllMovieReviews())}
+          >
+            All Reviews
+          </Button>
+          <Button
+            radius="sm"
+            color="blue"
+            mx={5}
+            onClick={() => dispatch(fetchApprovedMovieReviews())}
+          >
+            Approved Reviews
+          </Button>
+          <Button
+            radius="sm"
+            color="blue"
+            onClick={() => dispatch(fetchUnapprovedMovieReviews())}
+          >
+            Unapproved Reviews
+          </Button>
+        </div>
       </Group>
 
+      <Space h="md" />
+
       <DataTable
-        title="Your selected movie reviews"
+        title="Movie Reviews"
         columns={reviewsColumns}
         data={filteredItems}
         pagination
@@ -188,7 +212,7 @@ const TableReviews = () => {
       <Modal
         opened={viewReviewModal}
         onClose={() => setViewReviewModal(false)}
-        title="Viewing a movie review"
+        title={`Viewing a ${viewReviewData.movieReviews?.title} review`}
         centered
       >
         <div className="flexCenterStart">
@@ -239,7 +263,7 @@ const TableReviews = () => {
       <Modal
         opened={editReviewModal}
         onClose={() => setEditReviewModal(false)}
-        title="Update Movie Review"
+        title={`Update a ${viewReviewData.movieReviews?.title} Review`}
         centered
       >
         <SegmentedControl

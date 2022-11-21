@@ -65,7 +65,7 @@ describe("<Movies />", () => {
             isLoading: false,
             movies: [],
             selectedMovie: {} as IMovie,
-            selectedMovieReviews: [],
+            reviews: [],
           },
         },
       }
