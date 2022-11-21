@@ -147,12 +147,14 @@ export class ReviewsController {
 
   @get('/reviews/movie/{id}')
   @response(204, {
-    description: 'Return all reviews of movie.',
+    description: 'Return all reviews of a movie.',
     content: {'application/json': {schema: CustomResponseSchema}},
   })
   @authenticate('jwt')
   @authorize({allowedRoles: ['admin']})
-  async find(@param.path.string('id') id: string): Promise<CustomResponse<{}>> {
+  async findMovieReviewsById(
+    @param.path.string('id') id: string,
+  ): Promise<CustomResponse<{}>> {
     try {
       const movieReviews = await this.reviewsRepository.find({
         where: {movieId: id},
@@ -173,13 +175,155 @@ export class ReviewsController {
       return {
         status: 'success',
         data: movieReviews,
-        message: 'Reviews fetched successfully.',
+        message: 'Movie reviews fetched successfully.',
       };
     } catch (error) {
       return {
         status: 'fail',
         data: null,
-        message: error ? error.message : 'Updating review failed.',
+        message: error ? error.message : 'Fetching movie reviews failed.',
+      };
+    }
+  }
+
+  @get('/reviews')
+  @response(204, {
+    description: 'Return all reviews',
+    content: {'application/json': {schema: CustomResponseSchema}},
+  })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
+  async findAllReviews(): Promise<CustomResponse<{}>> {
+    try {
+      const reviews = await this.reviewsRepository.find({
+        include: [
+          {
+            relation: 'userReviewer',
+            scope: {
+              fields: {
+                role: false,
+                isActivated: false,
+                dateCreated: false,
+                email: false,
+              },
+            },
+          },
+          {
+            relation: 'movieReviews',
+            scope: {
+              fields: ['title'],
+            },
+          },
+        ],
+      });
+      return {
+        status: 'success',
+        data: reviews,
+        message: 'All reviews fetched successfully.',
+      };
+    } catch (error) {
+      return {
+        status: 'fail',
+        data: null,
+        message: error ? error.message : 'Fetching all reviews failed.',
+      };
+    }
+  }
+
+  @get('/reviews/approved')
+  @response(204, {
+    description: 'Return all approved reviews',
+    content: {'application/json': {schema: CustomResponseSchema}},
+  })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
+  async findAllApprovedReviews(): Promise<CustomResponse<{}>> {
+    try {
+      const reviews = await this.reviewsRepository.find({
+        where: {
+          isApproved: true,
+        },
+        include: [
+          {
+            relation: 'userReviewer',
+            scope: {
+              fields: {
+                role: false,
+                isActivated: false,
+                dateCreated: false,
+                email: false,
+              },
+            },
+          },
+          {
+            relation: 'movieReviews',
+            scope: {
+              fields: ['title'],
+            },
+          },
+        ],
+      });
+      return {
+        status: 'success',
+        data: reviews,
+        message: 'All approved reviews fetched successfully.',
+      };
+    } catch (error) {
+      return {
+        status: 'fail',
+        data: null,
+        message: error
+          ? error.message
+          : 'Fetching all approved reviews failed.',
+      };
+    }
+  }
+
+  @get('/reviews/unapproved')
+  @response(204, {
+    description: 'Return all unapproved reviews',
+    content: {'application/json': {schema: CustomResponseSchema}},
+  })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
+  async findAllUnapprovedReviews(): Promise<CustomResponse<{}>> {
+    try {
+      const reviews = await this.reviewsRepository.find({
+        where: {
+          isApproved: false,
+        },
+        include: [
+          {
+            relation: 'userReviewer',
+            scope: {
+              fields: {
+                role: false,
+                isActivated: false,
+                dateCreated: false,
+                email: false,
+              },
+            },
+          },
+          {
+            relation: 'movieReviews',
+            scope: {
+              fields: ['title'],
+            },
+          },
+        ],
+      });
+      return {
+        status: 'success',
+        data: reviews,
+        message: 'All unapproved reviews fetched successfully.',
+      };
+    } catch (error) {
+      return {
+        status: 'fail',
+        data: null,
+        message: error
+          ? error.message
+          : 'Fetching all unapproved reviews failed.',
       };
     }
   }
