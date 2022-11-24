@@ -8,7 +8,7 @@ import {
 } from "../features/movie/movieSlice";
 import { useTypedDispatch, useTypedSelector } from "../hooks/rtk-hooks";
 
-const Movies = () => {
+function Movies() {
   const { movies, isLoading } = useTypedSelector((state) => state.movie);
   const dispatch = useTypedDispatch();
   const [movieName, setMovieName] = useState<string>("");
@@ -20,7 +20,7 @@ const Movies = () => {
 
   const handleSearchClick = useCallback(() => {
     if (movieName.trim() === "") return setError(true);
-    dispatch(fetchSearchedMovies(movieName));
+    return dispatch(fetchSearchedMovies(movieName));
   }, [dispatch, movieName]);
 
   return (
@@ -55,6 +55,6 @@ const Movies = () => {
       </div>
     </main>
   );
-};
+}
 
 export default Movies;

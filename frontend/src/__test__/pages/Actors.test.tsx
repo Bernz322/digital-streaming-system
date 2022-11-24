@@ -6,7 +6,7 @@ import {
 import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { Actors } from "../../pages";
-import { renderWithProviders } from "../../utils/test-utils";
+import renderWithProviders from "../../utils/test-utils";
 import { mockActors, mockSearchedActor } from "../../utils/db.mocks";
 import { IActor } from "../../utils/types";
 

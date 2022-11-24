@@ -41,7 +41,7 @@ import {
 import AddActorModal from "../AddActorModal.tsx/AddActorModal";
 import { fetchAllActors } from "../../features/actor/actorSlice";
 
-const TableMovies = () => {
+function TableMovies() {
   const { movies, isLoading } = useTypedSelector((state) => state.movie);
   const { actors } = useTypedSelector((state) => state.actor);
   const dispatch = useTypedDispatch();
@@ -73,13 +73,13 @@ const TableMovies = () => {
   );
   const [movieIdToDelete, setMovieIdToDelete] = useState<string>("");
 
-  //Fetch all movies
+  // Fetch all movies
   useEffect(() => {
     dispatch(fetchAllMovies());
     dispatch(fetchAllActors());
   }, [dispatch]);
 
-  /* Inside add movie modal, actors multiple select input has to have an array of objects containing value and label [{value, label}]. Hence, actorsList mapping is done*/
+  /* Inside add movie modal, actors multiple select input has to have an array of objects containing value and label [{value, label}]. Hence, actorsList mapping is done */
   const actorsList = actors.map((actor) => {
     return { value: actor.id, label: `${actor.firstName} ${actor.lastName}` };
   });
@@ -216,6 +216,7 @@ const TableMovies = () => {
     {
       name: "Actions",
       minWidth: "200px",
+      // eslint-disable-next-line react/no-unstable-nested-components
       cell: (row) => (
         <>
           <Tooltip label="View Movie" withArrow radius="md">
@@ -471,6 +472,6 @@ const TableMovies = () => {
       </Modal>
     </Paper>
   );
-};
+}
 
 export default TableMovies;

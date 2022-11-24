@@ -29,7 +29,7 @@ import {
   fetchAllMovieReviews,
 } from "../../features/movie/movieSlice";
 
-const TableReviews = () => {
+function TableReviews() {
   const { reviews } = useTypedSelector((state) => state.movie);
   const dispatch = useTypedDispatch();
   const { classes } = useStyles();
@@ -48,7 +48,7 @@ const TableReviews = () => {
   const [selectedReviewData, setSelectedReviewData] =
     useState<IPatchReviewProps>({} as IPatchReviewProps);
 
-  //Fetch all unapproved reviews
+  // Fetch all unapproved reviews
   useEffect(() => {
     dispatch(fetchUnapprovedMovieReviews());
   }, [dispatch]);
@@ -102,6 +102,34 @@ const TableReviews = () => {
     [reviews, filterByName]
   );
 
+  const tableActions = (row: IMovieReview) => {
+    return (
+      <>
+        <Tooltip label="View Review" withArrow radius="md">
+          <Button
+            radius="md"
+            size="xs"
+            color="green"
+            onClick={() => handleViewReviewActionClick(row)}
+          >
+            <IconEye size={14} strokeWidth={2} />
+          </Button>
+        </Tooltip>
+        <Tooltip label="Edit Review" withArrow radius="md">
+          <Button
+            radius="md"
+            ml="sm"
+            size="xs"
+            color="blue"
+            onClick={() => handleReviewUpdateActionClick(row)}
+          >
+            <IconEdit size={14} strokeWidth={2} />
+          </Button>
+        </Tooltip>
+      </>
+    );
+  };
+
   // Review Table Columns
   const reviewsColumns: TableColumn<IMovieReview>[] = [
     {
@@ -136,31 +164,7 @@ const TableReviews = () => {
     {
       name: "Actions",
       minWidth: "200px",
-      cell: (row) => (
-        <>
-          <Tooltip label="View Review" withArrow radius="md">
-            <Button
-              radius="md"
-              size="xs"
-              color="green"
-              onClick={() => handleViewReviewActionClick(row)}
-            >
-              <IconEye size={14} strokeWidth={2} />
-            </Button>
-          </Tooltip>
-          <Tooltip label="Edit Review" withArrow radius="md">
-            <Button
-              radius="md"
-              ml="sm"
-              size="xs"
-              color="blue"
-              onClick={() => handleReviewUpdateActionClick(row)}
-            >
-              <IconEdit size={14} strokeWidth={2} />
-            </Button>
-          </Tooltip>
-        </>
-      ),
+      cell: (row) => tableActions(row),
       button: true,
     },
   ];
@@ -298,6 +302,6 @@ const TableReviews = () => {
       </Modal>
     </Paper>
   );
-};
+}
 
 export default TableReviews;

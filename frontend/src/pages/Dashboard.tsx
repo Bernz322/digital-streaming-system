@@ -1,5 +1,6 @@
 import { AppShell, Container, Navbar } from "@mantine/core";
 import { IconUser, IconMovie, IconUsers, IconMessageDots } from "@tabler/icons";
+import { Navigate, NavLink, Route, Routes } from "react-router-dom";
 import {
   TableActors,
   TableMovies,
@@ -7,9 +8,8 @@ import {
   TableUsers,
 } from "../components";
 import { useDashboardPageStyles } from "../styles/DashboardPageStyles";
-import { Navigate, NavLink, Route, Routes } from "react-router-dom";
 
-const Dashboard = () => {
+function Dashboard() {
   const { classes, cx } = useDashboardPageStyles();
   const navItems = [
     { link: "/cm/users", label: "Users", icon: IconUser },
@@ -68,6 +68,6 @@ const Dashboard = () => {
       </Container>
     </AppShell>
   );
-};
+}
 
 export default Dashboard;

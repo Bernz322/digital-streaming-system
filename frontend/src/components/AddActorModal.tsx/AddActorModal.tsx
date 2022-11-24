@@ -13,7 +13,7 @@ import { isValidName, isValidUrl } from "../../utils/helpers";
 import { IDispatchResponse, IPostActor } from "../../utils/types";
 import { useStyles } from "../Tables/TableStyles";
 
-const AddActorModal = ({ addActorModal, setAddActorModal }: any) => {
+function AddActorModal({ addActorModal, setAddActorModal }: any) {
   const { classes } = useStyles();
   const dispatch = useTypedDispatch();
   // Actor states for adding, updating, deleting
@@ -136,6 +136,6 @@ const AddActorModal = ({ addActorModal, setAddActorModal }: any) => {
       </Button>
     </Modal>
   );
-};
+}
 
 export default AddActorModal;

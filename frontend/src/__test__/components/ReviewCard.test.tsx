@@ -3,7 +3,7 @@ import { cleanup, screen } from "@testing-library/react";
 import dayjs from "dayjs";
 import { BrowserRouter } from "react-router-dom";
 import { ReviewCard } from "../../components";
-import { renderWithProviders } from "../../utils/test-utils";
+import renderWithProviders from "../../utils/test-utils";
 import { IMovieReview } from "../../utils/types";
 
 const movieReview: IMovieReview = {

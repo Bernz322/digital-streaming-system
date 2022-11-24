@@ -5,7 +5,7 @@ import { authLogout } from "../../features/auth/authSlice";
 import { useTypedDispatch, useTypedSelector } from "../../hooks/rtk-hooks";
 import "./Navbar.scss";
 
-const Navbar = () => {
+function Navbar() {
   const { loggedIn, user } = useTypedSelector((state) => state.auth);
   const dispatch = useTypedDispatch();
   const links = [
@@ -30,7 +30,7 @@ const Navbar = () => {
   return (
     <header className="headerContainer">
       <nav className="innerNavContainer">
-        <Link className="left" to={"/"}>
+        <Link className="left" to="/">
           <img className="logo" src={logo} alt="logo" />
           <h1>ratebox</h1>
         </Link>
@@ -62,6 +62,6 @@ const Navbar = () => {
       </nav>
     </header>
   );
-};
+}
 
 export default Navbar;

@@ -28,6 +28,24 @@ const initialState: IAuthState = {
   isLoading: false,
 };
 
+// Current User
+export const authCreds = createAsyncThunk(
+  "auth/authCreds",
+  async (_, thunkAPI) => {
+    try {
+      const res: APICustomResponse<{}> = await apiFetchCurrentLoggedUser();
+      if (res.status === "fail") throw new Error(res.message);
+      return res;
+    } catch (error: any) {
+      const message = isError(
+        error,
+        "Fecthing your information failed. Please login again."
+      );
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 // Login User
 export const authLogin = createAsyncThunk(
   "auth/login",
@@ -85,26 +103,9 @@ export const authLogout = createAsyncThunk(
       path: "/",
       domain: "localhost",
     });
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     dispatch(authReset());
     dispatch(userReset());
-  }
-);
-
-// Current User
-export const authCreds = createAsyncThunk(
-  "auth/authCreds",
-  async (_, thunkAPI) => {
-    try {
-      const res: APICustomResponse<{}> = await apiFetchCurrentLoggedUser();
-      if (res.status === "fail") throw new Error(res.message);
-      return res;
-    } catch (error: any) {
-      const message = isError(
-        error,
-        "Fecthing your information failed. Please login again."
-      );
-      return thunkAPI.rejectWithValue(message);
-    }
   }
 );
 

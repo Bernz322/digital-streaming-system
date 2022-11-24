@@ -8,7 +8,7 @@ import { useTypedDispatch, useTypedSelector } from "../hooks/rtk-hooks";
 import { budgetFormatter } from "../utils/helpers";
 import { IDispatchResponse } from "../utils/types";
 
-const IndividualMovie = () => {
+function IndividualMovie() {
   const { loggedIn } = useTypedSelector((state) => state.auth);
   const { selectedMovie, isLoading } = useTypedSelector((state) => state.movie);
   const dispatch = useTypedDispatch();
@@ -24,6 +24,7 @@ const IndividualMovie = () => {
     });
   }, [dispatch, id, navigate]);
 
+  // eslint-disable-next-line consistent-return
   const handleMovieReviewSubmit = useCallback(async () => {
     if (reviewComment.trim() === "") return setError(true);
     const reviewData = {
@@ -160,6 +161,6 @@ const IndividualMovie = () => {
       </div>
     </main>
   );
-};
+}
 
 export default IndividualMovie;

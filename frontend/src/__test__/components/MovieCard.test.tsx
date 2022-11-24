@@ -5,7 +5,7 @@ import { BrowserRouter, Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import { MovieCard } from "../../components";
 import { mockMovie } from "../../utils/db.mocks";
-import { renderWithProviders } from "../../utils/test-utils";
+import renderWithProviders from "../../utils/test-utils";
 
 describe("<MovieCard />", () => {
   const renderApp = () => {

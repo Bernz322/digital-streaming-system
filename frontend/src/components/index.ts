@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 export { default as Navbar } from "./Navbar/Navbar";
 export { default as Hero } from "./Hero/Hero";
 export { default as MoviesSection } from "./MoviesSection/MoviesSection";

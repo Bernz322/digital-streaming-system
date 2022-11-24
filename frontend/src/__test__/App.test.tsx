@@ -2,7 +2,7 @@
 import { cleanup, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
-import { renderWithProviders } from "../utils/test-utils";
+import renderWithProviders from "../utils/test-utils";
 import App from "../App";
 import { mockUsers } from "../utils/db.mocks";
 

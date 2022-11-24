@@ -24,13 +24,14 @@ import { authLogin, authRegister } from "../features/auth/authSlice";
 import { useTypedDispatch, useTypedSelector } from "../hooks/rtk-hooks";
 import { IRegisterAPIProps, IDispatchResponse } from "../utils/types";
 import { useAuthPageStyles } from "../styles/AuthPageStyles";
+
 export interface IRegisterForm {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
 }
-const Auth = () => {
+function Auth() {
   const { classes } = useAuthPageStyles();
   const { isLoading } = useTypedSelector((state) => state.auth);
   const dispatch = useTypedDispatch();
@@ -195,6 +196,6 @@ const Auth = () => {
       </Container>
     </Paper>
   );
-};
+}
 
 export default Auth;

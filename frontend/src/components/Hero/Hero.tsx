@@ -1,6 +1,7 @@
 import logo from "../../assets/logo.png";
 import "./Hero.scss";
-const Hero = () => {
+
+function Hero() {
   return (
     <div className="heroContainer">
       <div className="innerContainer">
@@ -18,6 +19,6 @@ const Hero = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Hero;

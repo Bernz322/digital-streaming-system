@@ -2,5 +2,5 @@ projectKey=POC-FE
 serverUrl=http://localhost:9000
 serverVersion=9.7.0.61563
 dashboardUrl=http://localhost:9000/dashboard?id=POC-FE
-ceTaskId=AYSYD0lygcO2J3lC8Jj-
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYSYD0lygcO2J3lC8Jj-
+ceTaskId=AYSnYM8CVHEQPAPVvE6e
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYSnYM8CVHEQPAPVvE6e

@@ -9,7 +9,7 @@ export interface MovieProps {
   movie: IMovie;
 }
 
-const MovieCard = ({ movie }: MovieProps) => {
+function MovieCard({ movie }: MovieProps) {
   const rating: number = movieRating(movie.movieReviews as IMovieReview[]);
 
   return (
@@ -25,6 +25,6 @@ const MovieCard = ({ movie }: MovieProps) => {
       </Link>
     </div>
   );
-};
+}
 
 export default MovieCard;

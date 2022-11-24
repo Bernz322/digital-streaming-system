@@ -27,7 +27,7 @@ import { useTypedDispatch, useTypedSelector } from "../../hooks/rtk-hooks";
 import { isValidName, isValidUrl } from "../../utils/helpers";
 import AddActorModal from "../AddActorModal.tsx/AddActorModal";
 
-const TableActors = () => {
+function TableActors() {
   const { actors, isLoading } = useTypedSelector((state) => state.actor);
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
@@ -149,6 +149,7 @@ const TableActors = () => {
     },
     {
       name: "Link",
+      // eslint-disable-next-line react/no-unstable-nested-components
       cell: (row) =>
         row.link ? (
           <a href={row.link} target="_blank" rel="noreferrer">
@@ -162,6 +163,7 @@ const TableActors = () => {
     {
       name: "Actions",
       minWidth: "200px",
+      // eslint-disable-next-line react/no-unstable-nested-components
       cell: (row) => (
         <>
           <Tooltip label="View Actor" withArrow radius="md">
@@ -360,6 +362,6 @@ const TableActors = () => {
       </Modal>
     </Paper>
   );
-};
+}
 
 export default TableActors;

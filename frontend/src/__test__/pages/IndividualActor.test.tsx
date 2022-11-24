@@ -5,7 +5,7 @@ import {
   waitForElementToBeRemoved,
 } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import { renderWithProviders } from "../../utils/test-utils";
+import renderWithProviders from "../../utils/test-utils";
 import { IndividualActor } from "../../pages";
 
 describe("<IndividualActor />", () => {

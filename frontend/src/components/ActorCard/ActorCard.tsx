@@ -7,7 +7,7 @@ export interface ActorProps {
   actor: IActor;
   isActorsPage: boolean;
 }
-const ActorCard = ({ actor, isActorsPage }: ActorProps) => {
+function ActorCard({ actor, isActorsPage }: ActorProps) {
   return (
     <div className="actorCardContainer">
       <Link to={`/actor/${actor.id}`} className="actorCardLink">
@@ -23,6 +23,6 @@ const ActorCard = ({ actor, isActorsPage }: ActorProps) => {
       </Link>
     </div>
   );
-};
+}
 
 export default ActorCard;

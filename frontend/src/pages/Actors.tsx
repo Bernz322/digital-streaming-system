@@ -8,7 +8,7 @@ import {
 } from "../features/actor/actorSlice";
 import { useTypedDispatch, useTypedSelector } from "../hooks/rtk-hooks";
 
-const Actors = () => {
+function Actors() {
   const { actors, isLoading } = useTypedSelector((state) => state.actor);
   const dispatch = useTypedDispatch();
   const [actorName, setActorName] = useState<string>("");
@@ -20,7 +20,7 @@ const Actors = () => {
 
   const handleSearchClick = useCallback(() => {
     if (actorName.trim() === "") return setError(true);
-    dispatch(fetchSearchedActors(actorName));
+    return dispatch(fetchSearchedActors(actorName));
   }, [dispatch, actorName]);
   return (
     <main className="pageContainer">
@@ -49,7 +49,7 @@ const Actors = () => {
             {actors.map((actor) => {
               return (
                 !isLoading && (
-                  <ActorCard actor={actor} key={actor.id} isActorsPage={true} />
+                  <ActorCard actor={actor} key={actor.id} isActorsPage />
                 )
               );
             })}
@@ -58,6 +58,6 @@ const Actors = () => {
       </div>
     </main>
   );
-};
+}
 
 export default Actors;

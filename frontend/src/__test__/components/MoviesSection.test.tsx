@@ -7,7 +7,7 @@ import { BrowserRouter, Router } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { createMemoryHistory } from "history";
 import { MoviesSection } from "../../components";
-import { renderWithProviders } from "../../utils/test-utils";
+import renderWithProviders from "../../utils/test-utils";
 
 describe("<MoviesSection />", () => {
   const renderApp = () => {

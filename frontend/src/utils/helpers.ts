@@ -20,8 +20,8 @@ export interface IDeleteCookie {
 export const isValidEmail = (email: string): void => {
   if (email?.trim() === "" || !email)
     throw new Error("Field email is required.");
-  let atPosition: number = email.indexOf("@");
-  let dotPosition: number = email.lastIndexOf(".");
+  const atPosition: number = email.indexOf("@");
+  const dotPosition: number = email.lastIndexOf(".");
 
   if (atPosition < 1 || dotPosition - atPosition < 2) {
     throw new Error("Invalid email.");
@@ -38,7 +38,7 @@ export const isValidEmail = (email: string): void => {
 export const isValidName = (name: string, field: string): void => {
   if (name?.trim() === "" || !name)
     throw new Error(`Field ${field} name is required.`);
-  let nameRegex: RegExp = /^[a-zA-Z-' ]+$/;
+  const nameRegex: RegExp = /^[a-zA-Z-' ]+$/;
   if (name?.trim().match(nameRegex) == null) {
     throw new Error(`Invalid ${field} name.`);
   }
@@ -85,14 +85,13 @@ export const isValidUrl = (urlString: string, field: string): boolean => {
  * @returns {boolean | string} - either returns the cookie value or false (cookie not found)
  */
 export const getCookie = (name: string): boolean | string => {
-  let match: RegExpMatchArray | null = document.cookie.match(
-    new RegExp("(^| )" + name + "=([^;]+)")
+  const match: RegExpMatchArray | null = document.cookie.match(
+    new RegExp(`(^| )${name}=([^;]+)`)
   );
   if (match) {
     return match[2];
-  } else {
-    return false;
   }
+  return false;
 };
 
 /**
@@ -120,12 +119,7 @@ export const deleteCookie = ({
   domain,
 }: IDeleteCookie): void => {
   if (getCookie(cookieName)) {
-    document.cookie =
-      cookieName +
-      "=" +
-      (path ? ";path=" + path : "") +
-      (domain ? ";domain=" + domain : "") +
-      ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+    document.cookie = `${cookieName}=;path=${path};domain=${domain};expires=Thu, 01 Jan 1970 00:00:01 GMT`;
   }
 };
 
@@ -158,8 +152,8 @@ export const movieRating = (movieReviews: IMovieReview[]): number => {
     // Although it is already expected that the returned reviews to be calculated are the only approved ones,
     // just ensure that only approved reviews gets counted.
     if (review.isApproved) {
-      sum += review?.rating;
-      length++;
+      sum += review?.rating || 0;
+      length += 1;
     }
   });
   const reviewCount = length || 1;
@@ -182,8 +176,8 @@ export const isError = (error: any, title: string): string => {
     error.message ||
     error.toString();
   showNotification({
-    title: title,
-    message: message,
+    title,
+    message,
     autoClose: 3000,
     color: "red",
   });

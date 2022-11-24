@@ -32,7 +32,7 @@ import {
 } from "../../features/user/userSlice";
 import { isNotEmpty, isValidEmail, isValidName } from "../../utils/helpers";
 
-const TableUsers = () => {
+function TableUsers() {
   const { users, isLoading } = useTypedSelector((state) => state.user);
   const dispatch = useTypedDispatch();
   const { classes } = useStyles();
@@ -181,6 +181,7 @@ const TableUsers = () => {
     {
       name: "Actions",
       minWidth: "200px",
+      // eslint-disable-next-line react/no-unstable-nested-components
       cell: (row) => (
         <>
           <Tooltip label="Edit User" withArrow radius="md">
@@ -413,6 +414,6 @@ const TableUsers = () => {
       </Modal>
     </Paper>
   );
-};
+}
 
 export default TableUsers;

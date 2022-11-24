@@ -8,7 +8,7 @@ interface IReviewCardProps {
   review: IMovieReview;
 }
 
-const ReviewCard = ({ review }: IReviewCardProps) => {
+function ReviewCard({ review }: IReviewCardProps) {
   const reviewerFullName = `${review?.userReviewer?.firstName} ${review?.userReviewer?.lastName}`;
   return (
     <div className="reviewCardContainer">
@@ -27,6 +27,6 @@ const ReviewCard = ({ review }: IReviewCardProps) => {
       </div>
     </div>
   );
-};
+}
 
 export default ReviewCard;

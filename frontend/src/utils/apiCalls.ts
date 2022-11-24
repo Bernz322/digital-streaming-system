@@ -33,7 +33,7 @@ const apiRequest = async <T>(
   // If there is token, attached it unto the request headers as bearer
   if (token) {
     if (!request.headers) request.headers = {};
-    request.headers["Authorization"] = `Bearer ${token}`;
+    request.headers.Authorization = `Bearer ${token}`;
   }
 
   const res = await axios(request);
@@ -179,7 +179,7 @@ export const apiPostMovie = async (
 export const apiUpdateMovieById = async (
   data: IPatchMovie
 ): Promise<APICustomResponse<{}>> => {
-  let { id, ...updatedMovie } = data;
+  const { id, ...updatedMovie } = data;
   const res = await apiRequest<APICustomResponse<{}>>(`/movies/${data.id}`, {
     method: "PATCH",
     headers: {
@@ -275,7 +275,7 @@ export const apiPostActor = async (
 export const apiUpdateActorById = async (
   data: IPostActor
 ): Promise<APICustomResponse<{}>> => {
-  let { id, ...updatedActor } = data;
+  const { id, ...updatedActor } = data;
   const res = await apiRequest<APICustomResponse<{}>>(`/actors/${data.id}`, {
     method: "PATCH",
     headers: {
@@ -368,7 +368,7 @@ export const apiPostMovieReview = async (
 export const apiUpdateReviewById = async (
   data: IPatchReviewProps
 ): Promise<APICustomResponse<{}>> => {
-  let { id, ...isApproved } = data;
+  const { id, ...isApproved } = data;
   const res = await apiRequest<APICustomResponse<{}>>(`/reviews/${id}`, {
     method: "PATCH",
     headers: {
@@ -396,7 +396,7 @@ export const apiFetchAllUsers = async (): Promise<APICustomResponse<{}>> => {
 export const apiUpdateUserById = async (
   data: IPatchUserAPIProps
 ): Promise<APICustomResponse<{}>> => {
-  let { id, ...updatedUser } = data;
+  const { id, ...updatedUser } = data;
   const res = await apiRequest<APICustomResponse<{}>>(`/users/${id}`, {
     method: "PATCH",
     headers: {
