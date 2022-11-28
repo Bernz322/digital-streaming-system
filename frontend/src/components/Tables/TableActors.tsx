@@ -124,6 +124,58 @@ function TableActors() {
     setDeleteActorModal(false);
   }, [dispatch, actorIdToDelete]);
 
+  const tableActorLink = (row: IActor) => {
+    return row.link ? (
+      <a href={row.link} target="_blank" rel="noreferrer">
+        More
+      </a>
+    ) : (
+      "No link"
+    );
+  };
+
+  const tableActions = (row: IActor) => {
+    return (
+      <>
+        <Tooltip label="View Actor" withArrow radius="md">
+          <Button
+            radius="md"
+            size="xs"
+            color="green"
+            onClick={() => navigate(`/actor/${row.id}`)}
+            data-testid="rowViewActorBtn"
+          >
+            <IconEye size={14} strokeWidth={2} />
+          </Button>
+        </Tooltip>
+        <Tooltip label="Edit Actor" withArrow radius="md">
+          <Button
+            radius="md"
+            ml="sm"
+            size="xs"
+            color="blue"
+            onClick={() => handleActorUpdateActionClick(row)}
+            data-testid="rowUpdateActorBtn"
+          >
+            <IconEdit size={14} strokeWidth={2} />
+          </Button>
+        </Tooltip>
+        <Tooltip label="Delete Actor" withArrow radius="md">
+          <Button
+            radius="md"
+            ml="sm"
+            size="xs"
+            color="red"
+            onClick={() => handleActorDeleteActionClick(row.id)}
+            data-testid="rowDeleteActorBtn"
+          >
+            <IconTrash size={14} strokeWidth={2} />
+          </Button>
+        </Tooltip>
+      </>
+    );
+  };
+
   // Actor Table Columns
   const actorsColumns: TableColumn<IActor>[] = [
     {
@@ -149,60 +201,13 @@ function TableActors() {
     },
     {
       name: "Link",
-      // eslint-disable-next-line react/no-unstable-nested-components
-      cell: (row) =>
-        row.link ? (
-          <a href={row.link} target="_blank" rel="noreferrer">
-            More
-          </a>
-        ) : (
-          "No link"
-        ),
+      cell: (row) => tableActorLink(row),
       sortable: true,
     },
     {
       name: "Actions",
       minWidth: "200px",
-      // eslint-disable-next-line react/no-unstable-nested-components
-      cell: (row) => (
-        <>
-          <Tooltip label="View Actor" withArrow radius="md">
-            <Button
-              radius="md"
-              size="xs"
-              color="green"
-              onClick={() => navigate(`/actor/${row.id}`)}
-              data-testid="rowViewActorBtn"
-            >
-              <IconEye size={14} strokeWidth={2} />
-            </Button>
-          </Tooltip>
-          <Tooltip label="Edit Actor" withArrow radius="md">
-            <Button
-              radius="md"
-              ml="sm"
-              size="xs"
-              color="blue"
-              onClick={() => handleActorUpdateActionClick(row)}
-              data-testid="rowUpdateActorBtn"
-            >
-              <IconEdit size={14} strokeWidth={2} />
-            </Button>
-          </Tooltip>
-          <Tooltip label="Delete Actor" withArrow radius="md">
-            <Button
-              radius="md"
-              ml="sm"
-              size="xs"
-              color="red"
-              onClick={() => handleActorDeleteActionClick(row.id)}
-              data-testid="rowDeleteActorBtn"
-            >
-              <IconTrash size={14} strokeWidth={2} />
-            </Button>
-          </Tooltip>
-        </>
-      ),
+      cell: (row) => tableActions(row),
       button: true,
     },
   ];

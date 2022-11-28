@@ -1,10 +1,11 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm run lint && npm run test || (
-    echo 'ESLint failed. Please read the errors above.'
+npm run lint && npm run test || 
+(
+    echo '❌ ESLint Check Failed. Make the required changes listed above. Add those changes and try to commit again.'
+    false
 )
+echo '✅ All checks passed.'
 
-echo 'All checks passed.'
-
-echo 'Commiting your changes.'
+echo '✏ Commiting your changes.'

@@ -186,6 +186,48 @@ function TableMovies() {
     setDeleteMovieModal(false);
   };
 
+  const tableActions = (row: IMovie) => {
+    return (
+      <>
+        <Tooltip label="View Movie" withArrow radius="md">
+          <Button
+            radius="md"
+            size="xs"
+            color="green"
+            onClick={() => navigate(`/movie/${row.id}`)}
+            data-testid="rowViewMovieBtn"
+          >
+            <IconEye size={14} strokeWidth={2} />
+          </Button>
+        </Tooltip>
+        <Tooltip label="Edit Movie" withArrow radius="md">
+          <Button
+            radius="md"
+            ml={5}
+            size="xs"
+            color="blue"
+            onClick={() => handleMovieUpdateActionClick(row)}
+            data-testid="rowUpdateMovieBtn"
+          >
+            <IconEdit size={14} strokeWidth={2} />
+          </Button>
+        </Tooltip>
+        <Tooltip label="Delete Movie" withArrow radius="md">
+          <Button
+            radius="md"
+            ml={5}
+            size="xs"
+            color="red"
+            onClick={() => handleMovieDeleteActionClick(row.id)}
+            data-testid="rowDeleteMovieBtn"
+          >
+            <IconTrash size={14} strokeWidth={2} />
+          </Button>
+        </Tooltip>
+      </>
+    );
+  };
+
   // Movie Table Columns
   const moviesColumns: TableColumn<IMovie>[] = [
     {
@@ -216,46 +258,7 @@ function TableMovies() {
     {
       name: "Actions",
       minWidth: "200px",
-      // eslint-disable-next-line react/no-unstable-nested-components
-      cell: (row) => (
-        <>
-          <Tooltip label="View Movie" withArrow radius="md">
-            <Button
-              radius="md"
-              size="xs"
-              color="green"
-              onClick={() => navigate(`/movie/${row.id}`)}
-              data-testid="rowViewMovieBtn"
-            >
-              <IconEye size={14} strokeWidth={2} />
-            </Button>
-          </Tooltip>
-          <Tooltip label="Edit Movie" withArrow radius="md">
-            <Button
-              radius="md"
-              ml={5}
-              size="xs"
-              color="blue"
-              onClick={() => handleMovieUpdateActionClick(row)}
-              data-testid="rowUpdateMovieBtn"
-            >
-              <IconEdit size={14} strokeWidth={2} />
-            </Button>
-          </Tooltip>
-          <Tooltip label="Delete Movie" withArrow radius="md">
-            <Button
-              radius="md"
-              ml={5}
-              size="xs"
-              color="red"
-              onClick={() => handleMovieDeleteActionClick(row.id)}
-              data-testid="rowDeleteMovieBtn"
-            >
-              <IconTrash size={14} strokeWidth={2} />
-            </Button>
-          </Tooltip>
-        </>
-      ),
+      cell: (row) => tableActions(row),
       button: true,
     },
   ];

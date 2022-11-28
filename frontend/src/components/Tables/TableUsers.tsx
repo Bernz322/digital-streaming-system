@@ -149,6 +149,37 @@ function TableUsers() {
     setDeleteUserModal(false);
   }, [dispatch, userIdToDelete]);
 
+  const tableActions = (row: IUser) => {
+    return (
+      <>
+        <Tooltip label="Edit User" withArrow radius="md">
+          <Button
+            radius="md"
+            ml="sm"
+            size="xs"
+            color="blue"
+            onClick={() => updateUserAction(row)}
+            data-testid="rowUpdateUserBtn"
+          >
+            <IconEdit size={14} strokeWidth={2} />
+          </Button>
+        </Tooltip>
+        <Tooltip label="Delete User" withArrow radius="md">
+          <Button
+            radius="md"
+            ml="sm"
+            size="xs"
+            color="red"
+            onClick={() => handleUserDeleteActionClick(row.id)}
+            data-testid="rowDeleteUserBtn"
+          >
+            <IconTrash size={14} strokeWidth={2} />
+          </Button>
+        </Tooltip>
+      </>
+    );
+  };
+
   // User Table Columns
   const usersColumns: TableColumn<IUser>[] = [
     {
@@ -181,35 +212,7 @@ function TableUsers() {
     {
       name: "Actions",
       minWidth: "200px",
-      // eslint-disable-next-line react/no-unstable-nested-components
-      cell: (row) => (
-        <>
-          <Tooltip label="Edit User" withArrow radius="md">
-            <Button
-              radius="md"
-              ml="sm"
-              size="xs"
-              color="blue"
-              onClick={() => updateUserAction(row)}
-              data-testid="rowUpdateUserBtn"
-            >
-              <IconEdit size={14} strokeWidth={2} />
-            </Button>
-          </Tooltip>
-          <Tooltip label="Delete User" withArrow radius="md">
-            <Button
-              radius="md"
-              ml="sm"
-              size="xs"
-              color="red"
-              onClick={() => handleUserDeleteActionClick(row.id)}
-              data-testid="rowDeleteUserBtn"
-            >
-              <IconTrash size={14} strokeWidth={2} />
-            </Button>
-          </Tooltip>
-        </>
-      ),
+      cell: (row) => tableActions(row),
       button: true,
     },
   ];
