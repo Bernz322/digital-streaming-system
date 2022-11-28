@@ -6,7 +6,7 @@ import {
 import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { Movies } from "../../pages";
-import { renderWithProviders } from "../../utils/test-utils";
+import renderWithProviders from "../../utils/test-utils";
 import { mockMovies, mockSearchedMovies } from "../../utils/db.mocks";
 import { IMovie } from "../../utils/types";
 

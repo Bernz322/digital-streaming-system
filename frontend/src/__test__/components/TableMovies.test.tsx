@@ -9,7 +9,7 @@ import userEvent from "@testing-library/user-event";
 import { createMemoryHistory } from "history";
 import { NotificationsProvider } from "@mantine/notifications";
 import { TableMovies } from "../../components";
-import { renderWithProviders } from "../../utils/test-utils";
+import renderWithProviders from "../../utils/test-utils";
 import { mockMovies } from "../../utils/db.mocks";
 
 interface IForm {

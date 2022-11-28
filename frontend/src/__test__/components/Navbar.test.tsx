@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import { Navbar } from "../../components";
 import { mockUsers } from "../../utils/db.mocks";
-import { renderWithProviders } from "../../utils/test-utils";
+import renderWithProviders from "../../utils/test-utils";
 
 describe("<Navbar />", () => {
   const renderApp = () => {

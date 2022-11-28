@@ -4,7 +4,7 @@ import { MovieCard } from "..";
 import { fetchLimitMovies } from "../../features/movie/movieSlice";
 import { useTypedDispatch, useTypedSelector } from "../../hooks/rtk-hooks";
 
-const MoviesSection = () => {
+function MoviesSection() {
   const { movies, isLoading } = useTypedSelector((state) => state.movie);
   const dispatch = useTypedDispatch();
 
@@ -40,6 +40,6 @@ const MoviesSection = () => {
       </div>
     </div>
   );
-};
+}
 
 export default MoviesSection;

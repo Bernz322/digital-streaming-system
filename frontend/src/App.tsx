@@ -19,7 +19,7 @@ import { useTypedDispatch, useTypedSelector } from "./hooks/rtk-hooks";
 import { authCreds } from "./features/auth/authSlice";
 import { isLoggedIn } from "./utils/helpers";
 
-const App = () => {
+function App() {
   const { user, loggedIn } = useTypedSelector((state) => state.auth);
   const dispatch = useTypedDispatch();
 
@@ -50,6 +50,6 @@ const App = () => {
       </NotificationsProvider>
     </MantineProvider>
   );
-};
+}
 
 export default App;

@@ -1,9 +1,9 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { BrowserRouter, Router } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
-import { renderWithProviders } from "../../utils/test-utils";
-import { Dashboard } from "../../pages";
 import { createMemoryHistory } from "history";
+import renderWithProviders from "../../utils/test-utils";
+import { Dashboard } from "../../pages";
 
 describe("<Dashboard />", () => {
   const renderApp = () => {

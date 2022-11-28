@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from "msw";
 import { baseAPIUrl } from "../utils/apiCalls";
 import {
@@ -15,6 +16,7 @@ import {
 /**
  * All MSW API Interceptors (handlers) which returns mocked values during testing
  */
+// eslint-disable-next-line import/prefer-default-export
 export const handlers = [
   rest.get(`${baseAPIUrl}/search/movies/:title`, (req, res, ctx) => {
     const { title } = req.params;

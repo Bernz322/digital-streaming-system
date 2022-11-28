@@ -8,7 +8,7 @@ import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
 import { NotificationsProvider } from "@mantine/notifications";
-import { renderWithProviders } from "../../utils/test-utils";
+import renderWithProviders from "../../utils/test-utils";
 import { IndividualMovie } from "../../pages";
 import { server } from "../../mocks/server";
 import { baseAPIUrl } from "../../utils/apiCalls";

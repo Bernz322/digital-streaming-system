@@ -6,7 +6,7 @@ import { fetchActorById } from "../features/actor/actorSlice";
 import { useTypedDispatch, useTypedSelector } from "../hooks/rtk-hooks";
 import { IDispatchResponse, IMovie } from "../utils/types";
 
-const IndividualActor = () => {
+function IndividualActor() {
   const { selectedActor, isLoading } = useTypedSelector((state) => state.actor);
   const dispatch = useTypedDispatch();
   const { id } = useParams();
@@ -90,6 +90,6 @@ const IndividualActor = () => {
       </div>
     </main>
   );
-};
+}
 
 export default IndividualActor;

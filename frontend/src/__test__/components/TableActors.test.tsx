@@ -9,7 +9,7 @@ import userEvent from "@testing-library/user-event";
 import { createMemoryHistory } from "history";
 import { NotificationsProvider } from "@mantine/notifications";
 import { TableActors } from "../../components";
-import { renderWithProviders } from "../../utils/test-utils";
+import renderWithProviders from "../../utils/test-utils";
 import { mockActors } from "../../utils/db.mocks";
 
 const openUpdateActorModal = async () => {

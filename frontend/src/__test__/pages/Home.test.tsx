@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { BrowserRouter, Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import { Home } from "../../pages";
-import { renderWithProviders } from "../../utils/test-utils";
+import renderWithProviders from "../../utils/test-utils";
 
 describe("<Home />", () => {
   const renderApp = () => {

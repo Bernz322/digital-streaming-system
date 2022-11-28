@@ -2,9 +2,9 @@ import { Button, Container, Group, Paper, Text, Title } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { usePage404Styles } from "../styles/Page404Styles";
 
-const Page404 = () => {
+function Page404() {
   const { classes } = usePage404Styles();
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   return (
     <Paper radius={0} className={classes.paper}>
       <Container className={classes.root}>
@@ -27,6 +27,6 @@ const Page404 = () => {
       </Container>
     </Paper>
   );
-};
+}
 
 export default Page404;

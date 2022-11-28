@@ -6,6 +6,7 @@ import { createStyles } from "@mantine/core";
  * As the entire app is in dark theme, the theme prop is set to dark.
  * @param {theme} theme - the theme of all mantine components to be used. (Dark)
  */
+// eslint-disable-next-line import/prefer-default-export
 export const useDashboardPageStyles = createStyles((theme) => ({
   main: {
     background: "#121212",

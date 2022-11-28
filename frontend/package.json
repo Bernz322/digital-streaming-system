@@ -45,7 +45,8 @@
     "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!axios)/\"",
     "eject": "react-scripts eject",
     "coverage": "npm test -- --coverage --watchAll",
-    "test-coverage": "react-scripts test --coverageDirectory test-coverage --transformIgnorePatterns \"node_modules/(?!axios)/\" --coverage --watchAll=false --testResultsProcessor jest-sonar-reporter"
+    "eslint": "eslint .",
+    "eslint:fix": "eslint --fix ."
   },
   "eslintConfig": {
     "extends": [
@@ -84,7 +85,19 @@
     "indent": 4
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.44.0",
+    "@typescript-eslint/parser": "^5.44.0",
+    "eslint": "^8.28.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.11",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "msw": "^0.47.4",
+    "prettier": "^2.8.0",
     "resize-observer-polyfill": "^1.5.1"
   }
 }

@@ -4,7 +4,7 @@ interface RatingProps {
   rating: number;
 }
 
-const Rating = ({ rating }: RatingProps) => {
+function Rating({ rating }: RatingProps) {
   return (
     <div className="movieRatingContainer">
       <p className="ratingTitle">Rating</p>
@@ -12,10 +12,10 @@ const Rating = ({ rating }: RatingProps) => {
         <p className="ratingValue" data-testid="testMovieRating">
           {rating}/5
         </p>
-        <i className="fa fa-star" aria-hidden="true"></i>
+        <i className="fa fa-star" aria-hidden="true" />
       </div>
     </div>
   );
-};
+}
 
 export default Rating;

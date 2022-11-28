@@ -9,7 +9,7 @@ import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { NotificationsProvider } from "@mantine/notifications";
 import { TableActors } from "../../components";
-import { renderWithProviders } from "../../utils/test-utils";
+import renderWithProviders from "../../utils/test-utils";
 
 interface IForm {
   fName?: string;
